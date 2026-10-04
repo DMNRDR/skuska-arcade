@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Skúška Arcade",
+    "slug": "skuska-arcade",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#141038",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "Skúška Arcade",
+      "themeColor": "#070b1f",
+      "backgroundColor": "#070b1f"
+    },
+    "backgroundColor": "#070b1f"
+  }
+}
