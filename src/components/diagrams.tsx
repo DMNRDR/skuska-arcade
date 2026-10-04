@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Animated, Platform, Pressable, Text, View } from 'react-native';
+import { play } from '../sound';
 import Svg, { Circle, Defs, G, Line, LinearGradient, Path, Polygon, Rect, Stop, Text as SvgText } from 'react-native-svg';
 import { C } from './ui';
 
@@ -68,6 +69,26 @@ export function Frame({ children, caption }: { children: React.ReactNode; captio
   );
 }
 
+function ChipButton({ children, onPress, style }: { children: React.ReactNode; onPress: () => void; style: object }) {
+  const s = React.useRef(new Animated.Value(1)).current;
+  const nd = Platform.OS !== 'web';
+  return (
+    <Animated.View style={{ transform: [{ scale: s }] }}>
+      <Pressable
+        onPressIn={() => Animated.spring(s, { toValue: 0.9, useNativeDriver: nd, speed: 50 }).start()}
+        onPressOut={() => Animated.spring(s, { toValue: 1, useNativeDriver: nd, speed: 30, bounciness: 14 }).start()}
+        onPress={() => {
+          play('tick');
+          onPress();
+        }}
+        style={style}
+      >
+        {children}
+      </Pressable>
+    </Animated.View>
+  );
+}
+
 export function Chips<T extends string | number>({ options, value, onChange, label }: { options: { v: T; l: string }[]; value: T; onChange: (v: T) => void; label?: string }) {
   return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
@@ -75,7 +96,7 @@ export function Chips<T extends string | number>({ options, value, onChange, lab
       {options.map((o) => {
         const on = o.v === value;
         return (
-          <Pressable
+          <ChipButton
             key={String(o.v)}
             onPress={() => onChange(o.v)}
             style={{
@@ -88,7 +109,7 @@ export function Chips<T extends string | number>({ options, value, onChange, lab
             }}
           >
             <Text style={{ color: on ? '#fff' : C.dim, fontSize: 12, fontWeight: '700' }}>{o.l}</Text>
-          </Pressable>
+          </ChipButton>
         );
       })}
     </View>
@@ -135,7 +156,7 @@ function KmityDiagram() {
   const v = Math.cos(phi);
   return (
     <View style={{ gap: 8 }}>
-      <Frame caption="Bod obieha po kružnici s polomerom A. Jeho výška v čase je y = A·sin(ωt). Šípka ukazuje rýchlosť: najväčšia je v strede, nulová na krajoch.">
+      <Frame caption="Bod obieha po kružnici s polomerom A. Jeho výška je y = A·sin(ωt) (žltý „tieň“ na osi). Ružový graf je záznam výšky: nová hodnota vzniká pri osi a starší záznam sa posúva doprava. Zelená šípka je rýchlosť: najväčšia v strede, nulová na krajoch.">
         <Line x1={0} y1={cy} x2={W} y2={cy} stroke={AX} />
         <Line x1={x0} y1={10} x2={x0} y2={190} stroke={AX} />
         <Circle cx={cx} cy={cy} r={R} stroke={CY} strokeOpacity={0.5} strokeWidth={1.5} fill="none" />
@@ -148,7 +169,7 @@ function KmityDiagram() {
         <Line x1={x0 - 4} y1={cy - R} x2={x0 + 4} y2={cy - R} stroke={AX} />
         <Label x={x0 + 6} y={cy - R + 4} color={C.dim}>+A</Label>
         <Label x={x0 + 6} y={cy + R + 4} color={C.dim}>−A</Label>
-        <Label x={W - 8} y={cy - 6} color={C.dim} anchor="end">t</Label>
+        <Label x={W - 8} y={cy - 6} color={C.dim} anchor="end">záznam →</Label>
         <Label x={8} y={18} color={PK}>y = A·sin(ωt)</Label>
         <Label x={8} y={190} color={GR}>v = A·ω·cos(ωt)</Label>
       </Frame>
@@ -265,8 +286,18 @@ function VlnyDiagram({ init }: { init?: string }) {
           })}
         {!stand && (
           <G>
-            <Line x1={14 + (Math.PI / 2 + w * t) / k - lam * Math.floor((Math.PI / 2 + w * t) / k / lam)} y1={40} x2={14 + (Math.PI / 2 + w * t) / k - lam * Math.floor((Math.PI / 2 + w * t) / k / lam) + lam} y2={40} stroke={YE} />
-            <Label x={W - 10} y={30} color={YE} anchor="end">λ</Label>
+            {(() => {
+              // vrchol: ω·t − k·x = π/2 + 2πn → x = (ω·t − π/2)/k − n·λ
+              const x0 = ((((w * t - Math.PI / 2) / k) % lam) + lam) % lam;
+              return (
+                <G>
+                  <Line x1={x0} y1={40} x2={x0 + lam} y2={40} stroke={YE} strokeWidth={2} />
+                  <Line x1={x0} y1={34} x2={x0} y2={100 - 45} stroke={YE} strokeDasharray="2 3" />
+                  <Line x1={x0 + lam} y1={34} x2={x0 + lam} y2={100 - 45} stroke={YE} strokeDasharray="2 3" />
+                  <Label x={x0 + lam / 2} y={34} color={YE} anchor="middle">λ</Label>
+                </G>
+              );
+            })()}
           </G>
         )}
       </Frame>
@@ -436,8 +467,7 @@ function SosovkyDiagram({ init }: { init?: string }) {
           <G key={m}>
             <Circle cx={toX(m * 40)} cy={cy} r={2.5} fill={C.dim} />
             <Label x={toX(m * 40)} y={cy + 14} color={C.dim} size={9} anchor="middle">
-              {Math.abs(m) === 2 ? '2F' : 'F'}
-              {m < 0 ? '' : '′'}
+              {(m < 0 ? '−' : '') + (Math.abs(m) === 2 ? '2f' : 'f')}
             </Label>
           </G>
         ))}

@@ -2,13 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Background, C } from './src/components/ui';
+import { Background, C, ScreenFade } from './src/components/ui';
 import { SUBJECTS } from './src/data';
 import Campaign from './src/screens/Campaign';
 import Game, { GameConfig, GameResult } from './src/screens/Game';
 import Home from './src/screens/Home';
 import Learn from './src/screens/Learn';
 import Results from './src/screens/Results';
+import { initSound, play as playSound } from './src/sound';
 import { EMPTY, loadProgress, Progress, saveProgress } from './src/storage';
 import { SubjectId } from './src/types';
 
@@ -26,7 +27,14 @@ export default function App() {
 
   useEffect(() => {
     loadProgress().then(setProgress);
+    initSound();
   }, []);
+
+  // zvuk pri prechode medzi obrazovkami
+  const screenKey = screen.name + ('key' in screen ? screen.key : '');
+  useEffect(() => {
+    playSound('whoosh');
+  }, [screenKey]);
 
   const update = useCallback((fn: (p: Progress) => Progress) => {
     setProgress((prev) => {
@@ -73,7 +81,7 @@ export default function App() {
       <StatusBar style="light" />
       <Background tint={tint}>
         <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
-          <View style={{ flex: 1, width: '100%', maxWidth: 620, alignSelf: 'center' }}>
+          <ScreenFade key={screenKey} style={{ flex: 1, width: '100%', maxWidth: 620, alignSelf: 'center' }}>
             {!progress ? (
               <ActivityIndicator color={C.text} style={{ marginTop: 80 }} />
             ) : screen.name === 'home' ? (
@@ -107,7 +115,7 @@ export default function App() {
                 onHome={() => setScreen(screen.result.config.mode === 'campaign' ? { name: 'campaign' } : { name: 'home' })}
               />
             )}
-          </View>
+          </ScreenFade>
         </SafeAreaView>
       </Background>
     </SafeAreaProvider>

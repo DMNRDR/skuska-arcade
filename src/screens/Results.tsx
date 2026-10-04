@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, ScrollView, Text, View } from 'react-native';
-import { C, Card, GButton, ND, Stars, styles as ui } from '../components/ui';
+import { C, Card, Confetti, GButton, ND, Stars, styles as ui } from '../components/ui';
+import { play } from '../sound';
 import { SUBJECTS } from '../data';
 import { levelInfo, Progress } from '../storage';
 import { GameResult } from './Game';
@@ -23,6 +24,12 @@ export default function Results({
   const acc = result.total ? Math.round((result.correct / result.total) * 100) : 0;
 
   const zoom = useRef(new Animated.Value(0)).current;
+  const celebrate = (config.mode === 'campaign' && (result.stars ?? 0) >= 2) || (config.mode === 'boss' && !!result.won) || (config.mode === 'arcade' && result.newBest);
+  useEffect(() => {
+    const t = setTimeout(() => play(celebrate ? 'win' : lv.level > prevLevel ? 'levelup' : 'pop'), 250);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     Animated.timing(zoom, { toValue: 1, duration: 600, easing: Easing.out(Easing.back(2)), useNativeDriver: ND }).start();
   }, [zoom]);
@@ -45,6 +52,8 @@ export default function Results({
   }
 
   return (
+    <View style={{ flex: 1 }}>
+    {celebrate && <Confetti />}
     <ScrollView contentContainerStyle={{ padding: 18, gap: 14, paddingBottom: 40 }}>
       <Animated.View style={{ alignItems: 'center', marginTop: 16, transform: [{ scale: zoom }], opacity: zoom }}>
         <Text style={{ fontSize: 72 }}>{emoji}</Text>
@@ -92,6 +101,7 @@ export default function Results({
         </View>
       )}
     </ScrollView>
+    </View>
   );
 }
 

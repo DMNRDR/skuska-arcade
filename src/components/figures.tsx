@@ -221,6 +221,9 @@ function Lambda() {
     <Frame caption="Vlnová dĺžka λ je vzdialenosť dvoch susedných vrcholov. Za jednu periódu T sa vlna posunie presne o λ, preto c = λ/T = λ·f.">
       <Line x1={0} y1={110} x2={W} y2={110} stroke={AX} />
       <Path d={fnPath((x) => 45 * Math.sin(k * (x - shift)), 0, 300, sx, (y) => 110 - y)} stroke={PK} strokeWidth={2.6} fill="none" />
+      {[30 + shift - 120, 150 + shift - 120, 150 + shift].map((x) => (
+        <Line key={x} x1={sx(x)} y1={44} x2={sx(x)} y2={65} stroke={YE} strokeDasharray="2 3" />
+      ))}
       <Line x1={sx(30 + shift - 120)} y1={50} x2={sx(150 + shift - 120)} y2={50} stroke={YE} strokeWidth={2} />
       <Line x1={sx(30 + shift)} y1={50} x2={sx(150 + shift)} y2={50} stroke={YE} strokeWidth={2} />
       <Label x={sx(90 + shift - 120)} y={42} color={YE} anchor="middle">λ</Label>
@@ -541,7 +544,7 @@ function VecAdd() {
   const c = Math.max(0, Math.min(1, (k - 0.8) / 0.3));
   const o = { x: 60, y: 160 };
   const u = [120, -40];
-  const v = [50, -90];
+  const v = [40, -80];
   return (
     <Frame caption="Vektor je šípka: má smer a veľkosť. Zapisujeme ho ako trojicu čísel (x, y, z). Súčet u + v dostaneš, keď šípky priložíš za seba: najprv u, na jeho koniec v.">
       {a > 0.05 && <Arrow x1={o.x} y1={o.y} x2={o.x + u[0] * a} y2={o.y + u[1] * a} color={CY} w={3} />}

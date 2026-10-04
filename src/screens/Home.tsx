@@ -1,9 +1,10 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { HeroWave } from '../components/diagrams';
 import { Bar, C, Card, GButton, ND, styles as ui } from '../components/ui';
 import { countGenerators, countQuestions, questionsByIds, SUBJECTS, TOPICS } from '../data';
+import { isMuted, onMutedChange, setMuted } from '../sound';
 import { levelInfo, Progress } from '../storage';
 import { SubjectId } from '../types';
 import { GameConfig } from './Game';
@@ -30,6 +31,8 @@ export default function Home({
   const missed = questionsByIds(progress.missed, subject).length;
   const acc = progress.answered ? Math.round((progress.correct / progress.answered) * 100) : 0;
 
+  const [muted, setM] = useState(isMuted());
+  useEffect(() => onMutedChange(setM), []);
   const float = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     const loop = Animated.loop(
@@ -44,6 +47,9 @@ export default function Home({
 
   return (
     <ScrollView contentContainerStyle={{ padding: 18, gap: 16, paddingBottom: 40 }}>
+      <Pressable onPress={() => setMuted(!muted)} hitSlop={10} style={s.mute}>
+        <Text style={{ fontSize: 18 }}>{muted ? '🔇' : '🔊'}</Text>
+      </Pressable>
       <View style={{ alignItems: 'center', marginTop: 10 }}>
         <Animated.Text style={{ fontSize: 54, transform: [{ translateY: float.interpolate({ inputRange: [0, 1], outputRange: [0, -8] }) }] }}>
           🎓
@@ -158,6 +164,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 const s = StyleSheet.create({
+  mute: { position: 'absolute', right: 18, top: 18, zIndex: 5, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' },
   lvl: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   switch: { flexDirection: 'row', gap: 8, backgroundColor: 'rgba(255,255,255,0.06)', padding: 6, borderRadius: 18 },
   pill: { paddingVertical: 12, borderRadius: 14, alignItems: 'center' },

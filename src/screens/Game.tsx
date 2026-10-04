@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TopicDiagram } from '../components/diagrams';
+import { play as playSound } from '../sound';
 import { Bar, C, Card, GButton, haptic, ND, styles as ui } from '../components/ui';
 import { buildTopicSet, makeEndlessSource, questionsByIds, SUBJECTS, TOPICS } from '../data';
 import { Progress } from '../storage';
@@ -207,6 +208,7 @@ export default function Game({
         n.maxStreak = Math.max(st.maxStreak, n.streak);
         n.correct = st.correct + 1;
         const mult = multFor(n.streak);
+        if (mult > multFor(st.streak)) setTimeout(() => playSound('levelup'), 180);
         const speed = rules.perQ ? Math.round(Math.max(0, 1 - st.qElapsed / rules.perQ) * 50) : 0;
         let gain = 100 * q.diff * mult + speed;
         if (config.mode === 'boss' && st.qElapsed < 8) {
@@ -408,12 +410,12 @@ export default function Game({
             const bg = fb && o.correct ? 'rgba(52,211,153,0.22)' : fb && isChosen ? 'rgba(251,113,133,0.22)' : 'rgba(255,255,255,0.05)';
             const border = fb && o.correct ? C.good : fb && isChosen ? C.bad : 'rgba(255,255,255,0.14)';
             return (
-              <Pressable key={i} disabled={fb} onPress={() => answer(i)} style={({ pressed }) => [s.opt, { backgroundColor: bg, borderColor: border, transform: [{ scale: pressed ? 0.98 : 1 }] }]}>
+              <AnswerOption key={g.idx + '-' + i} index={i} disabled={fb} onPress={() => answer(i)} state={fb && o.correct ? 'right' : fb && isChosen ? 'wrong' : 'idle'} style={[s.opt, { backgroundColor: bg, borderColor: border }]}>
                 <View style={[s.letter, { backgroundColor: fb && o.correct ? C.good : fb && isChosen ? C.bad : subj.color + '33' }]}>
                   <Text style={{ color: '#fff', fontWeight: '900' }}>{fb && o.correct ? '✓' : fb && isChosen ? '✕' : LETTERS[i]}</Text>
                 </View>
                 <Text style={s.optText}>{o.text}</Text>
-              </Pressable>
+              </AnswerOption>
             );
           })}
         </View>
@@ -451,6 +453,50 @@ export default function Game({
         )}
       </ScrollView>
     </View>
+  );
+}
+
+/** Odpoveď: postupne priletí, pri stlačení pruží, správna pulzuje, zlá sa zatrasie. */
+function AnswerOption({ children, index, disabled, onPress, state, style }: { children: React.ReactNode; index: number; disabled: boolean; onPress: () => void; state: 'idle' | 'right' | 'wrong'; style: object[] }) {
+  const enterA = useRef(new Animated.Value(0)).current;
+  const press = useRef(new Animated.Value(1)).current;
+  const fx = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(enterA, { toValue: 1, duration: 300, delay: 60 * index, easing: Easing.out(Easing.back(1.6)), useNativeDriver: ND }).start();
+  }, [enterA, index]);
+  useEffect(() => {
+    if (state === 'right') {
+      fx.setValue(0);
+      Animated.sequence([
+        Animated.timing(fx, { toValue: 1, duration: 140, useNativeDriver: ND }),
+        Animated.spring(fx, { toValue: 0, useNativeDriver: ND, bounciness: 14 }),
+      ]).start();
+    } else if (state === 'wrong') {
+      fx.setValue(0);
+      Animated.sequence([-1, 1, -0.7, 0.7, -0.3, 0].map((v) => Animated.timing(fx, { toValue: v, duration: 50, useNativeDriver: ND }))).start();
+    }
+  }, [state, fx]);
+  const transform =
+    state === 'wrong'
+      ? [{ translateX: fx.interpolate({ inputRange: [-1, 1], outputRange: [-9, 9] }) }]
+      : [{ scale: fx.interpolate({ inputRange: [0, 1], outputRange: [1, 1.05] }) }];
+  return (
+    <Animated.View
+      style={{
+        opacity: enterA,
+        transform: [{ translateX: enterA.interpolate({ inputRange: [0, 1], outputRange: [40, 0] }) }, { scale: press }, ...transform],
+      }}
+    >
+      <Pressable
+        disabled={disabled}
+        onPressIn={() => Animated.spring(press, { toValue: 0.96, useNativeDriver: ND, speed: 50 }).start()}
+        onPressOut={() => Animated.spring(press, { toValue: 1, useNativeDriver: ND, speed: 30, bounciness: 12 }).start()}
+        onPress={onPress}
+        style={style}
+      >
+        {children}
+      </Pressable>
+    </Animated.View>
   );
 }
 

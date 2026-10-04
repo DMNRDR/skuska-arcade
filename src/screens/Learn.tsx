@@ -5,7 +5,8 @@ import { Figure } from '../components/figures';
 import { Bar, C, Card, GButton, haptic, ND, Stars, styles as ui } from '../components/ui';
 import { buildTopicSet, SUBJECTS, TOPICS } from '../data';
 import { LESSONS } from '../data/learn';
-import { Formula, Step, STEPS, Worked } from '../data/steps';
+import { Check, Formula, Step, STEPS, Worked } from '../data/steps';
+import { play } from '../sound';
 import { Progress } from '../storage';
 import { Question, SubjectId } from '../types';
 import { shuffle } from '../util';
@@ -29,7 +30,17 @@ export default function Learn({
 }) {
   const [open, setOpen] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>('lekcia');
-  const [step, setStep] = useState(0);
+  const [step, setStepRaw] = useState(0);
+  const [dir, setDir] = useState(0);
+  const goStep = (to: number) => {
+    setDir(to > step ? 1 : -1);
+    setStepRaw(to);
+    play('pop');
+  };
+  const setStep = (to: number) => {
+    setDir(0);
+    setStepRaw(to);
+  };
   const scroll = useRef<ScrollView>(null);
   const subj = SUBJECTS[subject];
   const topics = TOPICS[subject];
@@ -133,14 +144,14 @@ export default function Learn({
               <>
                 <View style={{ flexDirection: 'row', gap: 4 }}>
                   {steps.map((_, i) => (
-                    <Pressable key={i} onPress={() => setStep(i)} style={{ flex: 1, height: 6, borderRadius: 3, backgroundColor: i <= step ? subj.color : 'rgba(255,255,255,0.12)' }} />
+                    <Pressable key={i} onPress={() => goStep(i)} hitSlop={8} style={{ flex: 1, height: 6, borderRadius: 3, backgroundColor: i <= step ? subj.color : 'rgba(255,255,255,0.12)' }} />
                   ))}
                 </View>
-                <StepView key={key + step} step={steps[step]} n={step + 1} total={steps.length} color={subj.color} />
+                <StepView key={key + step} step={steps[step]} n={step + 1} total={steps.length} color={subj.color} dir={dir} />
                 <View style={{ flexDirection: 'row', gap: 10 }}>
-                  <GButton small title="← Späť" disabled={step === 0} onPress={() => setStep((x) => Math.max(0, x - 1))} colors={['#334155', '#475569']} style={{ flex: 1 }} />
+                  <GButton small title="← Späť" disabled={step === 0} onPress={() => goStep(Math.max(0, step - 1))} colors={['#334155', '#475569']} style={{ flex: 1 }} />
                   {step < steps.length - 1 ? (
-                    <GButton small title="Ďalej →" onPress={() => setStep((x) => x + 1)} colors={[subj.color, subj.color2]} style={{ flex: 1.4 }} />
+                    <GButton small title="Ďalej →" onPress={() => goStep(step + 1)} colors={[subj.color, subj.color2]} style={{ flex: 1.4 }} />
                   ) : (
                     <GButton small title="Hotovo, na kvíz 🎯" onPress={() => setTab('kviz')} colors={['#f59e0b', '#d97706']} style={{ flex: 1.4 }} />
                   )}
@@ -176,33 +187,136 @@ export default function Learn({
   );
 }
 
-function FadeIn({ children }: { children: React.ReactNode }) {
+function FadeIn({ children, dx = 0 }: { children: React.ReactNode; dx?: number }) {
   const a = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    Animated.timing(a, { toValue: 1, duration: 350, easing: Easing.out(Easing.cubic), useNativeDriver: ND }).start();
+    Animated.timing(a, { toValue: 1, duration: 380, easing: Easing.out(Easing.cubic), useNativeDriver: ND }).start();
   }, [a]);
-  return <Animated.View style={{ opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [16, 0] }) }], gap: 14 }}>{children}</Animated.View>;
+  return (
+    <Animated.View
+      style={{
+        opacity: a,
+        transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [dx ? 0 : 16, 0] }) }, { translateX: a.interpolate({ inputRange: [0, 1], outputRange: [dx * 60, 0] }) }],
+        gap: 14,
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
 }
 
-function StepView({ step, n, total, color }: { step: Step; n: number; total: number; color: string }) {
+function Paragraphs({ text, style }: { text: string; style?: object }) {
   return (
-    <FadeIn>
+    <View style={{ gap: 10 }}>
+      {text.split(/\n\s*\n/).map((p, i) => (
+        <Text key={i} style={[s.body, style]}>
+          {p.trim()}
+        </Text>
+      ))}
+    </View>
+  );
+}
+
+/** „Prečo to tak je?“ – rozbaľovacie hlbšie vysvetlenie */
+function Deeper({ text, color }: { text: string; color: string }) {
+  const [open, setOpen] = useState(false);
+  const rot = useRef(new Animated.Value(0)).current;
+  const toggle = () => {
+    haptic('tap');
+    Animated.timing(rot, { toValue: open ? 0 : 1, duration: 220, useNativeDriver: ND }).start();
+    setOpen(!open);
+  };
+  return (
+    <View style={[s.deeper, { borderColor: color + '55' }]}>
+      <Pressable onPress={toggle} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <Text style={{ fontSize: 18 }}>🤔</Text>
+        <Text style={{ color, fontWeight: '900', fontSize: 15, flex: 1 }}>Prečo to tak je? (podrobnejšie)</Text>
+        <Animated.Text style={{ color, fontSize: 16, fontWeight: '900', transform: [{ rotate: rot.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] }) }] }}>⌄</Animated.Text>
+      </Pressable>
+      {open && (
+        <FadeIn>
+          <Paragraphs text={text} style={{ fontSize: 15, lineHeight: 23, color: '#dbeafe' }} />
+        </FadeIn>
+      )}
+    </View>
+  );
+}
+
+/** Kontrolná otázka priamo v kroku lekcie */
+function InlineCheck({ c, color }: { c: Check; color: string }) {
+  const opts = useMemo(() => shuffle(c.options.map((t, i) => ({ t, ok: i === 0 }))), [c]);
+  const [chosen, setChosen] = useState<number | null>(null);
+  return (
+    <View style={[s.check, { borderColor: color + '66' }]}>
+      <Text style={{ color, fontWeight: '900', fontSize: 14 }}>🧠 Over si to</Text>
+      <Text style={{ color: C.text, fontWeight: '700', fontSize: 16, lineHeight: 23 }}>{c.q}</Text>
+      {opts.map((o, j) => {
+        const fb = chosen !== null;
+        const border = fb && o.ok ? C.good : fb && chosen === j ? C.bad : 'rgba(255,255,255,0.14)';
+        const bg = fb && o.ok ? 'rgba(52,211,153,0.2)' : fb && chosen === j ? 'rgba(251,113,133,0.2)' : 'rgba(255,255,255,0.05)';
+        return (
+          <Pressable
+            key={j}
+            disabled={fb}
+            onPress={() => {
+              setChosen(j);
+              haptic(o.ok ? 'ok' : 'bad');
+            }}
+            style={({ pressed }) => [s.qopt, { borderColor: border, backgroundColor: bg, transform: [{ scale: pressed ? 0.97 : 1 }] }]}
+          >
+            <Text style={{ color: C.text, fontSize: 15 }}>
+              {fb && o.ok ? '✓ ' : fb && chosen === j ? '✕ ' : ''}
+              {o.t}
+            </Text>
+          </Pressable>
+        );
+      })}
+      {chosen !== null && (
+        <FadeIn>
+          <Text style={{ color: opts[chosen].ok ? C.good : C.bad, fontWeight: '900' }}>{opts[chosen].ok ? 'Správne! 🎉' : 'Nie celkom.'}</Text>
+          <Text style={{ color: C.text, fontSize: 15, lineHeight: 22 }}>{c.explain}</Text>
+          {!opts[chosen].ok && (
+            <Pressable onPress={() => setChosen(null)}>
+              <Text style={{ color, fontWeight: '800' }}>↺ Skús znova</Text>
+            </Pressable>
+          )}
+        </FadeIn>
+      )}
+    </View>
+  );
+}
+
+function StepView({ step, n, total, color, dir }: { step: Step; n: number; total: number; color: string; dir: number }) {
+  return (
+    <FadeIn dx={dir}>
       <View style={{ gap: 4 }}>
         <Text style={{ color, fontWeight: '800', fontSize: 12, letterSpacing: 1 }}>
           KROK {n} Z {total}
         </Text>
         <Text style={{ color: C.text, fontWeight: '900', fontSize: 22 }}>{step.title}</Text>
       </View>
-      <Text style={s.body}>{step.text}</Text>
+      <Paragraphs text={step.text} />
       {step.analogy && (
         <View style={s.analogy}>
           <Text style={{ fontSize: 20 }}>💡</Text>
           <Text style={[s.body, { fontSize: 14, color: '#fde68a' }]}>{step.analogy}</Text>
         </View>
       )}
+      {step.bullets && step.bullets.length > 0 && (
+        <View style={{ gap: 8 }}>
+          {step.bullets.map((b, i) => (
+            <View key={i} style={{ flexDirection: 'row', gap: 10 }}>
+              <View style={[s.bullet, { backgroundColor: color }]} />
+              <Text style={[s.body, { fontSize: 15, flex: 1 }]}>{b}</Text>
+            </View>
+          ))}
+        </View>
+      )}
       {step.fig && <Figure fig={step.fig} />}
       {step.formula && <FormulaCard f={step.formula} color={color} />}
+      {step.deeper && <Deeper text={step.deeper} color={color} />}
       {step.worked && <WorkedCard w={step.worked} color={color} />}
+      {step.check && <InlineCheck c={step.check} color={color} />}
     </FadeIn>
   );
 }
@@ -395,5 +509,8 @@ const s = StyleSheet.create({
   num: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginTop: 1 },
   result: { backgroundColor: 'rgba(52,211,153,0.15)', borderRadius: 12, padding: 10 },
   cheat: { backgroundColor: 'rgba(0,0,0,0.25)', borderRadius: 12, padding: 10, borderLeftWidth: 3, borderLeftColor: 'rgba(255,255,255,0.25)' },
+  deeper: { backgroundColor: 'rgba(56,189,248,0.07)', borderRadius: 16, padding: 14, borderWidth: 1.5, gap: 10 },
+  check: { backgroundColor: 'rgba(167,139,250,0.08)', borderRadius: 16, padding: 14, borderWidth: 1.5, gap: 10 },
+  bullet: { width: 8, height: 8, borderRadius: 4, marginTop: 9 },
   qopt: { minHeight: 52, padding: 12, borderRadius: 14, borderWidth: 1.5, justifyContent: 'center' },
 });

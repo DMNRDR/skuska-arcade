@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, Platform, Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { play } from '../sound';
 
 export const C = {
   bg1: '#070b1f',
@@ -18,6 +19,7 @@ export const C = {
 export const ND = Platform.OS !== 'web';
 
 export function haptic(kind: 'ok' | 'bad' | 'tap') {
+  play(kind === 'tap' ? 'tap' : kind === 'ok' ? 'correct' : 'wrong');
   if (Platform.OS === 'web') return;
   try {
     if (kind === 'tap') Haptics.selectionAsync();
@@ -80,6 +82,88 @@ function Star({ left, top, size, delay }: { left: number; top: number; size: num
         opacity: o,
       }}
     />
+  );
+}
+
+/** Plynulý príchod obrazovky (zosvetlenie a posun zdola). */
+export function ScreenFade({ children, style }: { children: React.ReactNode; style?: ViewStyle }) {
+  const a = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(a, { toValue: 1, duration: 320, easing: Easing.out(Easing.cubic), useNativeDriver: ND }).start();
+  }, [a]);
+  return (
+    <Animated.View
+      style={[
+        style,
+        { opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [18, 0] }) }, { scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.985, 1] }) }] },
+      ]}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
+/** Konfety pri výhre. */
+export function Confetti({ count = 36 }: { count?: number }) {
+  const parts = useRef(
+    Array.from({ length: count }, () => ({
+      v: new Animated.Value(0),
+      x: Math.random() * 2 - 1,
+      rot: Math.random() * 720 - 360,
+      color: ['#fbbf24', '#38bdf8', '#f472b6', '#34d399', '#a78bfa'][Math.floor(Math.random() * 5)],
+      delay: Math.random() * 300,
+      size: 6 + Math.random() * 6,
+    })),
+  ).current;
+  useEffect(() => {
+    Animated.parallel(
+      parts.map((p) => Animated.timing(p.v, { toValue: 1, duration: 1800 + Math.random() * 900, delay: p.delay, easing: Easing.out(Easing.quad), useNativeDriver: ND })),
+    ).start();
+  }, [parts]);
+  return (
+    <View pointerEvents="none" style={[StyleSheet.absoluteFill, { overflow: 'hidden', zIndex: 20 }]}>
+      {parts.map((p, i) => (
+        <Animated.View
+          key={i}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: 120,
+            width: p.size,
+            height: p.size * 0.6,
+            borderRadius: 2,
+            backgroundColor: p.color,
+            opacity: p.v.interpolate({ inputRange: [0, 0.8, 1], outputRange: [1, 1, 0] }),
+            transform: [
+              { translateX: p.v.interpolate({ inputRange: [0, 1], outputRange: [0, p.x * 220] }) },
+              { translateY: p.v.interpolate({ inputRange: [0, 0.35, 1], outputRange: [0, -140, 420] }) },
+              { rotate: p.v.interpolate({ inputRange: [0, 1], outputRange: ['0deg', p.rot + 'deg'] }) },
+            ],
+          }}
+        />
+      ))}
+    </View>
+  );
+}
+
+/** Pressable, ktorý sa pri stlačení jemne zmenší a pruží späť. */
+export function Bouncy({ children, onPress, disabled, style, scaleTo = 0.96, sound = true }: { children: React.ReactNode; onPress?: () => void; disabled?: boolean; style?: ViewStyle | ViewStyle[]; scaleTo?: number; sound?: boolean }) {
+  const s = useRef(new Animated.Value(1)).current;
+  const to = (v: number) => Animated.spring(s, { toValue: v, useNativeDriver: ND, speed: 40, bounciness: 10 }).start();
+  return (
+    <Animated.View style={[{ transform: [{ scale: s }] }, style as ViewStyle]}>
+      <Pressable
+        disabled={disabled}
+        onPressIn={() => to(scaleTo)}
+        onPressOut={() => to(1)}
+        onPress={() => {
+          if (sound) haptic('tap');
+          onPress?.();
+        }}
+      >
+        {children}
+      </Pressable>
+    </Animated.View>
   );
 }
 
