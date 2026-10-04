@@ -12,6 +12,8 @@ export type Progress = {
   bestStreak: number;
   /** id otázok, ktoré hráč pokazil (na opakovanie) */
   missed: string[];
+  /** najďalší prečítaný krok lekcie podľa `${subject}:${topic}` */
+  learned: Record<string, number>;
 };
 
 const KEY = 'skuska-arcade:v1';
@@ -25,6 +27,7 @@ export const EMPTY: Progress = {
   correct: 0,
   bestStreak: 0,
   missed: [],
+  learned: {},
 };
 
 export async function loadProgress(): Promise<Progress> {

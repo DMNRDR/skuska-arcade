@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { HeroWave } from '../components/diagrams';
 import { Bar, C, Card, GButton, ND, styles as ui } from '../components/ui';
 import { countGenerators, countQuestions, questionsByIds, SUBJECTS, TOPICS } from '../data';
 import { levelInfo, Progress } from '../storage';
@@ -51,6 +52,9 @@ export default function Home({
           SKÚŠKA <Text style={{ color: subj.color }}>ARCADE</Text>
         </Text>
         <Text style={[ui.p, { textAlign: 'center' }]}>Fyzika 1 · Matematika 1 · STU SvF, ZS 2026/27</Text>
+        <View style={{ width: '100%', marginTop: 6 }}>
+          <HeroWave color={subj.color} />
+        </View>
       </View>
 
       <Card style={{ gap: 10 }}>
@@ -99,8 +103,8 @@ export default function Home({
 
       <GButton
         icon="📖"
-        title="Učebňa"
-        subtitle="Vysvetlenie tém, vzorce, riešené príklady a ťaháky"
+        title="Učebňa: nauč sa to od nuly"
+        subtitle="Lekcie krok po kroku, hýbajúce sa obrázky, rozpísané vzorce a riešené príklady"
         colors={['#0ea5e9', '#14b8a6']}
         onPress={onLearn}
       />

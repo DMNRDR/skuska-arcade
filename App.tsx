@@ -88,7 +88,15 @@ export default function App() {
             ) : screen.name === 'campaign' ? (
               <Campaign progress={progress} subject={subject} onBack={() => setScreen({ name: 'home' })} onPlay={play} />
             ) : screen.name === 'learn' ? (
-              <Learn progress={progress} subject={subject} onBack={() => setScreen({ name: 'home' })} onPlay={play} />
+              <Learn
+                progress={progress}
+                subject={subject}
+                onBack={() => setScreen({ name: 'home' })}
+                onPlay={play}
+                onLearned={(k, n) => {
+                  if ((progress.learned[k] ?? 0) < n) update((p) => ({ ...p, learned: { ...p.learned, [k]: Math.max(p.learned[k] ?? 0, n) } }));
+                }}
+              />
             ) : screen.name === 'game' ? (
               <Game key={screen.key} config={screen.config} progress={progress} onFinish={finish} onQuit={() => setScreen({ name: 'home' })} />
             ) : (

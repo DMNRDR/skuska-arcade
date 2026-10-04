@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { TopicDiagram } from '../components/diagrams';
 import { Bar, C, Card, GButton, haptic, ND, styles as ui } from '../components/ui';
 import { buildTopicSet, makeEndlessSource, questionsByIds, SUBJECTS, TOPICS } from '../data';
 import { Progress } from '../storage';
@@ -441,6 +442,7 @@ export default function Game({
             </Text>
             <Text style={{ color: C.text, fontSize: 15, lineHeight: 21 }}>{q.explain}</Text>
             <Text style={{ color: C.dim, fontSize: 12 }}>📚 {q.src}</Text>
+            <ShowPicture id={`${config.subject}:${q.topic}`} />
             <GButton title={nextLabel(config.mode, g, source.total)} onPress={next} colors={[subj.color, subj.color2]} style={{ marginTop: 6 }} />
           </Card>
         )}
@@ -450,6 +452,18 @@ export default function Game({
       </ScrollView>
     </View>
   );
+}
+
+/** tlačidlo, ktoré pod vysvetlením ukáže interaktívny obrázok témy */
+function ShowPicture({ id }: { id: string }) {
+  const [on, setOn] = useState(false);
+  if (!on)
+    return (
+      <Pressable onPress={() => setOn(true)} style={{ alignSelf: 'flex-start', paddingVertical: 6 }}>
+        <Text style={{ color: '#7dd3fc', fontWeight: '800', fontSize: 14 }}>🖼️ Ukáž mi to na obrázku</Text>
+      </Pressable>
+    );
+  return <TopicDiagram id={id} />;
 }
 
 function nextLabel(mode: Mode, g: G, total: number) {
