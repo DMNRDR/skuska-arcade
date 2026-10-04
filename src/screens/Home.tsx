@@ -12,12 +12,14 @@ export default function Home({
   subject,
   setSubject,
   onCampaign,
+  onLearn,
   onPlay,
 }: {
   progress: Progress;
   subject: SubjectId;
   setSubject: (s: SubjectId) => void;
   onCampaign: () => void;
+  onLearn: () => void;
   onPlay: (c: GameConfig) => void;
 }) {
   const subj = SUBJECTS[subject];
@@ -95,6 +97,13 @@ export default function Home({
         })}
       </View>
 
+      <GButton
+        icon="📖"
+        title="Učebňa"
+        subtitle="Vysvetlenie tém, vzorce, riešené príklady a ťaháky"
+        colors={['#0ea5e9', '#14b8a6']}
+        onPress={onLearn}
+      />
       <GButton
         icon="🗺️"
         title="Kampaň"

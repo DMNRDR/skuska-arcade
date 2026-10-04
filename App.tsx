@@ -7,6 +7,7 @@ import { SUBJECTS } from './src/data';
 import Campaign from './src/screens/Campaign';
 import Game, { GameConfig, GameResult } from './src/screens/Game';
 import Home from './src/screens/Home';
+import Learn from './src/screens/Learn';
 import Results from './src/screens/Results';
 import { EMPTY, loadProgress, Progress, saveProgress } from './src/storage';
 import { SubjectId } from './src/types';
@@ -14,6 +15,7 @@ import { SubjectId } from './src/types';
 type Screen =
   | { name: 'home' }
   | { name: 'campaign' }
+  | { name: 'learn' }
   | { name: 'game'; config: GameConfig; key: number }
   | { name: 'results'; result: GameResult };
 
@@ -80,10 +82,13 @@ export default function App() {
                 subject={subject}
                 setSubject={setSubject}
                 onCampaign={() => setScreen({ name: 'campaign' })}
+                onLearn={() => setScreen({ name: 'learn' })}
                 onPlay={play}
               />
             ) : screen.name === 'campaign' ? (
               <Campaign progress={progress} subject={subject} onBack={() => setScreen({ name: 'home' })} onPlay={play} />
+            ) : screen.name === 'learn' ? (
+              <Learn progress={progress} subject={subject} onBack={() => setScreen({ name: 'home' })} onPlay={play} />
             ) : screen.name === 'game' ? (
               <Game key={screen.key} config={screen.config} progress={progress} onFinish={finish} onQuit={() => setScreen({ name: 'home' })} />
             ) : (
