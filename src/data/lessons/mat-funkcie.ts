@@ -262,7 +262,7 @@ const steps: Step[] = [
     check: {
       q: 'Kedy existuje inverzná funkcia k funkcii f?',
       options: ['Keď je f prostá', 'Vždy', 'Keď je f párna', 'Keď f(0) = 0'],
-      explain: 'Inverzná funkcia musí ku každému výstupu vrátiť jediný vstup, preto f musí byť prostá. Párna funkcia (okrem konštantných prípadov) prostá nie je, lebo f(−x) = f(x).',
+      explain: 'Inverzná funkcia musí ku každému výstupu vrátiť jediný vstup, preto f musí byť prostá. Párna funkcia (okrem triviálneho prípadu D(f) = {0}) prostá nie je, lebo f(−x) = f(x).',
     },
   },
   {
