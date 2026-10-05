@@ -159,7 +159,7 @@ const steps: Step[] = [
   },
   {
     title: 'Šošovka v kvapaline',
-    text: 'Rovnica brúsiča šošoviek obsahuje relatívny index lomu: n = n_šošovky / n_okolia. Vo vzduchu (n_okolia ≈ 1) je to obyčajný index lomu skla. Vo vode je to menšie číslo, takže šošovka láme slabšie – preto pod vodou bez okuliarov vidíš rozmazane.\n\nGeometrický faktor G pritom ostáva rovnaký, tvar šošovky sa nemení. Stačí teda z merania vo vzduchu zistiť G a použiť ho v novom prostredí.\n\nZaujímavosť: ak je okolie opticky hustejšie ako šošovka (n_okolia > n_šošovky), je (n − 1) záporné a spojka sa zmení na rozptylku. Presne to sa deje v príklade 41.',
+    text: 'Rovnica brúsiča šošoviek obsahuje relatívny index lomu: n = n_šošovky / n_okolia. Vo vzduchu (n_okolia ≈ 1) je to obyčajný index lomu skla. Vo vode je to menšie číslo, takže šošovka láme slabšie – z rovnakého dôvodu (vo vode slabšie láme rohovka oka) vidíš pod vodou bez okuliarov rozmazane.\n\nGeometrický faktor G pritom ostáva rovnaký, tvar šošovky sa nemení. Stačí teda z merania vo vzduchu zistiť G a použiť ho v novom prostredí.\n\nZaujímavosť: ak je okolie opticky hustejšie ako šošovka (n_okolia > n_šošovky), je (n − 1) záporné a spojka sa zmení na rozptylku. Presne to sa deje v príklade 41.',
     analogy: 'Vzduchová bublina vo vode má tvar spojky (je v strede „najhrubšia“), a predsa svetlo rozptyľuje – lebo vzduch je opticky redší ako voda okolo. Nerozhoduje len tvar, ale aj to, či je šošovka opticky hustejšia alebo redšia ako okolie.',
     formula: {
       f: 'D_k = (n_s / n_k − 1) · G',

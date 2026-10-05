@@ -150,7 +150,7 @@ const steps: Step[] = [
     worked: {
       q: 'Vlak idúci rýchlosťou 72 km/h trúbi 2 s. Ako dlho trvá zvukový signál, ktorý počuje stojaci pozorovateľ, ak sa vlak (a) približuje, (b) vzďaľuje? Rýchlosť zvuku je za daných podmienok 340 m/s. (príklad 22 zo 6. cvičenia)',
       steps: [
-        'Vieme: t = 2 s, v = 72 km/h = 20 m/s, c = 340 m/s. Teplotu −17 °C nepotrebujeme, lebo rýchlosť zvuku je zadaná. Hľadáme: t′.',
+        'Vieme: t = 2 s, v = 72 km/h = 20 m/s, c = 340 m/s. Teplotu vzduchu nepotrebujeme, lebo rýchlosť zvuku je zadaná. Hľadáme: t′.',
         'Úvaha bez vzorca: na začiatku trúbenia je vlak vo vzdialenosti D, prvý zvuk príde za D/c. Na konci (o 2 s) je vlak o v·2 s = 40 m bližšie, posledný zvuk príde v čase 2 + (D − 40)/c.',
         'Trvanie: t′ = 2 + (D − 40)/c − D/c = 2 − 40/340 ≈ 2 − 0,118 = 1,882 s. Neznáma vzdialenosť D sa vykrátila.',
         'Všeobecne: t′ = t·(1 − v/c) pri približovaní a t′ = t·(1 + v/c) pri vzďaľovaní. To isté vyjde z f′ = f/(1 ∓ v/c), lebo trvanie = počet kmitov × perióda a perióda je 1/f′.',

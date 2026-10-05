@@ -139,7 +139,7 @@ const steps: Step[] = [
   },
   {
     title: 'Priamka a rovina',
-    text: 'Priamka so smerom s a rovina s normálou n môžu byť v troch polohách. Rozhodne skalárny súčin s·n. Ak s·n ≠ 0, priamka nie je s rovinou rovnobežná a pretne ju v jednom bode (priesečník).\n\nAk s·n = 0, smer priamky je kolmý na normálu, takže priamka ide „popri“ rovine. Buď je s rovinou rovnobežná, alebo v nej celá leží. Rozhodneš dosadením bodu A priamky do rovnice roviny: ak vyjde 0, priamka leží v rovine. Špeciálny prípad je, keď je s násobkom n: vtedy je priamka na rovinu kolmá. Na obrázku si prepni kolmá, rovnobežná a pretína.\n\nPriesečník nájdeš tak, že x, y, z z parametrických rovníc priamky dosadíš do rovnice roviny. Dostaneš jednu rovnicu pre t, vypočítaš ho a dosadíš späť do priamky.',
+    text: 'Priamka so smerom s a rovina s normálou n môžu byť v troch polohách. Rozhodne skalárny súčin s·n. Ak s·n ≠ 0, priamka nie je s rovinou rovnobežná a pretne ju v jednom bode (priesečník).\n\nAk s·n = 0, smer priamky je kolmý na normálu, takže priamka ide „popri“ rovine. Buď je s rovinou rovnobežná, alebo v nej celá leží. Rozhodneš dosadením bodu A priamky do rovnice roviny: ak vyjde 0, priamka leží v rovine. Špeciálny prípad pretínania (s·n ≠ 0) je, keď je s násobkom n: vtedy je priamka na rovinu kolmá. Na obrázku si prepni kolmá, rovnobežná a pretína.\n\nPriesečník nájdeš tak, že x, y, z z parametrických rovníc priamky dosadíš do rovnice roviny. Dostaneš jednu rovnicu pre t, vypočítaš ho a dosadíš späť do priamky.',
     fig: 'mat:geometria',
     bullets: [
       's·n ≠ 0 → priamka pretína rovinu v jednom bode',
