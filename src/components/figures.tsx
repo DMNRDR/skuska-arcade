@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
-import { Arrow, AX, Chips, CY, fnPath, Frame, GR, GraphAxes, H, Label, PK, RD, TopicDiagram, useTime, VI, W, YE } from './diagrams';
+import { Arrow, AX, Chips, CY, fnPath, Frame, GR, GraphAxes, H, K as C, Label, PK, RD, TopicDiagram, useTime, VI, W, YE } from './diagrams';
 
 void W;
-import { C } from './ui';
 
 // Obrázky ku krokom lekcií v Učebni. Každý je malý a vysvetľuje jednu myšlienku.
 
@@ -142,7 +141,7 @@ function Springs2() {
   const a = 16 * Math.sin(t * 2.2);
   const b = 6 * Math.sin(t * 4.4);
   return (
-    <Frame caption="Za sebou: každá pružina sa natiahne a predĺženia sa sčítajú, celok je MÄKŠÍ (kmitá viac a pomalšie): 1/k = 1/k₁ + 1/k₂. Vedľa seba: sily sa sčítajú, celok je TVRDŠÍ (kmitá menej a rýchlejšie): k = k₁ + k₂.">
+    <Frame caption="Za sebou: každá pružina sa natiahne a predĺženia sa sčítajú, celok je MÄKŠÍ (pri rovnakej sile sa natiahne viac a kmitá pomalšie): 1/k = 1/k₁ + 1/k₂. Vedľa seba: sily sa sčítajú, celok je TVRDŠÍ (natiahne sa menej a kmitá rýchlejšie): k = k₁ + k₂.">
       <Rect x={50} y={14} width={60} height={6} fill={AX} />
       {coil(80, 20, 70 + a / 2, CY)}
       {coil(80, 70 + a / 2, 120 + a, PK)}
@@ -326,8 +325,8 @@ function Diffraction() {
     <Frame caption="Za úzkou štrbinou sa vlna rozlieva aj do „tieňa“ (sivé oblasti). To je difrakcia. Preto počuješ zvuk aj spoza rohu.">
       <Rect x={150} y={0} width={10} height={86} fill={C.dim} />
       <Rect x={150} y={114} width={10} height={86} fill={C.dim} />
-      <Rect x={160} y={0} width={160} height={70} fill="rgba(255,255,255,0.04)" />
-      <Rect x={160} y={130} width={160} height={70} fill="rgba(255,255,255,0.04)" />
+      <Rect x={160} y={0} width={160} height={86} fill="rgba(255,255,255,0.06)" />
+      <Rect x={160} y={114} width={160} height={86} fill="rgba(255,255,255,0.06)" />
       {Array.from({ length: 7 }, (_, i) => 10 + i * 22 + off).map((x) => (x < 150 ? <Line key={x} x1={x} y1={10} x2={x} y2={190} stroke={CY} strokeWidth={1.8} /> : null))}
       {Array.from({ length: 7 }, (_, i) => i * 22 + off + 8).map((r) => (
         <Path key={r} d={`M${155 + r * Math.cos(-1.2)} ${100 + r * Math.sin(-1.2)} A${r} ${r} 0 0 1 ${155 + r * Math.cos(1.2)} ${100 + r * Math.sin(1.2)}`} stroke={CY} strokeWidth={1.8} fill="none" strokeOpacity={Math.max(0.2, 1 - r / 170)} />
@@ -402,10 +401,11 @@ function Shadow() {
   const o = { x: 140, top: 80, bot: 120 };
   const sx = 300;
   const proj = (s: { x: number; y: number }, y: number) => s.y + ((y - s.y) * (sx - s.x)) / (o.x - s.x);
-  const umbraTop = proj(s2, o.top);
-  const umbraBot = proj(s1, o.bot);
-  const penTop = proj(s1, o.top);
-  const penBot = proj(s2, o.bot);
+  // úplný tieň: sem nevidí ani jeden okraj zdroja; polotieň: vidí len časť zdroja
+  const umbraTop = proj(s1, o.top);
+  const umbraBot = proj(s2, o.bot);
+  const penTop = proj(s2, o.top);
+  const penBot = proj(s1, o.bot);
   return (
     <View style={{ gap: 8 }}>
       <Frame caption={plos ? 'Plošný zdroj: v strede je úplný tieň (sem nedopadne žiadny lúč) a okolo polotieň (dopadá len časť lúčov).' : 'Bodový zdroj vrhá len ostrý tieň, polotieň nevzniká.'}>
@@ -422,7 +422,7 @@ function Shadow() {
           </G>
         ))}
         <Label x={sx - 6} y={(umbraTop + umbraBot) / 2 + 4} color={C.text} anchor="end">tieň</Label>
-        {plos && <Label x={sx - 6} y={penTop + 14} color={C.dim} anchor="end">polotieň</Label>}
+        {plos && <Label x={sx - 6} y={(penTop + umbraTop) / 2 + 4} color={C.dim} anchor="end">polotieň</Label>}
       </Frame>
       <Chips value={src} onChange={setSrc} options={[{ v: 'plos', l: 'plošný zdroj' }, { v: 'bod', l: 'bodový zdroj' }]} />
     </View>
@@ -465,7 +465,7 @@ function Fiber() {
   let x = 10;
   let y = 80;
   let dy = 1;
-  const step = 34;
+  const step = 70; // dopad na stenu ≈ 60° > kritický uhol skla 41,8°
   while (x < 320) {
     pts.push(`${x},${y}`);
     x += step;
@@ -572,9 +572,9 @@ function Cross3D() {
   };
   const o = iso(0, 0, 0);
   const u = iso(2, 0, 0);
-  const v = iso(0.6, 1.8, 0);
+  const v = iso(0.6, -1.8, 0);
   const w = iso(0, 0, 2.2);
-  const uv = iso(2.6, 1.8, 0);
+  const uv = iso(2.6, -1.8, 0);
   return (
     <Frame caption="u × v je šípka kolmá na u aj na v (pravidlo pravej ruky: prsty od u k v, palec ukazuje u × v). Jej dĺžka je obsah žltého rovnobežníka.">
       <Polygon points={`${o.x},${o.y} ${u.x},${u.y} ${uv.x},${uv.y} ${v.x},${v.y}`} fill="rgba(251,191,36,0.2)" stroke={YE} strokeDasharray="4 3" />

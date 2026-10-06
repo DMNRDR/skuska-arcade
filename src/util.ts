@@ -35,7 +35,7 @@ export function numOptions(correct: number, wrong: number[], dp = 2, unit = ''):
   wrong.forEach(add);
   let k = 1;
   while (out.length < 4 && k < 50) {
-    add(correct * (1 + 0.5 * k) + k);
+    add(correct + (k % 2 ? k : -k));
     k++;
   }
   return out.slice(0, 4);

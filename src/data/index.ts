@@ -5,8 +5,8 @@ import { GENERATORS } from './generators';
 import { MAT_QUESTIONS, MAT_TOPICS } from './matematika';
 
 export const SUBJECTS: Record<SubjectId, { name: string; short: string; color: string; color2: string; icon: string; boss: string; bossIcon: string }> = {
-  fyz: { name: 'Fyzika 1', short: 'Fyzika', color: '#38bdf8', color2: '#6366f1', icon: '⚛️', boss: 'Kráľ Oscilátor', bossIcon: '👾' },
-  mat: { name: 'Matematika 1', short: 'Mata', color: '#f472b6', color2: '#a855f7', icon: '∑', boss: 'Determinátor', bossIcon: '🤖' },
+  fyz: { name: 'Fyzika 1', short: 'Fyzika', color: '#2A56B8', color2: '#1D3F8A', icon: 'F', boss: 'Kráľ Oscilátor', bossIcon: '' },
+  mat: { name: 'Matematika 1', short: 'Mata', color: '#DE5A1E', color2: '#B4441A', icon: 'M', boss: 'Determinátor', bossIcon: '' },
 };
 
 export const TOPICS: Record<SubjectId, Topic[]> = { fyz: FYZ_TOPICS, mat: MAT_TOPICS };

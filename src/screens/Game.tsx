@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TopicDiagram } from '../components/diagrams';
 import { play as playSound } from '../sound';
-import { Bar, C, Card, GButton, haptic, ND, styles as ui } from '../components/ui';
+import { Bar, C, Card, F, GButton, haptic, Icon, ND, styles as ui } from '../components/ui';
 import { buildTopicSet, makeEndlessSource, questionsByIds, SUBJECTS, TOPICS } from '../data';
 import { Progress } from '../storage';
 import { Mode, Question, SubjectId } from '../types';
@@ -300,7 +300,7 @@ export default function Game({
   if (!g.q) {
     return (
       <View style={{ padding: 24, gap: 16 }}>
-        <Text style={ui.h2}>Žiadne otázky na tréning 🎉</Text>
+        <Text style={ui.h2}>Žiadne otázky na tréning</Text>
         <Text style={ui.p}>Zatiaľ nemáš žiadne chyby. Zahraj si kampaň alebo arcade.</Text>
         <GButton title="Späť" onPress={onQuit} />
       </View>
@@ -321,7 +321,7 @@ export default function Game({
       {/* HUD */}
       <View style={s.hud}>
         <Pressable onPress={onQuit} hitSlop={12} style={s.quit}>
-          <Text style={{ color: C.dim, fontSize: 18, fontWeight: '800' }}>✕</Text>
+          <Icon name="cross" size={16} />
         </Pressable>
         <View style={{ flex: 1 }}>
           <Text style={s.hudTitle} numberOfLines={1}>
@@ -329,13 +329,13 @@ export default function Game({
           </Text>
           <Text style={s.hudSub}>
             {source.total ? `Otázka ${g.idx} / ${source.total}` : `Otázka ${g.idx}`}
-            {isFinite(g.lives) ? '   ' + '❤️'.repeat(Math.max(0, g.lives)) + '🖤'.repeat(Math.max(0, rules.lives - g.lives)) : ''}
-            {g.shield > 0 ? '  🛡️' : ''}
+            {isFinite(g.lives) ? '   životy ' + '■'.repeat(Math.max(0, g.lives)) + '□'.repeat(Math.max(0, rules.lives - g.lives)) : ''}
+            {g.shield > 0 ? '  + štít' : ''}
           </Text>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
           <Text style={s.score}>{g.score.toLocaleString('sk-SK')}</Text>
-          <Text style={[s.combo, { color: mult > 1 ? C.gold : C.dim }]}>{mult > 1 ? `🔥 x${mult}` : `séria ${g.streak}`}</Text>
+          <Text style={[s.combo, { color: mult > 1 ? C.gold : C.dim }]}>{mult > 1 ? `combo ×${mult}` : `séria ${g.streak}`}</Text>
         </View>
       </View>
 
@@ -351,17 +351,19 @@ export default function Game({
           <Card style={{ flexDirection: 'row', alignItems: 'center', gap: 14, borderColor: subj.color + '66' }}>
             <Animated.Text
               style={{
-                fontSize: 48,
+                fontSize: 28,
+                fontFamily: F.monoBold,
+                color: C.ink,
                 transform: [
                   { translateX: bossHit.interpolate({ inputRange: [-1, 1], outputRange: [-12, 12] }) },
                   { rotate: bossHit.interpolate({ inputRange: [-1, 1], outputRange: ['-12deg', '12deg'] }) },
                 ],
               }}
             >
-              {g.bossHp <= 0 ? '💥' : subj.bossIcon}
+              {g.bossHp <= 0 ? 'x_x' : 'ò_ó'}
             </Animated.Text>
             <View style={{ flex: 1, gap: 6 }}>
-              <Text style={{ color: C.text, fontWeight: '900', fontSize: 16 }}>{subj.boss}</Text>
+              <Text style={{ color: C.ink, fontFamily: F.head, fontSize: 17 }}>{subj.boss}</Text>
               <Bar value={g.bossHp / BOSS_HP} color={C.bad} height={12} />
               <Text style={s.hudSub}>
                 {g.bossHp} / {BOSS_HP} HP
@@ -379,7 +381,7 @@ export default function Game({
           <Card style={{ borderColor: subj.color + '55', gap: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
               <Text style={[s.chip, { color: subj.color, borderColor: subj.color + '66' }]} numberOfLines={1}>
-                {topic?.icon} {topic?.name}
+                {topic?.name}
               </Text>
               <Text style={[s.chip, { color: C.dim }]}>{'●'.repeat(q.diff)}{'○'.repeat(3 - q.diff)}</Text>
             </View>
@@ -407,12 +409,12 @@ export default function Game({
             if (g.hidden.includes(i)) return <View key={i} style={[s.opt, { opacity: 0.15 }]} />;
             const fb = g.phase === 'feedback';
             const isChosen = g.chosen === i;
-            const bg = fb && o.correct ? 'rgba(52,211,153,0.22)' : fb && isChosen ? 'rgba(251,113,133,0.22)' : 'rgba(255,255,255,0.05)';
-            const border = fb && o.correct ? C.good : fb && isChosen ? C.bad : 'rgba(255,255,255,0.14)';
+            const bg = fb && o.correct ? '#DDF1E4' : fb && isChosen ? '#FBE3DF' : C.sheet;
+            const border = fb && o.correct ? C.good : fb && isChosen ? C.bad : C.ink;
             return (
               <AnswerOption key={g.idx + '-' + i} index={i} disabled={fb} onPress={() => answer(i)} state={fb && o.correct ? 'right' : fb && isChosen ? 'wrong' : 'idle'} style={[s.opt, { backgroundColor: bg, borderColor: border }]}>
-                <View style={[s.letter, { backgroundColor: fb && o.correct ? C.good : fb && isChosen ? C.bad : subj.color + '33' }]}>
-                  <Text style={{ color: '#fff', fontWeight: '900' }}>{fb && o.correct ? '✓' : fb && isChosen ? '✕' : LETTERS[i]}</Text>
+                <View style={[s.letter, { backgroundColor: fb && o.correct ? C.good : fb && isChosen ? C.bad : C.ink }]}>
+                  <Text style={{ color: '#fff', fontFamily: F.monoBold }}>{fb && o.correct ? '✓' : fb && isChosen ? '×' : LETTERS[i]}</Text>
                 </View>
                 <Text style={s.optText}>{o.text}</Text>
               </AnswerOption>
@@ -422,15 +424,16 @@ export default function Game({
 
         {g.phase === 'ask' && (rules.fifty > 0 || rules.boost > 0) && (
           <View style={{ flexDirection: 'row', gap: 10 }}>
-            {rules.fifty > 0 && <GButton small icon="✂️" title={`50/50 ×${g.fifty}`} onPress={onFifty} disabled={g.fifty <= 0} colors={['#334155', '#475569']} style={{ flex: 1 }} />}
+            {rules.fifty > 0 && <GButton small light color={C.sheet} title={`50/50 ×${g.fifty}`} onPress={onFifty} disabled={g.fifty <= 0} style={{ flex: 1 }} />}
             {rules.boost > 0 && (
               <GButton
                 small
-                icon={config.mode === 'arcade' ? '⏱️' : '🛡️'}
+                light
+                color={C.sheet}
                 title={config.mode === 'arcade' ? `+10 s ×${g.boost}` : `Štít ×${g.boost}`}
                 onPress={onBoost}
                 disabled={g.boost <= 0 || (config.mode === 'boss' && g.shield > 0)}
-                colors={['#334155', '#475569']}
+                
                 style={{ flex: 1 }}
               />
             )}
@@ -439,17 +442,17 @@ export default function Game({
 
         {g.phase === 'feedback' && (!g.wasCorrect || !rules.auto) && (
           <Card style={{ gap: 8, borderColor: g.wasCorrect ? C.good : C.bad }}>
-            <Text style={{ color: g.wasCorrect ? C.good : C.bad, fontSize: 18, fontWeight: '900' }}>
-              {g.wasCorrect ? `Správne! +${g.gain}` : g.chosen === -1 ? 'Čas vypršal ⌛' : g.blocked ? 'Vedľa, ale štít ťa ochránil 🛡️' : 'Vedľa'}
+            <Text style={{ color: g.wasCorrect ? C.good : C.bad, fontSize: 19, fontFamily: F.head }}>
+              {g.wasCorrect ? `Správne! +${g.gain}` : g.chosen === -1 ? 'Čas vypršal' : g.blocked ? 'Vedľa, ale štít ťa ochránil' : 'Vedľa'}
             </Text>
-            <Text style={{ color: C.text, fontSize: 15, lineHeight: 21 }}>{q.explain}</Text>
-            <Text style={{ color: C.dim, fontSize: 12 }}>📚 {q.src}</Text>
+            <Text style={{ color: C.ink, fontSize: 17, lineHeight: 24, fontFamily: F.body }}>{q.explain}</Text>
+            <Text style={{ color: C.dim, fontSize: 13, fontFamily: F.mono }}>zdroj: {q.src}</Text>
             <ShowPicture id={`${config.subject}:${q.topic}`} />
             <GButton title={nextLabel(config.mode, g, source.total)} onPress={next} colors={[subj.color, subj.color2]} style={{ marginTop: 6 }} />
           </Card>
         )}
         {g.phase === 'feedback' && g.wasCorrect && rules.auto && (
-          <Text style={{ color: C.good, textAlign: 'center', fontWeight: '800' }}>{g.bossHp <= 0 ? 'BOSS PORAZENÝ! 🏆' : 'Správne!'}</Text>
+          <Text style={{ color: C.good, fontFamily: F.head, fontSize: 18 }}>{g.bossHp <= 0 ? 'BOSS PORAZENÝ!' : 'Správne!'}</Text>
         )}
       </ScrollView>
     </View>
@@ -506,7 +509,7 @@ function ShowPicture({ id }: { id: string }) {
   if (!on)
     return (
       <Pressable onPress={() => setOn(true)} style={{ alignSelf: 'flex-start', paddingVertical: 6 }}>
-        <Text style={{ color: '#7dd3fc', fontWeight: '800', fontSize: 14 }}>🖼️ Ukáž mi to na obrázku</Text>
+        <Text style={{ color: C.blue, fontFamily: F.bodyBold, fontSize: 16, textDecorationLine: 'underline' }}>Ukáž mi to na obrázku</Text>
       </Pressable>
     );
   return <TopicDiagram id={id} />;
@@ -521,15 +524,15 @@ function nextLabel(mode: Mode, g: G, total: number) {
 
 const s = StyleSheet.create({
   hud: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingTop: 10, paddingBottom: 8 },
-  quit: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' },
-  hudTitle: { color: C.text, fontWeight: '800', fontSize: 16 },
-  hudSub: { color: C.dim, fontSize: 13, marginTop: 2 },
-  score: { color: C.text, fontWeight: '900', fontSize: 22, fontVariant: ['tabular-nums'] },
-  combo: { fontWeight: '800', fontSize: 13 },
-  chip: { fontSize: 12, fontWeight: '700', borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 3, overflow: 'hidden', flexShrink: 1 },
-  question: { color: C.text, fontSize: 20, fontWeight: '700', lineHeight: 28 },
-  opt: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 58, padding: 12, borderRadius: 16, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.14)' },
-  letter: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  optText: { color: C.text, fontSize: 16, flex: 1, lineHeight: 22 },
-  pop: { position: 'absolute', alignSelf: 'center', top: 120, zIndex: 10, color: C.gold, fontSize: 30, fontWeight: '900', textShadowColor: '#000', textShadowRadius: 8 },
+  quit: { width: 38, height: 38, borderRadius: 8, borderWidth: 2, borderColor: C.ink, backgroundColor: C.sheet, alignItems: 'center', justifyContent: 'center' },
+  hudTitle: { color: C.ink, fontFamily: F.head, fontSize: 17 },
+  hudSub: { color: C.dim, fontSize: 13, marginTop: 2, fontFamily: F.mono },
+  score: { color: C.ink, fontFamily: F.monoBold, fontSize: 22 },
+  combo: { fontFamily: F.mono, fontSize: 13 },
+  chip: { fontSize: 12, fontFamily: F.mono, borderWidth: 1, borderColor: C.ink, borderRadius: 3, paddingHorizontal: 8, paddingVertical: 2, overflow: 'hidden', flexShrink: 1 },
+  question: { color: C.ink, fontSize: 21, fontFamily: F.bodyMed, lineHeight: 29 },
+  opt: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 58, padding: 12, borderRadius: 6, borderWidth: 2, borderColor: C.ink },
+  letter: { width: 32, height: 32, borderRadius: 4, alignItems: 'center', justifyContent: 'center' },
+  optText: { color: C.ink, fontSize: 17, flex: 1, lineHeight: 23, fontFamily: F.body },
+  pop: { position: 'absolute', alignSelf: 'center', top: 120, zIndex: 10, color: C.orange, fontSize: 30, fontFamily: F.headX },
 });

@@ -1,22 +1,31 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AudioPlayer, createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 
-// Krátke zvukové efekty (vygenerované WAV v assets/sounds). Dajú sa vypnúť tlačidlom 🔊 v menu.
+// Zvukové efekty: Kenney.nl (Interface Sounds, Casino Audio, Digital Audio, Impact Sounds), licencia CC0.
+// Prevedené z OGG na WAV (mono), aby hrali aj na iOS a v Safari. Zoznam je v ASSETS.md.
 const FILES = {
-  tap: require('../assets/sounds/tap.wav'),
-  pop: require('../assets/sounds/pop.wav'),
-  correct: require('../assets/sounds/correct.wav'),
-  wrong: require('../assets/sounds/wrong.wav'),
-  whoosh: require('../assets/sounds/whoosh.wav'),
-  levelup: require('../assets/sounds/levelup.wav'),
-  win: require('../assets/sounds/win.wav'),
-  tick: require('../assets/sounds/tick.wav'),
+  tap: require('../assets/kenney/sounds/tap.wav'),
+  pop: require('../assets/kenney/sounds/pop.wav'),
+  correct: require('../assets/kenney/sounds/correct.wav'),
+  wrong: require('../assets/kenney/sounds/wrong.wav'),
+  whoosh: require('../assets/kenney/sounds/whoosh.wav'),
+  levelup: require('../assets/kenney/sounds/levelup.wav'),
+  win: require('../assets/kenney/sounds/win.wav'),
+  tick: require('../assets/kenney/sounds/tick.wav'),
+  chip: require('../assets/kenney/sounds/chip.wav'),
+  chips: require('../assets/kenney/sounds/chips.wav'),
+  dice: require('../assets/kenney/sounds/dice.wav'),
+  card: require('../assets/kenney/sounds/card.wav'),
+  fly: require('../assets/kenney/sounds/fly.wav'),
+  crash: require('../assets/kenney/sounds/crash.wav'),
+  step: require('../assets/kenney/sounds/step.wav'),
+  bell: require('../assets/kenney/sounds/bell.wav'),
 };
 
 export type SoundName = keyof typeof FILES;
 
 const KEY = 'skuska-arcade:muted';
-const VOLUME: Partial<Record<SoundName, number>> = { tap: 0.5, tick: 0.4, whoosh: 0.5 };
+const VOLUME: Partial<Record<SoundName, number>> = { tap: 0.6, tick: 0.5, whoosh: 0.35, bell: 0.5, step: 0.7 };
 const players: Partial<Record<SoundName, AudioPlayer>> = {};
 let muted = false;
 let ready = false;

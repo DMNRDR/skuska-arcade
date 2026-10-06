@@ -1,12 +1,13 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { C, haptic, Stars, styles as ui } from '../components/ui';
+import { C, F, haptic, Header, Icon, Stars } from '../components/ui';
 import { SUBJECTS, TOPICS } from '../data';
 import { Progress } from '../storage';
 import { SubjectId } from '../types';
 import { GameConfig } from './Game';
+import { SUBJ_COLOR } from './Learn';
 
+/** Kampaň: levely ako zastávky na trase (geodetický polygónový ťah). */
 export default function Campaign({
   progress,
   subject,
@@ -19,53 +20,43 @@ export default function Campaign({
   onPlay: (c: GameConfig) => void;
 }) {
   const subj = SUBJECTS[subject];
+  const color = SUBJ_COLOR[subject];
   const topics = TOPICS[subject];
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={s.head}>
-        <Pressable onPress={onBack} hitSlop={12} style={s.back}>
-          <Text style={{ color: C.text, fontSize: 18, fontWeight: '800' }}>←</Text>
-        </Pressable>
-        <View>
-          <Text style={ui.h2}>Kampaň · {subj.name}</Text>
-          <Text style={ui.p}>8 otázok, 3 životy. Prejdi level a odomkni ďalší.</Text>
-        </View>
-      </View>
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 40, paddingTop: 8 }}>
+      <Header kicker={subj.name} title="Kampaň" onBack={onBack} />
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 40 }}>
+        <Text style={s.lead}>8 otázok na level, 3 životy. Aspoň jedna hviezda odomkne ďalší level.</Text>
         {topics.map((t, i) => {
           const stars = progress.stars[`${subject}:${t.id}`] ?? 0;
           const prevStars = i === 0 ? 1 : progress.stars[`${subject}:${topics[i - 1].id}`] ?? 0;
           const locked = prevStars === 0;
-          const left = i % 2 === 0;
+          const last = i === topics.length - 1;
           return (
-            <View key={t.id} style={{ alignItems: left ? 'flex-start' : 'flex-end' }}>
-              {i > 0 && <View style={[s.path, { alignSelf: 'center', backgroundColor: locked ? 'rgba(255,255,255,0.1)' : subj.color + '88' }]} />}
+            <View key={t.id} style={{ flexDirection: 'row', gap: 14 }}>
+              {/* trasa: bod + spojnica */}
+              <View style={{ width: 30, alignItems: 'center' }}>
+                <View style={{ width: 3, height: 18, backgroundColor: i === 0 ? 'transparent' : C.ink }} />
+                <View style={[s.dot, { backgroundColor: locked ? C.sheet : stars ? color : C.yellow }]}>
+                  <Text style={[s.dotText, { color: locked ? C.ink2 : stars ? '#fff' : C.ink }]}>{i + 1}</Text>
+                </View>
+                {!last && <View style={{ width: 3, flex: 1, backgroundColor: C.ink }} />}
+              </View>
               <Pressable
                 disabled={locked}
                 onPress={() => {
                   haptic('tap');
                   onPlay({ mode: 'campaign', subject, topic: t.id, title: `${i + 1}. ${t.name}` });
                 }}
-                style={({ pressed }) => [{ width: '78%', transform: [{ scale: pressed ? 0.97 : 1 }] }]}
+                style={({ pressed }) => [s.card, { opacity: locked ? 0.5 : pressed ? 0.7 : 1 }]}
               >
-                <LinearGradient
-                  colors={locked ? ['#1e2238', '#1a1d30'] : stars === 3 ? ['#f59e0b', '#d97706'] : [subj.color, subj.color2]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={[s.node, locked && { opacity: 0.6 }]}
-                >
-                  <View style={s.num}>
-                    <Text style={{ fontSize: 26 }}>{locked ? '🔒' : t.icon}</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={s.nodeTitle}>
-                      {i + 1}. {t.name}
-                    </Text>
-                    <Text style={s.nodeSub}>{t.src}</Text>
-                    <Stars n={stars} size={16} />
-                  </View>
-                </LinearGradient>
+                <View style={{ flex: 1, gap: 4 }}>
+                  <Text style={s.name}>{t.name}</Text>
+                  <Text style={s.meta}>{t.src}</Text>
+                  <Stars n={stars} size={16} />
+                </View>
+                <Icon name={locked ? 'locked' : 'next'} size={20} color={C.ink} />
               </Pressable>
             </View>
           );
@@ -76,11 +67,10 @@ export default function Campaign({
 }
 
 const s = StyleSheet.create({
-  head: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 18, paddingBottom: 6 },
-  back: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' },
-  path: { width: 4, height: 22, borderRadius: 2 },
-  node: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 20 },
-  num: { width: 50, height: 50, borderRadius: 25, backgroundColor: 'rgba(0,0,0,0.22)', alignItems: 'center', justifyContent: 'center' },
-  nodeTitle: { color: '#fff', fontWeight: '900', fontSize: 16 },
-  nodeSub: { color: 'rgba(255,255,255,0.8)', fontSize: 12, marginBottom: 2 },
+  lead: { fontFamily: F.body, fontSize: 16, lineHeight: 22, color: C.ink2, marginBottom: 6 },
+  dot: { width: 30, height: 30, borderRadius: 15, borderWidth: 2.5, borderColor: C.ink, alignItems: 'center', justifyContent: 'center' },
+  dotText: { fontFamily: F.monoBold, fontSize: 13 },
+  card: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 8, marginBottom: 8, padding: 14, borderWidth: 2, borderColor: C.ink, borderRadius: 8, backgroundColor: C.sheet },
+  name: { fontFamily: F.head, fontSize: 18, color: C.ink },
+  meta: { fontFamily: F.mono, fontSize: 12, color: C.ink2 },
 });

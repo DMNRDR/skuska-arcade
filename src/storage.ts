@@ -14,6 +14,8 @@ export type Progress = {
   missed: string[];
   /** najďalší prečítaný krok lekcie podľa `${subject}:${topic}` */
   learned: Record<string, number>;
+  /** rekordy v hrách ('dron', 'kasino', 'hra') */
+  gameBest: Record<string, number>;
 };
 
 const KEY = 'skuska-arcade:v1';
@@ -28,6 +30,7 @@ export const EMPTY: Progress = {
   bestStreak: 0,
   missed: [],
   learned: {},
+  gameBest: {},
 };
 
 export async function loadProgress(): Promise<Progress> {

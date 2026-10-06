@@ -5,14 +5,14 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "sk.dmnrdr.skuskaarcade"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#141038",
+        "backgroundColor": "#F1ECDF",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -23,9 +23,9 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "name": "Skúška Arcade",
-      "themeColor": "#070b1f",
-      "backgroundColor": "#070b1f"
+      "themeColor": "#F1ECDF",
+      "backgroundColor": "#F1ECDF"
     },
-    "backgroundColor": "#070b1f"
+    "backgroundColor": "#F1ECDF"
   }
 }

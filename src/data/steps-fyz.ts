@@ -54,7 +54,7 @@ export const FYZ_STEPS: Record<string, Step[]> = {
           ['A', 'amplitúda = najväčšia výchylka, VŽDY kladná [m]'],
           ['ω', 'uhlová frekvencia [rad/s]: ako rýchlo rastie uhol'],
           ['t', 'čas [s]'],
-          ['φ₀', 'počiatočná fáza [rad]: uhol v čase t = 0, posúva graf doľava'],
+          ['φ₀', 'počiatočná fáza [rad]: uhol v čase t = 0; kladné φ₀ posúva graf doľava'],
           ['ω·t + φ₀', 'celé toto sa volá fáza'],
         ],
       },

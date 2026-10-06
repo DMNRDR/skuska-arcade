@@ -2,19 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { Animated, Platform, Pressable, Text, View } from 'react-native';
 import { play } from '../sound';
 import Svg, { Circle, Defs, G, Line, LinearGradient, Path, Polygon, Rect, Stop, Text as SvgText } from 'react-native-svg';
-import { C } from './ui';
+import { C as UI, F } from './ui';
+
+/** kriedové farby na tabuli (obrázky sú kreslené na tmavozelenej tabuli) */
+export const K = {
+  text: '#F3F0E6',
+  dim: '#A7B7AE',
+  bg1: '#203630',
+  good: '#7EE2A8',
+  bad: '#FF8A7A',
+  gold: '#FFD25E',
+};
+const C = K;
 
 // Interaktívne obrázky k témam. Všetko je kreslené v súradniciach viewBoxu 320 × 200.
 export const W = 320;
 export const H = 200;
-export const AX = 'rgba(255,255,255,0.35)';
-const GRID = 'rgba(255,255,255,0.07)';
-export const CY = '#38bdf8';
-export const PK = '#f472b6';
-export const YE = '#fbbf24';
-export const GR = '#34d399';
-export const RD = '#fb7185';
-export const VI = '#a78bfa';
+export const AX = 'rgba(243,240,230,0.4)';
+const GRID = 'rgba(243,240,230,0.08)';
+export const CY = '#7CC8F2';
+export const PK = '#F59AC0';
+export const YE = '#FFD25E';
+export const GR = '#7EE2A8';
+export const RD = '#FF8A7A';
+export const VI = '#C3B1FF';
 
 /** čas v sekundách, obnovuje sa ~30× za sekundu */
 export function useTime(running = true) {
@@ -53,7 +64,7 @@ export function fnPath(f: (x: number) => number, x0: number, x1: number, sx: (x:
 export function Frame({ children, caption }: { children: React.ReactNode; caption?: string }) {
   return (
     <View style={{ gap: 6 }}>
-      <View style={{ backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 14, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' }}>
+      <View style={{ backgroundColor: K.bg1, borderRadius: 6, overflow: 'hidden', borderWidth: 6, borderColor: '#6B4F35' }}>
         <Svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', aspectRatio: W / H }}>
           {Array.from({ length: 9 }, (_, i) => (
             <Line key={'v' + i} x1={i * 40} y1={0} x2={i * 40} y2={H} stroke={GRID} />
@@ -64,7 +75,7 @@ export function Frame({ children, caption }: { children: React.ReactNode; captio
           {children}
         </Svg>
       </View>
-      {caption ? <Text style={{ color: C.dim, fontSize: 13, lineHeight: 18 }}>{caption}</Text> : null}
+      {caption ? <Text style={{ color: UI.ink2, fontSize: 15, lineHeight: 21, fontFamily: F.body }}>{caption}</Text> : null}
     </View>
   );
 }
@@ -92,7 +103,7 @@ function ChipButton({ children, onPress, style }: { children: React.ReactNode; o
 export function Chips<T extends string | number>({ options, value, onChange, label }: { options: { v: T; l: string }[]; value: T; onChange: (v: T) => void; label?: string }) {
   return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-      {label ? <Text style={{ color: C.dim, fontSize: 12, marginRight: 2 }}>{label}</Text> : null}
+      {label ? <Text style={{ color: UI.ink2, fontSize: 13, marginRight: 2, fontFamily: F.mono }}>{label}</Text> : null}
       {options.map((o) => {
         const on = o.v === value;
         return (
@@ -100,15 +111,15 @@ export function Chips<T extends string | number>({ options, value, onChange, lab
             key={String(o.v)}
             onPress={() => onChange(o.v)}
             style={{
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 999,
-              backgroundColor: on ? 'rgba(56,189,248,0.25)' : 'rgba(255,255,255,0.06)',
-              borderWidth: 1,
-              borderColor: on ? CY : 'rgba(255,255,255,0.12)',
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              borderRadius: 6,
+              backgroundColor: on ? UI.ink : UI.sheet,
+              borderWidth: 2,
+              borderColor: UI.ink,
             }}
           >
-            <Text style={{ color: on ? '#fff' : C.dim, fontSize: 12, fontWeight: '700' }}>{o.l}</Text>
+            <Text style={{ color: on ? '#fff' : UI.ink, fontSize: 14, fontFamily: F.bodyBold }}>{o.l}</Text>
           </ChipButton>
         );
       })}
@@ -116,10 +127,10 @@ export function Chips<T extends string | number>({ options, value, onChange, lab
   );
 }
 
-const FONT = Platform.OS === 'web' ? 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif' : undefined;
+const FONT = F.bodyBold;
 
 export const Label = ({ x, y, children, color = C.text, size = 11, anchor = 'start' }: { x: number; y: number; children: React.ReactNode; color?: string; size?: number; anchor?: 'start' | 'middle' | 'end' }) => (
-  <SvgText x={x} y={y} fill={color} fontSize={size} fontWeight="700" textAnchor={anchor} fontFamily={FONT}>
+  <SvgText x={x} y={y} fill={color} fontSize={size + 1} textAnchor={anchor} fontFamily={FONT}>
     {children}
   </SvgText>
 );
@@ -165,7 +176,7 @@ function KmityDiagram() {
         <Path d={wave} stroke={PK} strokeWidth={2.5} fill="none" />
         <Circle cx={px} cy={py} r={5} fill={CY} />
         <Circle cx={x0} cy={py} r={6} fill={YE} />
-        {Math.abs(v) > 0.08 && <Arrow x1={x0 - 14} y1={py} x2={x0 - 14} y2={py - v * 30} color={GR} w={2} />}
+        {Math.abs(v) > 0.08 && <Arrow x1={x0 - 14} y1={py} x2={x0 - 14} y2={py - v * R * w * 0.4} color={GR} w={2} />}
         <Line x1={x0 - 4} y1={cy - R} x2={x0 + 4} y2={cy - R} stroke={AX} />
         <Label x={x0 + 6} y={cy - R + 4} color={C.dim}>+A</Label>
         <Label x={x0 + 6} y={cy + R + 4} color={C.dim}>−A</Label>
@@ -467,7 +478,7 @@ function SosovkyDiagram({ init }: { init?: string }) {
           <G key={m}>
             <Circle cx={toX(m * 40)} cy={cy} r={2.5} fill={C.dim} />
             <Label x={toX(m * 40)} y={cy + 14} color={C.dim} size={9} anchor="middle">
-              {(m < 0 ? '−' : '') + (Math.abs(m) === 2 ? '2f' : 'f')}
+              {(m < 0 ? '−' : '') + (Math.abs(m) === 2 ? '2' : '') + (type === 'spojka' ? 'f' : '|f|')}
             </Label>
           </G>
         ))}
@@ -484,13 +495,23 @@ function SosovkyDiagram({ init }: { init?: string }) {
         label="predmet:"
         value={pos}
         onChange={setPos}
-        options={[
-          { v: -3.5, l: 'za 2F' },
-          { v: -2, l: 'v 2F' },
-          { v: -1.5, l: 'F – 2F' },
-          { v: -1, l: 'v F' },
-          { v: -0.5, l: 'lupa' },
-        ]}
+        options={
+          type === 'spojka'
+            ? [
+                { v: -3.5, l: 'za 2F' },
+                { v: -2, l: 'v 2F' },
+                { v: -1.5, l: 'F – 2F' },
+                { v: -1, l: 'v F' },
+                { v: -0.5, l: 'lupa' },
+              ]
+            : [
+                { v: -3.5, l: '3,5·|f|' },
+                { v: -2, l: '2·|f|' },
+                { v: -1.5, l: '1,5·|f|' },
+                { v: -1, l: '|f|' },
+                { v: -0.5, l: '0,5·|f|' },
+              ]
+        }
       />
     </View>
   );

@@ -145,7 +145,7 @@ export const LESSONS: Record<string, Lesson> = {
       ['sin α_krit = n₂/n₁', 'kritický uhol (len ak n₂ < n₁)'],
       ['tg α = n', 'odrazený lúč kolmý na lomený (Brewster)'],
     ],
-    tips: ['Uhly sa vždy merajú od kolmice, nie od plochy.', 'Pri zrkadle: zrkadlo leží na osi uhla medzi dopadajúcim a odrazeným lúčom.'],
+    tips: ['Uhly sa vždy merajú od kolmice, nie od plochy.', 'Pri zrkadle: kolmica na zrkadlo je osou uhla medzi dopadajúcim a odrazeným lúčom (samotné zrkadlo je osou uhla medzi smermi ich šírenia).'],
     example: { q: 'Kritický uhol pre sklo (n = 1,5) → vzduch?', a: 'sin α = 1/1,5 = 0,667 → α ≈ 41,8°.' },
   },
   'fyz:sosovky': {

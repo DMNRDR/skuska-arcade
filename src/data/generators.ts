@@ -8,6 +8,8 @@ const deg = (r: number) => (r * 180) / Math.PI;
 const rad = (d: number) => (d * Math.PI) / 180;
 const pi = (n: number) => (n === 1 ? 'π' : `${n}π`);
 const vec = (v: number[]) => '(' + v.map((x) => fmt(x)).join(', ') + ')';
+/** číslo do súčinu: záporné v zátvorke, so slovenským mínusom */
+const pn = (x: number) => (x < 0 ? `(${fmt(x)})` : fmt(x));
 
 /** a·x + b·y + c·z + d = 0 bez nulových členov a s pekným znamienkom */
 function linEq(terms: [number, string][]): string {
@@ -288,7 +290,7 @@ export const GENERATORS: Generator[] = [
       return {
         diff: 1, q: `u = ${vec(u)}, v = ${vec(v)}. Skalárny súčin u·v = ?`,
         options: numOptions(dot, [u[0] * v[0] + u[1] * v[1] - u[2] * v[2], dot + rnd(1, 4), u[0] + v[0] + u[1] + v[1] + u[2] + v[2]], 0),
-        explain: `u·v = ${u.map((x, i) => `${fmt(x)}·${fmt(v[i])}`).join(' + ')} = ${fmt(dot)}.`, src: 'Tematický plán: Prednáška 1 (generované)',
+        explain: `u·v = ${u.map((x, i) => `${pn(x)}·${pn(v[i])}`).join(' + ')} = ${fmt(dot)}.`, src: 'Tematický plán: Prednáška 1 (generované)',
       };
     },
   },
@@ -319,7 +321,7 @@ export const GENERATORS: Generator[] = [
       return {
         diff: 2, q: `Vzdialenosť bodu [${P.map((x) => fmt(x)).join(', ')}] od roviny ${eq}?`,
         options: numOptions(Math.abs(val) / len, [Math.abs(val), Math.abs(val) / (len * len), Math.abs(val - d) / len], 3),
-        explain: `|${val}| / √(${n.map((x) => x * x).join(' + ')}) = ${Math.abs(val)}/${len} ≈ ${fmt(Math.abs(val) / len, 3)}.`,
+        explain: `|${fmt(val)}| / √(${n.map((x) => x * x).join(' + ')}) = ${Math.abs(val)}/${len} ≈ ${fmt(Math.abs(val) / len, 3)}.`,
         src: 'Tematický plán: Prednáška 2 (generované)',
       };
     },
@@ -353,7 +355,7 @@ export const GENERATORS: Generator[] = [
       return {
         diff: 1, q: `det [[${[a, b].map((x) => fmt(x)).join(', ')}], [${[c, d].map((x) => fmt(x)).join(', ')}]] = ?`,
         options: numOptions(det, [a * d + b * c, a * b - c * d, b * c - a * d], 0),
-        explain: `a·d − b·c = ${a}·${d} − ${b}·${c} = ${det}.`, src: 'Tematický plán: Prednáška 4 (generované)',
+        explain: `a·d − b·c = ${pn(a)}·${pn(d)} − ${pn(b)}·${pn(c)} = ${fmt(det)}.`, src: 'Tematický plán: Prednáška 4 (generované)',
       };
     },
   },
@@ -368,7 +370,7 @@ export const GENERATORS: Generator[] = [
       return {
         diff: 3, q: `det ${'['}${M.map((r) => '[' + r.map((x) => fmt(x)).join(', ') + ']').join(', ')}] = ?`,
         options: numOptions(det, [wrongSign, diagOnly, -det], 0),
-        explain: `Sarrusovo pravidlo / rozvoj podľa 1. riadku: ${a}·(${e * i - f * h}) − ${b}·(${d * i - f * g}) + ${c}·(${d * h - e * g}) = ${det}.`,
+        explain: `Sarrusovo pravidlo / rozvoj podľa 1. riadku: ${pn(a)}·(${fmt(e * i - f * h)}) − ${pn(b)}·(${fmt(d * i - f * g)}) + ${pn(c)}·(${fmt(d * h - e * g)}) = ${fmt(det)}.`,
         src: 'Tematický plán: Prednáška 4 (generované)',
       };
     },
@@ -385,7 +387,7 @@ export const GENERATORS: Generator[] = [
         const q = rnd(1, 4);
         return {
           diff: 3, q: `Vlastné čísla matice [[${p}, ${q}], [${q}, ${p}]]?`,
-          options: uniq([`${p + q} a ${p - q}`, `${p} a ${p}`, `${p + q} a ${q - p}`, `${p * p - q * q} a 0`]),
+          options: uniq([`${p + q} a ${fmt(p - q)}`, `${p} a ${p}`, `${p + q} a ${fmt(q - p)}`, `${fmt(p * p - q * q)} a 0`]),
           explain: `det(A − λE) = (${p} − λ)² − ${q * q} = 0 → λ = ${p} ± ${q}.`, src: 'Tematický plán: Prednáška 4 (generované)',
         };
       }
@@ -421,9 +423,9 @@ export const GENERATORS: Generator[] = [
       const x0 = rnd(-2, 3);
       const val = a * n * x0 ** (n - 1) + b;
       return {
-        diff: 2, q: `f(x) = ${poly([[a, n], [b, 1]])}. Aká je f′(${x0})?`,
+        diff: 2, q: `f(x) = ${poly([[a, n], [b, 1]])}. Aká je f′(${fmt(x0)})?`,
         options: numOptions(val, [a * x0 ** n + b * x0, a * n * x0 ** n + b, a * (n - 1) * x0 ** (n - 1) + b], 0),
-        explain: `f′(x) = ${poly([[a * n, n - 1], [b, 0]])}, f′(${x0}) = ${val}.`, src: 'Tematický plán: Prednáška 7 (generované)',
+        explain: `f′(x) = ${poly([[a * n, n - 1], [b, 0]])}, f′(${fmt(x0)}) = ${fmt(val)}.`, src: 'Tematický plán: Prednáška 7 (generované)',
       };
     },
   },

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, ScrollView, Text, View } from 'react-native';
-import { C, Card, Confetti, GButton, ND, Stars, styles as ui } from '../components/ui';
+import { C, Card, Confetti, F, GButton, Icon, IconName, ND, Stars, styles as ui } from '../components/ui';
 import { play } from '../sound';
 import { SUBJECTS } from '../data';
 import { levelInfo, Progress } from '../storage';
@@ -34,20 +34,20 @@ export default function Results({
     Animated.timing(zoom, { toValue: 1, duration: 600, easing: Easing.out(Easing.back(2)), useNativeDriver: ND }).start();
   }, [zoom]);
 
-  let emoji = '📘';
+  let icon: IconName = 'check';
   let title = 'Hotovo';
   if (config.mode === 'campaign') {
     const st = result.stars ?? 0;
-    emoji = st === 3 ? '🏆' : st > 0 ? '✅' : '💀';
+    icon = st === 3 ? 'trophy' : st > 0 ? 'check' : 'cross';
     title = st === 3 ? 'Perfektné!' : st > 0 ? 'Level splnený' : 'Došli životy';
   } else if (config.mode === 'boss') {
-    emoji = result.won ? '🏆' : '💀';
+    icon = result.won ? 'trophy' : 'cross';
     title = result.won ? `${subj.boss} porazený!` : `${subj.boss} vyhral`;
   } else if (config.mode === 'arcade') {
-    emoji = result.newBest ? '🥇' : '☄️';
+    icon = result.newBest ? 'medal' : 'target';
     title = result.newBest ? 'Nový rekord!' : 'Čas vypršal';
   } else {
-    emoji = '🩹';
+    icon = 'retry';
     title = 'Tréning hotový';
   }
 
@@ -55,9 +55,9 @@ export default function Results({
     <View style={{ flex: 1 }}>
     {celebrate && <Confetti />}
     <ScrollView contentContainerStyle={{ padding: 18, gap: 14, paddingBottom: 40 }}>
-      <Animated.View style={{ alignItems: 'center', marginTop: 16, transform: [{ scale: zoom }], opacity: zoom }}>
-        <Text style={{ fontSize: 72 }}>{emoji}</Text>
-        <Text style={[ui.h1, { textAlign: 'center' }]}>{title}</Text>
+      <Animated.View style={{ alignItems: 'flex-start', gap: 8, marginTop: 16, transform: [{ scale: zoom }], opacity: zoom }}>
+        <Icon name={icon} size={56} color={subj.color} />
+        <Text style={ui.h1}>{title}</Text>
         {config.mode === 'campaign' && <Stars n={result.stars ?? 0} size={36} />}
       </Animated.View>
 
@@ -65,14 +65,14 @@ export default function Results({
         <Big label="skóre" value={result.score.toLocaleString('sk-SK')} color={subj.color} />
         <Big label="správne" value={`${result.correct}/${result.total}`} />
         <Big label="úspešnosť" value={`${acc} %`} />
-        <Big label="séria" value={`🔥${result.maxStreak}`} />
+        <Big label="séria" value={`${result.maxStreak}`} />
       </Card>
 
       <Card style={{ alignItems: 'center', gap: 4 }}>
-        <Text style={{ color: C.gold, fontWeight: '900', fontSize: 22 }}>+{result.xp} XP</Text>
+        <Text style={{ color: C.gold, fontFamily: F.headX, fontSize: 22 }}>+{result.xp} XP</Text>
         {lv.level > prevLevel ? (
-          <Text style={{ color: C.good, fontWeight: '800' }}>
-            LEVEL UP! Teraz si level {lv.level}: {lv.rank} 🎉
+          <Text style={{ color: C.good, fontFamily: F.head }}>
+            LEVEL UP! Teraz si level {lv.level}: {lv.rank}
           </Text>
         ) : (
           <Text style={ui.p}>
@@ -82,8 +82,8 @@ export default function Results({
       </Card>
 
       <View style={{ flexDirection: 'row', gap: 10 }}>
-        <GButton title="Znova" icon="🔁" onPress={onAgain} colors={[subj.color, subj.color2]} style={{ flex: 1 }} />
-        <GButton title="Menu" icon="🏠" onPress={onHome} colors={['#334155', '#475569']} style={{ flex: 1 }} />
+        <GButton title="Znova" icon="retry" onPress={onAgain} color={subj.color} style={{ flex: 1 }} />
+        <GButton title="Menu" icon="home" light color={C.sheet} onPress={onHome} style={{ flex: 1 }} />
       </View>
 
       {result.missed.length > 0 && (
@@ -92,10 +92,10 @@ export default function Results({
           <Text style={ui.p}>Tieto otázky sa ti uložili do Tréningu chýb.</Text>
           {result.missed.map((q, i) => (
             <Card key={q.id + i} style={{ gap: 6 }}>
-              <Text style={{ color: C.text, fontWeight: '700', fontSize: 15 }}>{q.q}</Text>
-              <Text style={{ color: C.good, fontWeight: '800' }}>✓ {q.options[0]}</Text>
+              <Text style={{ color: C.ink, fontFamily: F.bodyBold, fontSize: 15 }}>{q.q}</Text>
+              <Text style={{ color: C.good, fontFamily: F.head }}>✓ {q.options[0]}</Text>
               <Text style={{ color: C.dim, fontSize: 14, lineHeight: 20 }}>{q.explain}</Text>
-              <Text style={{ color: C.dim, fontSize: 12 }}>📚 {q.src}</Text>
+              <Text style={{ color: C.dim, fontSize: 13 }}>zdroj: {q.src}</Text>
             </Card>
           ))}
         </View>
@@ -108,7 +108,7 @@ export default function Results({
 function Big({ label, value, color = C.text }: { label: string; value: string; color?: string }) {
   return (
     <View style={{ alignItems: 'center' }}>
-      <Text style={{ color, fontWeight: '900', fontSize: 20 }}>{value}</Text>
+      <Text style={{ color, fontFamily: F.headX, fontSize: 20 }}>{value}</Text>
       <Text style={{ color: C.dim, fontSize: 12 }}>{label}</Text>
     </View>
   );
