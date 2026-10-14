@@ -52,7 +52,7 @@ export default function Home({
       <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
         <View style={{ flex: 1 }}>
           <Text style={s.word}>Skúška</Text>
-          <Text style={s.sub}>Mata 1 a Fyzika 1 · STU SvF · ZS 2026/27</Text>
+          <Text style={s.sub}>Mata 1, Fyzika 1, Deskriptíva · STU SvF · ZS 2026/27</Text>
         </View>
         <Pressable onPress={() => setMuted(!muted)} hitSlop={10} style={s.iconBtn} accessibilityLabel={muted ? 'Zapnúť zvuk' : 'Vypnúť zvuk'}>
           <Icon name={muted ? 'soundOff' : 'soundOn'} size={22} />
@@ -73,7 +73,7 @@ export default function Home({
 
       {/* predmet ako záložky v zošite */}
       <View style={s.tabs}>
-        {(['mat', 'fyz'] as SubjectId[]).map((id) => {
+        {(['mat', 'fyz', 'dg'] as SubjectId[]).map((id) => {
           const on = id === subject;
           return (
             <Pressable
@@ -84,7 +84,7 @@ export default function Home({
               }}
               style={[s.tab, on && { backgroundColor: SUBJ_COLOR[id], borderBottomColor: SUBJ_COLOR[id] }]}
             >
-              <Text style={[s.tabText, on && { color: '#fff' }]}>{SUBJECTS[id].name}</Text>
+              <Text style={[s.tabText, on && { color: '#fff' }]}>{SUBJECTS[id].short}</Text>
             </Pressable>
           );
         })}
@@ -146,7 +146,7 @@ export default function Home({
 
       <Text style={s.foot}>
         {countQuestions(subject)} otázok + {countGenerators(subject)} generátorov príkladov.{' '}
-        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : 'Zdroj: tematický plán prednášok z Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
+        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. písomku z Metód zobrazovania, pracovné listy a utorková písomka.' : 'Zdroj: tematický plán prednášok z Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
       </Text>
     </ScrollView>
   );
@@ -212,7 +212,7 @@ const s = StyleSheet.create({
   level: { fontFamily: F.bodyBold, fontSize: 17, color: C.ink },
   mono: { fontFamily: F.mono, fontSize: 12, color: C.ink2 },
   tabs: { flexDirection: 'row', gap: 6, borderBottomWidth: 2, borderBottomColor: C.ink },
-  tab: { paddingHorizontal: 16, paddingVertical: 10, borderWidth: 2, borderBottomWidth: 0, borderColor: C.ink, borderTopLeftRadius: 8, borderTopRightRadius: 8, backgroundColor: C.sheet, marginBottom: -2 },
+  tab: { paddingHorizontal: 12, paddingVertical: 10, borderWidth: 2, borderBottomWidth: 0, borderColor: C.ink, borderTopLeftRadius: 8, borderTopRightRadius: 8, backgroundColor: C.sheet, marginBottom: -2 },
   tabText: { fontFamily: F.head, fontSize: 17, color: C.ink },
   section: { fontFamily: F.monoBold, fontSize: 12, letterSpacing: 1.6, color: C.ink2, textTransform: 'uppercase' },
   bigBtn: { fontFamily: F.headX, fontSize: 28, lineHeight: 32, color: '#fff' },

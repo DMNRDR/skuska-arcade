@@ -17,6 +17,7 @@ import mat_limity from './mat-limity';
 import mat_matice from './mat-matice';
 import mat_priebeh from './mat-priebeh';
 import mat_vektory from './mat-vektory';
+import { DG_STEPS } from './dg';
 
 // Podrobné lekcie: každá téma má vlastný súbor <predmet>-<téma>.ts s `export default steps`.
 // Kým súbor neexistuje, použije sa kratšia verzia zo steps-fyz.ts / steps-mat.ts.
@@ -39,4 +40,4 @@ const DETAILED: Record<string, Step[]> = {
   'mat:vektory': mat_vektory,
 };
 
-export const LESSON_STEPS: Record<string, Step[]> = { ...FYZ_STEPS, ...MAT_STEPS, ...DETAILED };
+export const LESSON_STEPS: Record<string, Step[]> = { ...FYZ_STEPS, ...MAT_STEPS, ...DETAILED, ...DG_STEPS };

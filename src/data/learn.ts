@@ -341,4 +341,115 @@ export const LESSONS: Record<string, Lesson> = {
     tips: ['Pri lineárnej substitúcii delíš koeficientom: ∫ e³ˣ dx = e³ˣ/3 + C.', 'Výsledok si over deriváciou.'],
     example: { q: '∫ x·eˣ dx = ?', a: 'u = x, v′ = eˣ: x·eˣ − ∫ eˣ dx = (x − 1)·eˣ + C.' },
   },
+  // ───────────── DESKRIPTÍVA (Metódy zobrazovania) ─────────────
+  'dg:pisomka': {
+    intro: 'Písomka trvá 25 až 30 minút, má teóriu aj rysovanie. Body sa strácajú hlavne za označenie.',
+    points: [
+      'Rozsah: kužeľosečky, rovnobežné a kótované premietanie, krivky a plochy, topografické plochy, Monge.',
+      'Skupina C v utorok: parabola s oskulačnou kružnicou, pravý uhol v kolmom premietaní, rovnobežka bodom B, priamka a terén, Monge s osami.',
+      'Body A, B veľkými, priamky a, b malými, roviny α, β gréckymi písmenami.',
+      'Popíš každý zostrojený bod aj výsledok úlohy.',
+    ],
+    formulas: [
+      ['A′', 'priemet v rovnobežnom premietaní'],
+      ['A₁(3)', 'kótované premietanie: priemet a kóta'],
+      ['A₁, A₂, A₃', 'Monge: pôdorys, nárys, bokorys'],
+      ['π ∩ ν = x,  π ∩ μ = y,  ν ∩ μ = z', 'osi v Mongeovej projekcii'],
+    ],
+    tips: ['Spádové merítko rysuj dvojitou čiarou.', 'Na papieri je os x základnica x₁,₂.'],
+  },
+  'dg:kuzelosecky': {
+    intro: 'Elipsa, hyperbola a parabola sú definované vzdialenosťami od ohnísk (a pri parabole od riadiacej priamky).',
+    points: [
+      'Elipsa: súčet vzdialeností od F₁, F₂ je 2a. Bod R pri konštrukcii volíš medzi ohniskami.',
+      'Hyperbola: rozdiel vzdialeností je 2a. Bod R volíš mimo úsečky F₁F₂.',
+      'Parabola: rovnako ďaleko od F aj od d. Vrchol V je v strede FD.',
+      'Asymptoty hyperboly sú uhlopriečky obdĺžnika z kružnice cez ohniská a kolmíc vo vrcholoch.',
+      'Oskulačná kružnica elipsy: kolmica z rohu obdĺžnika na spojnicu AC.',
+    ],
+    formulas: [
+      ['r₁ + r₂ = 2a,  a² = b² + e²', 'elipsa'],
+      ['|r₁ − r₂| = 2a,  e² = a² + b²', 'hyperbola'],
+      ['|MF| = |Md|', 'parabola'],
+      ['ρ_A = b²/a,  ρ_C = a²/b', 'oskulačné kružnice elipsy'],
+      ['ρ_V = p = |FD|', 'oskulačná kružnica paraboly'],
+    ],
+    tips: ['Z jedného bodu R dostaneš 4 body (vymeníš polomery).', 'Pri hyperbole si nezamieňaj a² = b² + e² (to je elipsa).'],
+  },
+  'dg:rovnobezne': {
+    intro: 'Rovnobežné premietanie je určené priemetňou a smerom premietania. Kolmé je jeho špeciálny prípad.',
+    points: [
+      'Zachováva incidenciu, rovnobežnosť a deliaci pomer.',
+      'Priamka v smere premietania sa premietne do bodu, rovina obsahujúca smer do priamky.',
+      'Stopník je priesečník priamky s priemetňou, stopa je priesečnica roviny s priemetňou.',
+      'Hlavné priamky sú rovnobežné s priemetňou, spádové sú na ne kolmé.',
+      'Pravý uhol ostane pravý, ak je aspoň jedno rameno rovnobežné s priemetňou.',
+    ],
+    formulas: [
+      ['|A₁B₁| = |AB| · cos φ', 'kolmý priemet úsečky'],
+      ['b = r · cos φ', 'vedľajšia polos priemetu kružnice'],
+    ],
+    tips: ['V šikmom premietaní môže byť priemet aj dlhší, v kolmom nikdy.', 'Štvorec: štvorec, úsečka (5 až 5√2) alebo rovnobežník.'],
+  },
+  'dg:kotovane': {
+    intro: 'Kolmé premietanie na vodorovnú priemetňu, ku každému priemetu píšeme kótu (výšku).',
+    points: [
+      'Sklopenie: kolmice v priemetoch, nanes kóty (opačné znamienka na opačné strany), spoj.',
+      'Sklopená úsečka má skutočnú dĺžku, pretína priemet v stopníku, uhol je spádový uhol.',
+      'Stupňovanie: rozdeľ priemet podľa rozdielu kót pomocným lúčom.',
+      'Spádové merítko je kolmé na hlavné priamky, rysuje sa dvojitou čiarou.',
+      'Kóta bodu v rovine: kolmica z bodu na merítko.',
+      'Priesečnica rovín: spoj priesečníky hlavných priamok s rovnakou kótou.',
+      'Rovnobežka: rovnaký smer priemetu, interval aj smer stúpania.',
+    ],
+    formulas: [
+      ['s = tg φ = Δz / d', 'spád'],
+      ['i = 1 / s', 'interval'],
+    ],
+    tips: ['Pri veľkých kótach (89, 96) nanášaj len rozdiel.', 'Rovnobežné hlavné priamky oboch rovín: pomôže pomocná rovina.'],
+    example: { q: 'A₁(38), B₁(45), M₁ v 0,4 dĺžky od A₁. Kóta M?', a: '38 + 0,4 · 7 = 40,8.' },
+  },
+  'dg:krivky': {
+    intro: 'Krivka je dráha pohybujúceho sa bodu, plochy vznikajú pohybom kriviek.',
+    points: [
+      'Dotyčnica je hraničná poloha sečnice, normála je na ňu kolmá v bode dotyku.',
+      'Interpolačná krivka ide cez všetky body, aproximačná ich len sleduje.',
+      'Valcová plocha: priamky rovnakého smeru cez riadiacu krivku.',
+    ],
+    formulas: [
+      ['y = f(x)', 'explicitné vyjadrenie'],
+      ['F(x, y) = 0', 'implicitné vyjadrenie'],
+      ['x = x(t), y = y(t)', 'parametrické vyjadrenie'],
+    ],
+    tips: ['Kružnica: x = r·cos t, y = r·sin t.'],
+  },
+  'dg:topo': {
+    intro: 'Terén zobrazujeme vrstevnicami v kótovanom premietaní.',
+    points: [
+      'Vrstevnica: body s rovnakou kótou, rez vodorovnou rovinou.',
+      'Priesečníky priamky s terénom: profil (zvislý rez) a priesečníky s priamkou.',
+      'Spádnica pretína vrstevnice kolmo.',
+      'Krivka konštantného spádu: do kružidla interval 1 / s, pretínaj vrstevnicu za vrstevnicou.',
+      'Rez rovinou a prienik plôch: spájaj priesečníky čiar s rovnakou kótou.',
+    ],
+    formulas: [
+      ['s = Δz / d', 'spád oblúka krivky'],
+      ['i = 1 / s', 'dĺžka do kružidla pri konštantnom spáde'],
+    ],
+    tips: ['Husté vrstevnice znamenajú strmý svah.', 'Profil: výšky nanášaj v mierke kolmo na priamku.'],
+  },
+  'dg:monge': {
+    intro: 'Kolmé premietanie na dve kolmé priemetne: pôdorys zhora, nárys spredu, bokorys zboku.',
+    points: [
+      'Základnica x₁,₂ je priesečnica pôdorysne a nárysne.',
+      'Ordinála spája A₁ a A₂ a je kolmá na základnicu.',
+      'Bokorys: výška z nárysu, vzdialenosť y z pôdorysu cez štvrťkružnicu.',
+      'Viditeľné hrany plnou čiarou, neviditeľné čiarkovane.',
+    ],
+    formulas: [
+      ['|A₂ x₁,₂| = z', 'výška z nárysu'],
+      ['|A₁ x₁,₂| = y', 'vzdialenosť pred nárysňou z pôdorysu'],
+    ],
+    tips: ['Nárys a pôdorys pod sebou, nárys a bokorys vedľa seba.', 'Pomenuj osi: x, y, z a priemetne π, ν, μ.'],
+  },
 };

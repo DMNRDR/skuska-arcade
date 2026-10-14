@@ -23,8 +23,8 @@ const KEY = 'skuska-arcade:v1';
 export const EMPTY: Progress = {
   xp: 0,
   stars: {},
-  arcadeBest: { fyz: 0, mat: 0 },
-  bossWins: { fyz: 0, mat: 0 },
+  arcadeBest: { fyz: 0, mat: 0, dg: 0 },
+  bossWins: { fyz: 0, mat: 0, dg: 0 },
   answered: 0,
   correct: 0,
   bestStreak: 0,

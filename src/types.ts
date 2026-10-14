@@ -1,4 +1,4 @@
-export type SubjectId = 'fyz' | 'mat';
+export type SubjectId = 'fyz' | 'mat' | 'dg';
 
 export type Question = {
   id: string;
