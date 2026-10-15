@@ -1,6 +1,6 @@
 import type { Step } from '../steps';
 
-// Matematika 1, prednáška 4: Determinanty, inverzná matica, metódy riešenia SLAR, maticové rovnice, vlastné čísla a vektory.
+// Matematika 1, prednáška 4: Determinanty, inverzná matica, metódy riešenia SLAR, maticové rovnice (vlastné čísla sú v mat-vlastne.ts).
 
 const steps: Step[] = [
   {
@@ -296,36 +296,8 @@ const steps: Step[] = [
     },
   },
   {
-    title: 'Vlastné čísla a vlastné vektory',
-    text: 'Keď maticou A vynásobíš vektor v, väčšinou dostaneš vektor, ktorý ukazuje iným smerom. Niektoré špeciálne vektory však matica iba natiahne alebo skráti a smer ostane rovnaký (prípadne presne opačný). Taký nenulový vektor je vlastný vektor a číslo λ (lambda), ktorým sa natiahne, je vlastné číslo: A·v = λ·v.\n\nNa obrázku matica [[2, 1], [1, 2]] sivý vektor otočí, ale zelený (1, 1) iba natiahne trojnásobne (λ = 3) a žltý (1, −1) nechá tak, ako je (λ = 1).\n\nPostup má dva kroky. 1. Vlastné čísla nájdeš z charakteristickej rovnice det(A − λE) = 0: od prvkov na diagonále odčítaš λ a determinant položíš rovný nule. 2. Pre každé λ vyriešiš homogénnu sústavu (A − λE)·v = 0. Tá má nekonečne veľa riešení a vlastný vektor je ktorékoľvek nenulové z nich.',
-    fig: 'eigen',
-    formula: {
-      f: 'A·v = λ·v, v ≠ o     det(A − λ·E) = 0     (A − λ·E)·v = 0',
-      what: 'Vlastné čísla a vlastné vektory',
-      vars: [
-        ['λ', 'vlastné číslo (koľkokrát sa vektor natiahne)'],
-        ['v', 'vlastný vektor, nesmie byť nulový'],
-        ['A − λE', 'matica A, ktorej od každého prvku na diagonále odčítaš λ'],
-        ['det(A − λE) = 0', 'charakteristická rovnica'],
-      ],
-    },
-    deeper: 'Prečo det(A − λE) = 0? Rovnicu A·v = λ·v prepíšeš ako A·v − λ·E·v = 0, teda (A − λE)·v = 0. To je homogénna sústava. Chceme nenulové riešenie v a to existuje iba vtedy, keď je matica A − λE singulárna, teda keď je jej determinant 0.\n\nUžitočné kontroly: súčet vlastných čísel = súčet prvkov na diagonále (stopa matice) a súčin vlastných čísel = det A. Pre [[2, 1], [1, 2]]: 1 + 3 = 2 + 2 a 1·3 = 4 − 1. Vlastné čísla trojuholníkovej matice sú priamo prvky na jej diagonále.',
-    worked: {
-      q: 'Nájdi vlastné čísla a vlastné vektory matice A = [[2, 1], [1, 2]].',
-      steps: [
-        'A − λE = [[2 − λ, 1], [1, 2 − λ]].',
-        'det(A − λE) = (2 − λ)² − 1·1 = 0 → (2 − λ)² = 1 → 2 − λ = 1 alebo 2 − λ = −1.',
-        'Vlastné čísla: λ₁ = 1, λ₂ = 3.',
-        'λ = 3: A − 3E = [[−1, 1], [1, −1]], rovnica −v₁ + v₂ = 0 → v₂ = v₁. Vlastný vektor napr. (1, 1).',
-        'λ = 1: A − E = [[1, 1], [1, 1]], rovnica v₁ + v₂ = 0 → v₂ = −v₁. Vlastný vektor napr. (1, −1).',
-        'Skúška: A·(1, 1) = (2 + 1, 1 + 2) = (3, 3) = 3·(1, 1) a A·(1, −1) = (2 − 1, 1 − 2) = (1, −1) = 1·(1, −1). Sedí.',
-      ],
-      result: 'λ₁ = 1 s vlastnými vektormi t·(1, −1), λ₂ = 3 s vlastnými vektormi t·(1, 1), t ≠ 0.',
-    },
-  },
-  {
     title: 'Zhrnutie',
-    text: 'Determinant je jedno číslo zo štvorcovej matice, ktoré rozhoduje, či je matica regulárna. Stojí na ňom inverzná matica, Cramerovo pravidlo aj vlastné čísla. Pri sústave si najprv rozmysli, ktorá metóda je najkratšia: Gauss funguje vždy, Cramer a inverzná matica iba pre štvorcové sústavy s det ≠ 0.\n\nTypické chyby: Sarrus použitý na 4×4, zabudnuté znamienka zo šachovnice pri rozvoji, det(k·A) = k·det A (správne je kⁿ), násobenie inverznou maticou z nesprávnej strany a nulový „vlastný vektor“.',
+    text: 'Determinant je jedno číslo zo štvorcovej matice, ktoré rozhoduje, či je matica regulárna. Stojí na ňom inverzná matica, Cramerovo pravidlo a neskôr aj vlastné čísla (tie majú vlastnú tému). Pri sústave si najprv rozmysli, ktorá metóda je najkratšia: Gauss funguje vždy, Cramer a inverzná matica iba pre štvorcové sústavy s det ≠ 0.\n\nTypické chyby: Sarrus použitý na 4×4, zabudnuté znamienka zo šachovnice pri rozvoji, det(k·A) = k·det A (správne je kⁿ), násobenie inverznou maticou z nesprávnej strany.',
     bullets: [
       'det 2×2 = ad − bc; 3×3 Sarrus (iba 3×3) alebo rozvoj so znamienkami + − +.',
       'Úpravy: výmena riadkov mení znamienko, Rᵢ + k·Rⱼ nemení nič, trojuholníková matica → súčin diagonály.',
@@ -335,12 +307,11 @@ const steps: Step[] = [
       'Gauss: stupňovitý tvar + spätné dosadenie; Gauss-Jordan: nuly aj nad diagonálou.',
       'Cramer: xᵢ = det Aᵢ / det A (iba štvorcová sústava, det A ≠ 0).',
       'A·X = B → X = A⁻¹·B; X·A = B → X = B·A⁻¹.',
-      'Vlastné čísla: det(A − λE) = 0; vlastné vektory: (A − λE)·v = 0, v ≠ o.',
     ],
     check: {
-      q: 'Aké sú vlastné čísla trojuholníkovej matice [[2, 5], [0, 3]]?',
-      options: ['2 a 3', '2 a 5', '0 a 5', '5 a 3'],
-      explain: 'det(A − λE) = (2 − λ)(3 − λ) − 5·0 = (2 − λ)(3 − λ) = 0, teda λ = 2 a λ = 3. Pri trojuholníkovej matici sú vlastné čísla priamo na diagonále.',
+      q: 'Matica A je 3×3 a det A = 2. Koľko je det(2·A)?',
+      options: ['16', '4', '8', '2'],
+      explain: 'Pri násobení celej matice číslom k sa každý z n riadkov vynásobí k, preto det(k·A) = kⁿ·det A = 2³·2 = 16.',
     },
   },
 ];

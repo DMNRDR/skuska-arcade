@@ -1049,6 +1049,137 @@ function Antideriv() {
   );
 }
 
+/** Funkcie zadané viacerými predpismi: signum a absolútna hodnota */
+function SgnAbs() {
+  const [k, setK] = useState<'sgn' | 'abs'>('sgn');
+  const t = useTime();
+  const sx = (x: number) => 160 + x * 40;
+  const sy = (y: number) => 110 - y * 32;
+  const x0 = 3.2 * Math.sin(t * 0.7);
+  const sgn = (x: number) => (x > 0 ? 1 : x < 0 ? -1 : 0);
+  const y0 = k === 'sgn' ? sgn(x0) : Math.abs(x0);
+  const cap =
+    k === 'sgn'
+      ? `sgn x: tri predpisy podľa znamienka. Teraz x = ${sn(x0, 1)}, sgn x = ${sgn(x0)}. Prázdne krúžky v [0, ±1] k grafu nepatria, plný bod [0, 0] áno.`
+      : `|x| = x pre x ≥ 0 a −x pre x < 0. Teraz x = ${sn(x0, 1)}, |x| = ${sn(Math.abs(x0), 1)}. Graf je „V“, vždy nad osou x alebo na nej.`;
+  return (
+    <View style={{ gap: 8 }}>
+      <Frame caption={cap}>
+        <GraphAxes sx={sx} sy={sy} x0={-3.8} x1={3.8} y0={-2.2} y1={3.2} />
+        {k === 'sgn' ? (
+          <G>
+            <Line x1={sx(-3.8)} y1={sy(-1)} x2={sx(0) - 5} y2={sy(-1)} stroke={CY} strokeWidth={3} />
+            <Line x1={sx(0) + 5} y1={sy(1)} x2={sx(3.8)} y2={sy(1)} stroke={CY} strokeWidth={3} />
+            <Circle cx={sx(0)} cy={sy(-1)} r={5} fill={C.bg1} stroke={CY} strokeWidth={2} />
+            <Circle cx={sx(0)} cy={sy(1)} r={5} fill={C.bg1} stroke={CY} strokeWidth={2} />
+            <Circle cx={sx(0)} cy={sy(0)} r={5} fill={CY} />
+            <Label x={sx(-3.6)} y={sy(-1) - 8} color={CY}>−1 pre x &lt; 0</Label>
+            <Label x={sx(1)} y={sy(1) - 8} color={CY}>1 pre x &gt; 0</Label>
+          </G>
+        ) : (
+          <G>
+            <Path d={fnPath(Math.abs, -3.8, 3.8, sx, sy)} stroke={PK} strokeWidth={3} fill="none" />
+            <Label x={sx(-3.5)} y={sy(2.4)} color={PK}>−x</Label>
+            <Label x={sx(3.1)} y={sy(2.4)} color={PK}>x</Label>
+          </G>
+        )}
+        <Line x1={sx(x0)} y1={sy(0)} x2={sx(x0)} y2={sy(y0)} stroke={YE} strokeDasharray="4 3" />
+        <Circle cx={sx(x0)} cy={sy(y0)} r={5} fill={YE} />
+      </Frame>
+      <Chips value={k} onChange={setK} options={[{ v: 'sgn', l: 'sgn x' }, { v: 'abs', l: '|x|' }]} />
+    </View>
+  );
+}
+
+/** 1/x³: klesá na každom kuse, ale nie na zjednotení */
+function Cube() {
+  const t = useTime();
+  const sx = (x: number) => 160 + x * 46;
+  const sy = (y: number) => 100 - y * 30;
+  const f = (x: number) => 1 / (x * x * x);
+  // bod beží po pravej vetve zľava doprava, hodnota klesá
+  const xr = 0.75 + 2.4 * ((t * 0.35) % 1);
+  return (
+    <Frame caption={`f(x) = 1/x³ klesá na (−∞, 0) aj na (0, ∞): bod idúci doprava stále klesá (teraz f(${sn(xr, 1)}) = ${sn(f(xr))}). Ale −1 < 1 a f(−1) = −1 < f(1) = 1, preto na celom D(f) klesajúca nie je.`}>
+      <GraphAxes sx={sx} sy={sy} x0={-3.4} x1={3.4} y0={-3.2} y1={3.2} />
+      <Path d={fnPath(f, -3.4, -0.66, sx, sy)} stroke={CY} strokeWidth={2.6} fill="none" />
+      <Path d={fnPath(f, 0.66, 3.4, sx, sy)} stroke={CY} strokeWidth={2.6} fill="none" />
+      <Line x1={sx(-1)} y1={sy(-1)} x2={sx(1)} y2={sy(1)} stroke={RD} strokeDasharray="4 4" />
+      <Circle cx={sx(-1)} cy={sy(-1)} r={5} fill={RD} />
+      <Circle cx={sx(1)} cy={sy(1)} r={5} fill={RD} />
+      <Label x={sx(-1) - 6} y={sy(-1) + 18} color={RD} anchor="end">f(−1) = −1</Label>
+      <Label x={sx(1) + 8} y={sy(1) - 8} color={RD}>f(1) = 1</Label>
+      <Circle cx={sx(xr)} cy={sy(f(xr))} r={5} fill={YE} />
+      <Label x={8} y={20} color={CY}>y = 1/x³</Label>
+    </Frame>
+  );
+}
+
+/** Lokálne maximum nižšie ako lokálne minimum */
+function LocalExt() {
+  const t = useTime();
+  const sx = (x: number) => 160 + x * 41;
+  const sy = (y: number) => 105 - y * 30;
+  const f = (x: number) => 0.6 * x + Math.sin(1.6 * x);
+  const xM = -2.705;
+  const xm = 2.705;
+  const eps = 0.35 + 0.25 * (0.5 + 0.5 * Math.sin(t * 1.4));
+  return (
+    <Frame caption={`Lokálne maximum v x_M ≈ −2,7 má hodnotu ≈ −0,7, lokálne minimum v x_m ≈ 2,7 má hodnotu ≈ 0,7. Maximum je nižšie ako minimum! Ružový úsek je okolie (x_M − ε, x_M + ε), v ňom je f(x_M) najvyššia.`}>
+      <GraphAxes sx={sx} sy={sy} x0={-3.8} x1={3.8} y0={-2.6} y1={2.9} />
+      <Path d={fnPath(f, -3.8, 3.8, sx, sy)} stroke={CY} strokeWidth={2.6} fill="none" />
+      <Line x1={sx(-3.8)} y1={sy(f(xM))} x2={sx(3.8)} y2={sy(f(xM))} stroke={GR} strokeDasharray="4 4" strokeOpacity={0.6} />
+      <Line x1={sx(-3.8)} y1={sy(f(xm))} x2={sx(3.8)} y2={sy(f(xm))} stroke={RD} strokeDasharray="4 4" strokeOpacity={0.6} />
+      <Line x1={sx(xM - eps)} y1={sy(0)} x2={sx(xM + eps)} y2={sy(0)} stroke={PK} strokeWidth={5} />
+      <Path d={fnPath(f, xM - eps, xM + eps, sx, sy)} stroke={PK} strokeWidth={4} fill="none" />
+      <Circle cx={sx(xM)} cy={sy(f(xM))} r={5} fill={GR} />
+      <Circle cx={sx(xm)} cy={sy(f(xm))} r={5} fill={RD} />
+      <Label x={sx(xM)} y={sy(f(xM)) - 12} color={GR} anchor="middle">lok. max</Label>
+      <Label x={sx(xm)} y={sy(f(xm)) + 22} color={RD} anchor="middle">lok. min</Label>
+      <Label x={sx(xM)} y={sy(0) + 18} color={PK} anchor="middle">okolie</Label>
+    </Frame>
+  );
+}
+
+/** Konvexnosť a konkávnosť pomocou spojnice dvoch bodov */
+function Chord() {
+  const [k, setK] = useState<'vex' | 'cav'>('vex');
+  const t = useTime();
+  const vex = k === 'vex';
+  const f = vex ? (x: number) => 0.32 * x * x - 1 : (x: number) => -0.32 * x * x + 2.6;
+  const sx = (x: number) => 160 + x * 36;
+  const sy = (y: number) => 120 - y * 28;
+  const x1 = -2.6 + 0.6 * Math.sin(t * 0.5);
+  const x2 = 2.3 + 0.8 * Math.sin(t * 0.37 + 1);
+  const x = x1 + (x2 - x1) * (0.5 + 0.42 * Math.sin(t * 1.3));
+  const p = (u: number) => f(x1) + ((f(x2) - f(x1)) / (x2 - x1)) * (u - x1);
+  return (
+    <View style={{ gap: 8 }}>
+      <Frame
+        caption={
+          vex
+            ? `Konvexná (∪): medzi x₁ a x₂ je graf POD spojnicou p. Teraz f(x) = ${sn(f(x))} ≤ p(x) = ${sn(p(x))}.`
+            : `Konkávna (∩): medzi x₁ a x₂ je graf NAD spojnicou p. Teraz f(x) = ${sn(f(x))} ≥ p(x) = ${sn(p(x))}.`
+        }
+      >
+        <GraphAxes sx={sx} sy={sy} x0={-4.4} x1={4.4} y0={-1.6} y1={4} />
+        <Path d={fnPath(f, -4.4, 4.4, sx, sy)} stroke={vex ? GR : RD} strokeWidth={2.8} fill="none" />
+        <Line x1={sx(x1)} y1={sy(f(x1))} x2={sx(x2)} y2={sy(f(x2))} stroke={YE} strokeWidth={2.2} />
+        <Line x1={sx(x)} y1={sy(f(x))} x2={sx(x)} y2={sy(p(x))} stroke={PK} strokeWidth={3} />
+        <Circle cx={sx(x1)} cy={sy(f(x1))} r={5} fill={YE} />
+        <Circle cx={sx(x2)} cy={sy(f(x2))} r={5} fill={YE} />
+        <Circle cx={sx(x)} cy={sy(f(x))} r={4} fill={vex ? GR : RD} />
+        <Circle cx={sx(x)} cy={sy(p(x))} r={4} fill={YE} />
+        <Label x={sx(x1)} y={sy(0) + 16} color={C.dim} anchor="middle">x₁</Label>
+        <Label x={sx(x2)} y={sy(0) + 16} color={C.dim} anchor="middle">x₂</Label>
+        <Label x={sx(x2) + 8} y={sy(f(x2)) + (vex ? 14 : -6)} color={YE}>p</Label>
+        <Label x={8} y={20} color={vex ? GR : RD}>{vex ? 'konvexná ∪' : 'konkávna ∩'}</Label>
+      </Frame>
+      <Chips value={k} onChange={setK} options={[{ v: 'vex', l: 'konvexná' }, { v: 'cav', l: 'konkávna' }]} />
+    </View>
+  );
+}
+
 // ═════════════ REGISTER ═════════════
 
 const FIGS: Record<string, () => React.ReactElement> = {
@@ -1091,6 +1222,10 @@ const FIGS: Record<string, () => React.ReactElement> = {
   extrema: Extrema,
   convex: Convex,
   antideriv: Antideriv,
+  sgnabs: SgnAbs,
+  cube: Cube,
+  localext: LocalExt,
+  chord: Chord,
 };
 
 /** fig = názov malého obrázka, alebo "fyz:kmity" / "fyz:vlny@stoj" pre interaktívny diagram témy */

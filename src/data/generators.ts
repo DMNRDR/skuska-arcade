@@ -376,7 +376,7 @@ export const GENERATORS: Generator[] = [
     },
   },
   {
-    subject: 'mat', topic: 'determinanty',
+    subject: 'mat', topic: 'vlastne',
     make: () => {
       const a = rnd(-4, 6);
       const d = rnd(-4, 6);
@@ -388,13 +388,71 @@ export const GENERATORS: Generator[] = [
         return {
           diff: 3, q: `Vlastné čísla matice [[${p}, ${q}], [${q}, ${p}]]?`,
           options: uniq([`${p + q} a ${fmt(p - q)}`, `${p} a ${p}`, `${p + q} a ${fmt(q - p)}`, `${fmt(p * p - q * q)} a 0`]),
-          explain: `det(A − λE) = (${p} − λ)² − ${q * q} = 0 → λ = ${p} ± ${q}.`, src: 'Tematický plán: Prednáška 4 (generované)',
+          explain: `det(A − λE) = (${p} − λ)² − ${q * q} = 0 → λ = ${p} ± ${q}.`, src: 'Prednáška 5 (generované)',
         };
       }
       return {
         diff: 2, q: `Vlastné čísla trojuholníkovej matice [[${fmt(a)}, ${fmt(b)}], [0, ${fmt(d)}]]?`,
         options: uniq([`${fmt(a)} a ${fmt(d)}`, `${fmt(a)} a ${fmt(b)}`, `${fmt(a + d)} a 0`, `${fmt(a * d)} a ${fmt(b)}`, `${fmt(-a)} a ${fmt(-d)}`]),
-        explain: 'Vlastné čísla trojuholníkovej matice sú prvky na diagonále.', src: 'Tematický plán: Prednáška 4 (generované)',
+        explain: 'Vlastné čísla trojuholníkovej matice sú prvky na diagonále.', src: 'Prednáška 5 (generované)',
+      };
+    },
+  },
+  {
+    // matica s celočíselnými vlastnými číslami: A = P·D·P⁻¹, P = [[1, 1], [k, k + 1]] (det P = 1)
+    subject: 'mat', topic: 'vlastne',
+    make: () => {
+      const k = rnd(-1, 1);
+      const l1 = rnd(-3, 5);
+      let l2 = rnd(-3, 5);
+      while (l2 === l1) l2 = rnd(-3, 5);
+      const q = k + 1;
+      const A = [
+        [l1 * q - l2 * k, l2 - l1],
+        [k * q * (l1 - l2), -k * l1 + q * l2],
+      ];
+      const tr = l1 + l2;
+      const det = l1 * l2;
+      const M = `[[${fmt(A[0][0])}, ${fmt(A[0][1])}], [${fmt(A[1][0])}, ${fmt(A[1][1])}]]`;
+      const [a, b] = l1 < l2 ? [l1, l2] : [l2, l1];
+      if (Math.random() < 0.5) {
+        return {
+          diff: 2, q: `Vlastné čísla matice ${M}?`,
+          // dvojice čísel ako text v poradí od menšieho; zlé dvojice nesmú byť zhodou tá správna
+          options: uniq([[a, b], ...[[-a, -b], [A[0][0], A[1][1]], [tr, det], [a + 1, b - 1], [a - 1, b + 1]].filter(([x, y]) => !((x === a && y === b) || (x === b && y === a)))].map(([x, y]) => (x <= y ? `${fmt(x)} a ${fmt(y)}` : `${fmt(y)} a ${fmt(x)}`))),
+          explain: `Stopa ${pn(A[0][0])} + ${pn(A[1][1])} = ${fmt(tr)}, det = ${fmt(det)}. λ² − ${pn(tr)}·λ + ${pn(det)} = 0 → (λ − ${pn(a)})(λ − ${pn(b)}) = 0.`,
+          src: 'Prednáška 5 (generované)',
+        };
+      }
+      // vlastný vektor k l1 je (1, k), k l2 je (1, k + 1)
+      return {
+        diff: 3, q: `Matica ${M} má vlastné číslo λ = ${fmt(l1)}. Ktorý vektor je jej vlastný vektor k tomuto λ?`,
+        // zlé možnosti nesmú ležať na priamke vlastného vektora (1, k)
+        options: uniq([vec([1, k]), ...[[1, q], [k, 1], [1, -k - 2], [-1, k + 3], [2, 2 * k + 1]].filter(([x, y]) => y - k * x !== 0).map(vec)]),
+        explain: `Skúška: A·(1, ${fmt(k)}) = (${fmt(A[0][0] + A[0][1] * k)}, ${fmt(A[1][0] + A[1][1] * k)}) = ${fmt(l1)}·(1, ${fmt(k)}). Vektor (1, ${fmt(q)}) patrí k druhému vlastnému číslu ${fmt(l2)}.`,
+        src: 'Prednáška 5 (generované)',
+      };
+    },
+  },
+  {
+    subject: 'mat', topic: 'vlastne',
+    make: () => {
+      // overenie z príkladu 1: je v vlastný vektor?
+      const lam = pick([-2, -1, 2, 3, 4]);
+      const v = pick([[1, 1], [1, -1], [1, 2], [2, 1]]);
+      // A = λ·E + u·wᵀ s w ⊥ v → A·v = λ·v
+      const w = [-v[1], v[0]];
+      const u = pick([[1, 0], [0, 1], [1, 1]]);
+      const A = [
+        [lam + u[0] * w[0], u[0] * w[1]],
+        [u[1] * w[0], lam + u[1] * w[1]],
+      ];
+      const Av = [A[0][0] * v[0] + A[0][1] * v[1], A[1][0] * v[0] + A[1][1] * v[1]];
+      return {
+        diff: 1, q: `Je ${vec(v)} vlastný vektor matice [[${fmt(A[0][0])}, ${fmt(A[0][1])}], [${fmt(A[1][0])}, ${fmt(A[1][1])}]]? Ak áno, s akým λ?`,
+        options: uniq([`Áno, λ = ${fmt(lam)}`, `Áno, λ = ${fmt(-lam)}`, `Áno, λ = ${fmt(lam + 1)}`, 'Nie je']),
+        explain: `A·${vec(v)} = ${vec(Av)} = ${pn(lam)}·${vec(v)}. Stačí vynásobiť a pozrieť, či vyšiel násobok v.`,
+        src: 'Prednáška 5, ako príklad 1 (generované)',
       };
     },
   },

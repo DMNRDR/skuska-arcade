@@ -644,6 +644,32 @@ function MaticeDiagram() {
 }
 
 /** Determinant ako zmena obsahu: matica deformuje jednotkový štvorec */
+/** Vlastné vektory: vektor v sa otáča, A·v ho väčšinou stočí; na vlastných smeroch ostane na priamke */
+function VlastneDiagram() {
+  const t = useTime();
+  const deg = (t * 22) % 180;
+  const r = (deg * Math.PI) / 180;
+  const v = [1.1 * Math.cos(r), 1.1 * Math.sin(r)];
+  const Av = [v[0] + 2 * v[1], 4 * v[0] + 3 * v[1]];
+  const o = { x: 160, y: 118 };
+  const s = 17;
+  const d1 = Math.abs(deg - 63.43) < 4;
+  const d2 = Math.abs(deg - 135) < 4;
+  const hit = d1 || d2;
+  return (
+    <Frame caption={hit ? `Vlastný smer! A·v leží na tej istej priamke ako v: λ = ${d1 ? '5' : '−1'}.` : 'A = [[1, 2], [4, 3]] skoro každý vektor v (modrý) stočí: A·v (žltý) mieri inam. Len v smeroch (1, 2) a (−1, 1) nie, tie sú vlastné vektory.'}>
+      <Line x1={0} y1={o.y} x2={W} y2={o.y} stroke={AX} />
+      <Line x1={o.x} y1={0} x2={o.x} y2={H} stroke={AX} />
+      <Line x1={o.x - 60} y1={o.y + 120} x2={o.x + 60} y2={o.y - 120} stroke={GR} strokeOpacity={0.25} strokeDasharray="4 4" />
+      <Line x1={o.x + 120} y1={o.y + 120} x2={o.x - 120} y2={o.y - 120} stroke={GR} strokeOpacity={0.25} strokeDasharray="4 4" />
+      <Arrow x1={o.x} y1={o.y} x2={o.x + Av[0] * s} y2={o.y - Av[1] * s} color={hit ? GR : YE} w={3} />
+      <Arrow x1={o.x} y1={o.y} x2={o.x + v[0] * s * 1.6} y2={o.y - v[1] * s * 1.6} color={CY} w={3} />
+      <Label x={10} y={20} color={hit ? GR : YE}>{hit ? 'A·v = λ·v' : 'A·v'}</Label>
+      <Label x={10} y={36} color={CY}>v</Label>
+    </Frame>
+  );
+}
+
 function DeterminantyDiagram() {
   const [p, setP] = useState(0);
   const M = [
@@ -882,6 +908,7 @@ const DIAGRAMS: Record<string, (p: { init?: string }) => React.ReactElement> = {
   'mat:geometria': GeometriaDiagram,
   'mat:matice': MaticeDiagram,
   'mat:determinanty': DeterminantyDiagram,
+  'mat:vlastne': VlastneDiagram,
   'mat:funkcie': FunkcieDiagram,
   'mat:limity': LimityDiagram,
   'mat:derivacie': DerivacieDiagram,

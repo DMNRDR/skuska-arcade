@@ -35,6 +35,7 @@ const SHORT: Record<string, string> = {
   geometria: '3D geom.',
   matice: 'Matice',
   determinanty: 'Determ.',
+  vlastne: 'Vlastné č.',
   funkcie: 'Funkcie',
   limity: 'Limity',
   derivacie: 'Derivácie',

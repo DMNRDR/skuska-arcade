@@ -16,6 +16,7 @@ export default function Home({
   subject,
   setSubject,
   onCampaign,
+  onTezy,
   onLearn,
   onPlay,
   onGame,
@@ -24,6 +25,7 @@ export default function Home({
   subject: SubjectId;
   setSubject: (s: SubjectId) => void;
   onCampaign: () => void;
+  onTezy: () => void;
   onLearn: (topic?: string) => void;
   onPlay: (c: GameConfig) => void;
   onGame: (g: GameId) => void;
@@ -90,6 +92,18 @@ export default function Home({
         })}
       </View>
 
+      {/* deskriptíva: tézy na 1. písomku */}
+      {subject === 'dg' && (
+        <View style={{ gap: 10 }}>
+          <Text style={s.section}>Písomka</Text>
+          <Press color={C.ink} onPress={onTezy} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>DOKUMENT OD UČITEĽKY</Text>
+            <Text style={s.bigBtn}>Tézy 1. písomky</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Každá otázka so vzorovou odpoveďou a obrázkom. Skúšanie na teóriu aj rysovanie.</Text>
+          </Press>
+        </View>
+      )}
+
       {/* Učebňa */}
       <View style={{ gap: 10 }}>
         <Text style={s.section}>Učebňa</Text>
@@ -146,7 +160,7 @@ export default function Home({
 
       <Text style={s.foot}>
         {countQuestions(subject)} otázok + {countGenerators(subject)} generátorov príkladov.{' '}
-        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. písomku z Metód zobrazovania, pracovné listy a utorková písomka.' : 'Zdroj: tematický plán prednášok z Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
+        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. písomku z Metód zobrazovania, pracovné listy a utorková písomka.' : 'Zdroj: prednášky doc. Minarechovej (týždne 1 až 4) a tematický plán Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
       </Text>
     </ScrollView>
   );

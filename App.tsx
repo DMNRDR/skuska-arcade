@@ -16,6 +16,7 @@ import Game, { GameConfig, GameResult } from './src/screens/Game';
 import Home from './src/screens/Home';
 import Learn from './src/screens/Learn';
 import Results from './src/screens/Results';
+import Tezy from './src/screens/Tezy';
 import { initSound } from './src/sound';
 import { EMPTY, loadProgress, Progress, saveProgress } from './src/storage';
 import { SubjectId } from './src/types';
@@ -23,6 +24,7 @@ import { SubjectId } from './src/types';
 type Screen =
   | { name: 'home' }
   | { name: 'campaign' }
+  | { name: 'tezy' }
   | { name: 'learn'; topic?: string }
   | { name: 'game'; config: GameConfig; key: number }
   | { name: 'results'; result: GameResult }
@@ -117,11 +119,13 @@ export default function App() {
         subject={subject}
         setSubject={setSubject}
         onCampaign={() => setScreen({ name: 'campaign' })}
+        onTezy={() => setScreen({ name: 'tezy' })}
         onLearn={(topic) => setScreen({ name: 'learn', topic })}
         onPlay={play}
         onGame={(game) => setScreen({ name: 'play', game, key: Date.now() })}
       />
     );
+  else if (screen.name === 'tezy') body = <Tezy onBack={home} onXp={(xp) => update((p) => ({ ...p, xp: p.xp + xp }))} />;
   else if (screen.name === 'campaign') body = <Campaign progress={progress} subject={subject} onBack={home} onPlay={play} />;
   else if (screen.name === 'learn')
     body = (

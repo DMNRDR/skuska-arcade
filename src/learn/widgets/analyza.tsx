@@ -278,3 +278,53 @@ export function LineParam({ onWin }: { onWin?: () => void }) {
     </View>
   );
 }
+
+// ───────────────────────── graf ln x: posúvanie, preklápanie, naťahovanie ─────────────────────────
+
+const LN_T: { id: string; f: (x: number) => number; how: string }[] = [
+  { id: 'ln x', f: (x) => Math.log(x), how: 'Pôvodný graf: D = (0, ∞), prechádza bodom [1, 0], pri nule padá do −∞.' },
+  { id: '−ln x', f: (x) => -Math.log(x), how: 'Mínus pred funkciou: preklopenie podľa osi x. D sa nemení.' },
+  { id: 'ln(−x)', f: (x) => Math.log(-x), how: 'Mínus pri x: preklopenie podľa osi y. D = (−∞, 0).' },
+  { id: '|ln x|', f: (x) => Math.abs(Math.log(x)), how: 'Absolútna hodnota: časť pod osou x (pre 0 < x < 1) sa preklopí nahor.' },
+  { id: 'ln x + 2', f: (x) => Math.log(x) + 2, how: 'Pripočítanie vonku: posun o 2 HORE. Nulový bod sa presunie do x = e⁻² ≈ 0,14.' },
+  { id: 'ln(x + 2)', f: (x) => Math.log(x + 2), how: 'Pripočítanie vnútri: posun o 2 DOĽAVA. D = (−2, ∞), nulový bod x = −1.' },
+  { id: '2·ln x', f: (x) => 2 * Math.log(x), how: 'Násobenie vonku: natiahnutie 2× zvislo. Bod [1, 0] ostane na mieste.' },
+];
+
+export function LnTransform({ onWin }: { onWin?: () => void }) {
+  const [i, setI] = useState(0);
+  const [seen, setSeen] = useState<number[]>([0]);
+  const { sx, sy, Ax } = axes(-4.5, 5.5, -3.2, 4.2);
+  const cur = LN_T[i];
+  const done = seen.length >= LN_T.length;
+  useOnce(done, () => onWin?.());
+  return (
+    <View style={{ gap: 12 }}>
+      <Chalk>
+        <Ax />
+        <Path d={fnPath(Math.log, 0.005, 5.5, sx, sy, 300)} stroke={CH.dim} strokeWidth={2} strokeDasharray="5 4" fill="none" />
+        {i > 0 && <Path d={fnPath(cur.f, -4.5, 5.5, sx, sy, 600)} stroke={CH.a} strokeWidth={3} fill="none" />}
+        <Circle cx={sx(1)} cy={sy(0)} r={4} fill={CH.dim} />
+        <Label x={sx(5.3)} y={sy(Math.log(5.3)) + 16} color={CH.dim} anchor="end">ln x</Label>
+        <Label x={8} y={18} color={i > 0 ? CH.a : CH.text}>y = {cur.id}</Label>
+      </Chalk>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+        {LN_T.map((t, k) => (
+          <Toggle
+            key={t.id}
+            on={k === i}
+            label={t.id}
+            color={C.orange}
+            onPress={() => {
+              setI(k);
+              if (!seen.includes(k)) setSeen([...seen, k]);
+            }}
+          />
+        ))}
+      </View>
+      <Text style={T.small}>{cur.how}</Text>
+      <Goal done={done}>Prepni všetkých 7 funkcií z prednášky ({seen.length}/7)</Goal>
+      <Stamp show={done} />
+    </View>
+  );
+}

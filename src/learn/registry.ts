@@ -1,9 +1,10 @@
 import React from 'react';
-import { LimitApproach, LineParam, MonotonyDrag, ParabolaShift, Riemann, SecantTangent } from './widgets/analyza';
+import { LimitApproach, LineParam, LnTransform, MonotonyDrag, ParabolaShift, Riemann, SecantTangent } from './widgets/analyza';
 import { DopplerMove, LensDrag, MalusTurn, PhaseSum, SnellDrag, SpringPeriod, WaveLambda } from './widgets/fyzika';
 import { MatMul, SarrusTap } from './widgets/matice';
 import { BossTriangle, CrossCover, VecAB, VecDot } from './widgets/vektory';
 import { rys } from './widgets/deskriptiva';
+import { EigenDrag } from './widgets/vlastne';
 
 export type WidgetDef = {
   title: string;
@@ -19,11 +20,13 @@ export const WIDGETS: Record<string, WidgetDef> = {
   'cross-cover': { title: 'Vyskúšaj: zakry stĺpec', lead: 'Vektorový súčin po zložkách, každú klikom.', C: CrossCover },
   'boss-triangle': { title: 'Boss príklad', lead: 'Celý skúškový príklad, krok po kroku. Ďalší krok sa odomkne, až keď je predošlý správne.', C: BossTriangle, boss: true },
   matmul: { title: 'Vyskúšaj: riadok krát stĺpec', lead: 'Ťukni na políčko výsledku a uvidíš, odkiaľ sa vzalo.', C: MatMul },
+  'eigen-drag': { title: 'Vyskúšaj: smer, ktorý matica neotočí', lead: 'Otáčaj vektor v a hľadaj, kedy A·v ostane na tej istej priamke.', C: EigenDrag },
   sarrus: { title: 'Vyskúšaj: Sarrusovo pravidlo', lead: 'Ťukaj na šesť uhlopriečok a skladaj determinant.', C: SarrusTap },
   secant: { title: 'Vyskúšaj: zo sečnice dotyčnica', lead: 'Zmenšuj krok h a sleduj, kam sa blíži sklon.', C: SecantTangent },
   riemann: { title: 'Vyskúšaj: plocha z obdĺžnikov', lead: 'Pridávaj obdĺžniky a sleduj, ako sa súčet blíži k integrálu.', C: Riemann },
   limit: { title: 'Vyskúšaj: blížime sa k nule', lead: 'Posúvaj x k nule z oboch strán.', C: LimitApproach },
   monotony: { title: 'Vyskúšaj: rastie alebo klesá?', lead: 'Ťahaj bod po krivke a sleduj znamienko f′(x).', C: MonotonyDrag },
+  lntrans: { title: 'Vyskúšaj: sedem podôb ln x', lead: 'Úloha z prednášky: prepínaj funkcie a porovnaj so sivým ln x.', C: LnTransform },
   parabola: { title: 'Vyskúšaj: posuň parabolu', lead: 'Tri posuvníky, tri parametre. Trafíš cieľ?', C: ParabolaShift },
   lineparam: { title: 'Vyskúšaj: parameter t', lead: 'Každé t je jeden bod priamky.', C: LineParam },
   spring: { title: 'Pokus: pružina', lead: 'Meň hmotnosť a tuhosť. Závažie kmitá naozaj s vypočítanou periódou.', C: SpringPeriod },
@@ -61,11 +64,12 @@ export const EXTRAS: Record<string, Record<number, string[]>> = {
   'mat:vektory': { 1: ['vec-ab'], 5: ['vec-dot'], 8: ['cross-cover'], 9: ['boss-triangle'] },
   'mat:matice': { 3: ['matmul'] },
   'mat:determinanty': { 2: ['sarrus'] },
+  'mat:vlastne': { 2: ['eigen-drag'] },
   'mat:derivacie': { 1: ['secant'] },
   'mat:integraly': { 2: ['riemann'] },
   'mat:limity': { 8: ['limit'] },
   'mat:priebeh': { 1: ['monotony'] },
-  'mat:funkcie': { 8: ['parabola'] },
+  'mat:funkcie': { 8: ['lntrans'], 17: ['parabola'] },
   'mat:geometria': { 1: ['lineparam'] },
   'fyz:kmity': { 9: ['spring'] },
   'fyz:skladanie': { 3: ['phase'] },

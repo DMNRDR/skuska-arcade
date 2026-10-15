@@ -1,7 +1,9 @@
 import type { Step } from '../steps';
 
-// Matematika 1, prednáška 5: Reálna funkcia jednej reálnej premennej.
-// Pojem funkcie, D(f), H(f), operácie, vlastnosti, elementárne funkcie.
+// Matematika 1: Reálna funkcia jednej reálnej premennej (doc. Minarechová, 4. týždeň).
+// Zdroj: ZS_2026-27/Matematika_1/Prednasky/4 týždeň/Funkcie_zakladne_vlastnosti.pdf
+// Pojem funkcie, spôsoby zadania, D(f), H(f), rovnosť, graf, operácie, zúženie, inverzná,
+// monotónnosť, ohraničenosť, lokálne extrémy, párnosť, periodickosť, konvexnosť, elementárne funkcie.
 
 const steps: Step[] = [
   {
@@ -35,6 +37,54 @@ const steps: Step[] = [
       q: 'Ktorá rovnica NEurčuje y ako funkciu premennej x?',
       options: ['x² + y² = 1', 'y = x² + 1', 'y = |x|', 'y = 5'],
       explain: 'Pri x² + y² = 1 (kružnica) dostaneš pre x = 0 dve hodnoty: y = 1 aj y = −1. Funkcia však musí dať práve jednu. Konštanta y = 5 je úplne v poriadku funkcia: každému x priradí to isté číslo 5.',
+    },
+  },
+  {
+    title: 'Je to funkcia? Úlohy z prednášky',
+    text: 'V prednáške je funkcia definovaná presne: funkcia f : X → Y je zobrazenie množiny X do množiny Y, ktoré KAŽDÉMU prvku x ∈ X jednoznačne priradí prvok y ∈ Y tak, že f(x) = y. My budeme pracovať s reálnymi funkciami jednej reálnej premennej (skratka RFJRP), teda X aj Y sú podmnožiny ℝ.\n\nNa tom, či priradenie je funkcia, rozhoduje slovo „jednoznačne“. Stačí nájsť jeden vstup, ku ktorému patria dva rôzne výstupy, a funkcia to nie je. Kosoštvorec má dve uhlopriečky a tie môžu byť rôzne dlhé, preto „kosoštvorcu priradíme dĺžku jeho uhlopriečky“ funkcia NIE JE. Trojuholník má tri výšky, preto ani „trojuholníku priradíme jeho výšku“. Naopak súčet strán trojuholníka (obvod) je vždy jediné číslo, takže to funkcia JE.\n\nPri číslach: druhá mocnina je funkcia. Druhá odmocnina na celom ℝ nie, lebo záporným číslam nevieme priradiť nič (a každý vstup musí niečo dostať). Tretia odmocnina funkcia je: ∛(−8) = −2, existuje pre každé reálne číslo.',
+    formula: {
+      f: 'D(f) = {x ∈ X ; (∃y ∈ Y)(f(x) = y)}     H(f) = {y ∈ Y ; (∃x ∈ X)(f(x) = y)}',
+      what: 'Definičný obor a obor hodnôt zapísané množinovo',
+      vars: [
+        ['{ … ; … }', 'množina všetkých prvkov pred bodkočiarkou, ktoré spĺňajú podmienku za ňou'],
+        ['x ∈ X', 'x je prvkom množiny X („x patrí do X“)'],
+        ['∃', '„existuje“ (aspoň jeden)'],
+        ['D(f)', 'všetky x, ku ktorým existuje nejaké y = f(x): vzory, nezávislá premenná'],
+        ['H(f)', 'všetky y, ku ktorým existuje x s f(x) = y: obrazy, funkčné hodnoty'],
+      ],
+    },
+    bullets: [
+      'Lichobežníku priradíme dĺžku jeho výšky: ÁNO (výška lichobežníka je jedna vzdialenosť rovnobežných strán).',
+      'Prirodzenému číslu priradíme súčin jeho deliteľov: ÁNO (pre 6: 1·2·3·6 = 36).',
+      'Trojuholníku priradíme kružnicu jemu vpísanú: ÁNO (vpísaná kružnica je jediná).',
+      'Kosoštvorcu dĺžku uhlopriečky: NIE. Trojuholníku jeho výšku: NIE.',
+      'Reálnemu číslu druhú odmocninu: NIE. Tretiu odmocninu: ÁNO.',
+    ],
+    check: {
+      q: 'Je priradenie „každému obdĺžniku priradíme dĺžku jeho uhlopriečky“ funkcia?',
+      options: ['Áno, obe uhlopriečky obdĺžnika sú rovnako dlhé', 'Nie, obdĺžnik má dve uhlopriečky', 'Nie, obdĺžnik nie je číslo', 'Len pre štvorec'],
+      explain: 'Rozhoduje, či je výsledok jediný. Obdĺžnik má síce dve uhlopriečky, ale rovnako dlhé, takže dĺžka je jedno číslo. Pri kosoštvorci sú uhlopriečky rôzne dlhé, preto tam funkcia nie je.',
+    },
+  },
+  {
+    title: 'Ako sa dá funkcia zadať',
+    text: 'Najčastejšie je funkcia zadaná explicitne predpisom. Tri zápisy y = x², f(x) = x² a f : x ↦ x² znamenajú to isté. Ak k nim pridáš definičný obor, napríklad x ∈ ⟨−5, 6⟩, je funkcia úplne určená a jej obor hodnôt je ⟨0, 36⟩ (najmenšia hodnota 0 pre x = 0, najväčšia 36 pre x = 6).\n\nFunkcia môže byť zadaná aj tabuľkou: vtedy je definovaná iba v konečnom počte bodov. Tak vyzerajú výsledky merania, napríklad x = 1, 2, 3 a y = 2; 2,1; 1,9.\n\nČasto má funkcia viac predpisov podľa toho, kde x leží. Na obrázku je signum (z latinčiny „znamienko“), sgn x: pre záporné x je −1, v nule 0 a pre kladné x je 1. Prepni si aj absolútnu hodnotu |x|: pre x ≥ 0 je x, pre x < 0 je −x (teda opäť kladné číslo).\n\nPoslednými dvoma spôsobmi sú parametrické zadanie (x aj y sú funkcie pomocného parametra t, napríklad x = t, y = t²) a implicitné zadanie rovnicou F(x, y) = 0 s podmienkami (napríklad y² − x² = 0 a y > 0 je opäť graf |x|).',
+    fig: 'sgnabs',
+    formula: {
+      f: 'sgn x = −1 pre x < 0;  0 pre x = 0;  1 pre x > 0        |x| = x pre x ≥ 0;  −x pre x < 0',
+      what: 'Funkcie zadané viacerými predpismi',
+      vars: [
+        ['sgn', 'signum: z čísla nechá iba znamienko, H = {−1, 0, 1}'],
+        ['|x|', 'absolútna hodnota: vzdialenosť x od nuly, H = ⟨0, ∞)'],
+        ['−x pre x < 0', 'mínus zo záporného čísla urobí kladné: |−3| = −(−3) = 3'],
+        ['x ↦ x²', '„x sa zobrazí na x²“, iný zápis predpisu'],
+      ],
+    },
+    deeper: 'Prečo y² − x² = 0, y > 0 je to isté ako y = |x|? Rovnica y² = x² znamená y = x alebo y = −x, teda dve priamky. Podmienka y > 0 z každej nechá iba hornú polovicu: pre x > 0 je to y = x, pre x < 0 je to y = −x. Spolu presne „V“ absolútnej hodnoty. (Bod [0, 0] podmienka y > 0 vylúči, preto v prednáške stojí ako ekvivalentný aj zápis y − |x| = 0.)\n\nAj parametricky sa dá |x| zapísať: x = t, y = |t|, t ∈ ℝ. Parametrické zadanie poznáš z priamky v priestore, X = A + t·s.',
+    check: {
+      q: 'Koľko je sgn(−7) + |−7|?',
+      options: ['6', '−8', '8', '0'],
+      explain: 'sgn(−7) = −1, lebo −7 je záporné. |−7| = 7. Súčet −1 + 7 = 6.',
     },
   },
   {
@@ -103,6 +153,35 @@ const steps: Step[] = [
     deeper: 'Prečo na intervale medzi nulovými bodmi nemôže znamienko „preskočiť“? Výraz x² − 4x + 3 je spojitý (jeho graf je súvislá parabola). Ak by mal v bode 0 kladnú hodnotu a v bode 2 zápornú, musel by niekde medzi nimi prejsť nulou. Lenže všetky nulové body sme už našli, takže medzi nimi ďalší neexistuje.\n\nPri parabole to vidíš aj z grafu: y = x² − 4x + 3 je parabola otvorená nahor (a = 1 > 0), ktorá pretína os x v bodoch 1 a 3. Nad osou x (kladná) je vľavo od 1 a vpravo od 3, pod osou medzi nimi.',
   },
   {
+    title: 'Definičné obory z prednášky',
+    text: 'V prednáške je šesť definičných oborov na precvičenie. Všetky sa riešia rovnakým postupom ako doteraz: vypíšeš každú podmienku zvlášť a nakoniec urobíš prienik. Nové sú dve veci.\n\nLogaritmus so základom menším ako 1 (napríklad log₀,₅) je KLESAJÚCI. Keď z nerovnice s ním „zhadzuješ“ logaritmus, znak nerovnosti sa otočí. A pri goniometrickej nerovnici, napríklad cos x > √3/2, nájdeš riešenie na jednej perióde a pripíšeš + 2kπ, kde k je ľubovoľné celé číslo (k ∈ ℤ).\n\nVýsledky všetkých šiestich sú v odrážkach. Tri ťažšie sú rozpísané v riešenom príklade.',
+    bullets: [
+      'f(x) = ∛(2 − ln x): tretia odmocnina nemá podmienku, ln x chce x > 0. D(f) = (0, ∞).',
+      'g(x) = ln(2cos x − √3): D(g) = ⋃ (−π/6 + 2kπ, π/6 + 2kπ), k ∈ ℤ.',
+      'h(x) = √(2 − log₀,₅ x): D(h) = ⟨1/4, ∞).',
+      'i(x) = √((x − 1)/(x + 1)): D(i) = (−∞, −1) ∪ ⟨1, ∞).',
+      'j(x) = arcsin(2x + 1): −1 ≤ 2x + 1 ≤ 1, D(j) = ⟨−1, 0⟩.',
+      'k(x) = arctg(1/√(x² − 4x + 3)): x² − 4x + 3 > 0, D(k) = (−∞, 1) ∪ (3, ∞).',
+    ],
+    worked: {
+      q: 'Urči definičné obory funkcií g(x) = ln(2cos x − √3), h(x) = √(2 − log₀,₅ x) a i(x) = √((x − 1)/(x + 1)).',
+      steps: [
+        'g: logaritmus chce kladný argument: 2cos x − √3 > 0, teda cos x > √3/2.',
+        'cos x = √3/2 pre x = ±π/6. Kosínus je väčší (bod na kružnici bližšie k [1, 0]) medzi nimi: x ∈ (−π/6, π/6), a to sa opakuje každých 2π. D(g) = (−π/6 + 2kπ, π/6 + 2kπ), k ∈ ℤ.',
+        'h: dve podmienky. Logaritmus: x > 0. Odmocnina: 2 − log₀,₅ x ≥ 0, teda log₀,₅ x ≤ 2.',
+        '2 = log₀,₅(1/4), lebo (1/2)² = 1/4. Základ 0,5 < 1, funkcia klesá, znak sa otočí: x ≥ 1/4. Spolu s x > 0: D(h) = ⟨1/4, ∞).',
+        'i: pod odmocninou (x − 1)/(x + 1) ≥ 0 a menovateľ x + 1 ≠ 0. Nulové body: 1 (čitateľ, smie byť nula) a −1 (menovateľ, nesmie).',
+        'Znamienka: pre x < −1 je (−)/(−) = +, medzi −1 a 1 je (−)/(+) = −, pre x > 1 je (+)/(+) = +. D(i) = (−∞, −1) ∪ ⟨1, ∞).',
+      ],
+      result: 'D(g) = (−π/6 + 2kπ, π/6 + 2kπ), k ∈ ℤ;  D(h) = ⟨1/4, ∞);  D(i) = (−∞, −1) ∪ ⟨1, ∞).',
+    },
+    check: {
+      q: 'Aký je definičný obor funkcie j(x) = arcsin(2x + 1)?',
+      options: ['⟨−1, 0⟩', '⟨−1, 1⟩', '⟨0, 1⟩', '(−1, 0)'],
+      explain: 'arcsin chce argument z ⟨−1, 1⟩: −1 ≤ 2x + 1 ≤ 1. Odčítaj 1: −2 ≤ 2x ≤ 0. Vydeľ 2: −1 ≤ x ≤ 0. Krajné body patria, lebo arcsin(±1) existuje.',
+    },
+  },
+  {
     title: 'Obor hodnôt H(f)',
     text: 'Obor hodnôt H(f) je množina všetkých čísel y, ktoré môžu z funkcie vyjsť. Kým D(f) hovorí, čo smieš do stroja vložiť, H(f) hovorí, čo z neho môže vypadnúť.\n\nH(f) sa hľadá ťažšie ako D(f). Pomôže ti znalosť grafov základných funkcií (oplatí sa ich vedieť naspamäť) a úpravy výrazu. Pri kvadratickej funkcii je najlepšia úprava doplnenie na štvorec, lebo štvorec (…)² je vždy ≥ 0.\n\nNeskôr, v lekcii Priebeh funkcie, budeš H(f) určovať z extrémov a limít. Teraz si zapamätaj obory hodnôt základných funkcií (pozri odrážky).',
     formula: {
@@ -139,6 +218,48 @@ const steps: Step[] = [
     },
   },
   {
+    title: 'Rovnosť funkcií',
+    text: 'Kedy sú dve funkcie rovnaké? Nestačí, že majú podobný predpis. Funkcie f a g sa rovnajú, ak majú ROVNAKÝ definičný obor a v každom bode tohto oboru rovnakú hodnotu. Obe podmienky musia platiť naraz.\n\nPrvý príklad z prednášky: f(x) = 1 a g(x) = sin² x + cos² x. Obe sú definované na celom ℝ a podľa vzorca sin² x + cos² x = 1 majú všade hodnotu 1. Rovnajú sa.\n\nDruhý príklad: f(x) = x + 2 a g(x) = (x² − 4)/(x − 2). Keď zlomok vykrátiš, dostaneš x + 2, takže to vyzerá rovnako. Lenže g nie je definovaná v bode x = 2 (menovateľ by bol 0), kým f(2) = 4 existuje. Definičné obory sú rôzne, funkcie sa NErovnajú. Graf g je priamka y = x + 2 s „dierou“ v bode [2, 4].',
+    formula: {
+      f: 'f = g  ⇔  D(f) = D(g)  a  (∀x ∈ D(f)) f(x) = g(x)',
+      what: 'Rovnosť funkcií',
+      vars: [
+        ['⇔', '„práve vtedy, keď“'],
+        ['D(f) = D(g)', 'rovnaké definičné obory (často sa na to zabúda)'],
+        ['∀', '„pre všetky“'],
+        ['f(x) = g(x)', 'rovnaké hodnoty v každom bode'],
+      ],
+    },
+    deeper: 'Krátenie zlomku mení funkciu! Výraz (x² − 4)/(x − 2) = (x − 2)(x + 2)/(x − 2) smieš vykrátiť iba pre x ≠ 2. Presne zapísané: g(x) = x + 2 pre x ∈ ℝ∖{2}. Funkcia g je teda zúžením funkcie f na ℝ∖{2} (o zúžení je reč o pár krokov ďalej). Táto „diera“ sa vráti v lekcii Limity: lim (x→2) g(x) = 4, hoci g(2) neexistuje.',
+    check: {
+      q: 'Rovnajú sa funkcie f(x) = x a g(x) = √(x²)?',
+      options: ['Nie, √(x²) = |x|, napr. g(−3) = 3 ≠ f(−3)', 'Áno, odmocnina a druhá mocnina sa zrušia', 'Áno, obe majú D = ℝ', 'Nie, g nemá definičný obor'],
+      explain: 'Obe majú D = ℝ, ale hodnoty sa líšia pre záporné x: √((−3)²) = √9 = 3, kým f(−3) = −3. Platí √(x²) = |x|.',
+    },
+  },
+  {
+    title: 'Graf funkcie a jeho posúvanie',
+    text: 'Graf funkcie je množina všetkých bodov [x, f(x)], kde x prechádza celý definičný obor. Ak poznáš graf jednej funkcie, grafy mnohých ďalších dostaneš bez počítania, len posunutím, prevrátením alebo natiahnutím.\n\nV prednáške je na to úloha s logaritmom: nakresli ln x, −ln x, ln(−x), |ln x|, ln x + 2, ln(x + 2) a 2·ln x. V pokuse nižšie si každú z nich prepni a porovnaj so sivým ln x.\n\nPravidlo na zapamätanie: zmena VONKU (s výsledkom f(x)) hýbe grafom zvislo a robí presne to, čo vidíš. Zmena VNÚTRI (s x pred dosadením) hýbe grafom vodorovne a robí opak toho, čo by si čakal: ln(x + 2) sa posunie DOĽAVA, nie doprava.',
+    formula: {
+      f: 'f(x) + c   f(x + c)   −f(x)   f(−x)   |f(x)|   k·f(x)',
+      what: 'Základné úpravy grafu',
+      vars: [
+        ['f(x) + c', 'posun o c hore (c < 0 dole)'],
+        ['f(x + c)', 'posun o c DOĽAVA (c < 0 doprava)'],
+        ['−f(x)', 'preklopenie podľa osi x'],
+        ['f(−x)', 'preklopenie podľa osi y'],
+        ['|f(x)|', 'časť pod osou x sa preklopí nad ňu'],
+        ['k·f(x)', 'natiahnutie k-krát zvislo (body na osi x ostanú)'],
+      ],
+    },
+    deeper: 'Prečo ln(x + 2) ide doľava? Graf ln x prechádza bodom [1, 0], lebo ln 1 = 0. Funkcia ln(x + 2) má nulu tam, kde x + 2 = 1, teda v x = −1. Bod sa posunul z 1 na −1, o 2 doľava. Rovnako sa posunie aj definičný obor: x + 2 > 0, teda D = (−2, ∞).\n\nln(−x) je definovaný iba pre záporné x (−x > 0), preto je jeho graf vľavo od osi y, zrkadlový obraz ln x.',
+    check: {
+      q: 'Aký definičný obor má funkcia k(x) = ln(x + 2)?',
+      options: ['(−2, ∞)', '(2, ∞)', '(0, ∞)', '⟨−2, ∞)'],
+      explain: 'Argument logaritmu musí byť kladný: x + 2 > 0, teda x > −2. Graf ln x sa posunul o 2 doľava, s ním aj zvislá asymptota z x = 0 na x = −2.',
+    },
+  },
+  {
     title: 'Operácie s funkciami a zložená funkcia',
     text: 'Funkcie môžeš sčítať, odčítať, násobiť aj deliť: (f + g)(x) = f(x) + g(x) a podobne. Nová funkcia je definovaná tam, kde sú definované obe pôvodné. Pri podiele f/g navyše musí byť g(x) ≠ 0.\n\nNajdôležitejšia operácia je zloženie (f ∘ g)(x) = f(g(x)). Najprv na x zapôsobí vnútorná funkcia g a jej výsledok vložíš do vonkajšej funkcie f. Na obrázku číslo x = 1 prejde najprv vnútornou funkciou 3x (vznikne 3) a potom vonkajšou sin (vznikne sin 3 ≈ 0,14). Text o derivácii pod obrázkom využiješ až v lekcii Derivácie.\n\nPoradie pri zložení je dôležité: f ∘ g a g ∘ f sú väčšinou úplne iné funkcie. Rozpoznať, čo je vnútro a čo obal, budeš potrebovať pri derivovaní aj integrovaní.',
     analogy: 'Práčka a sušička: bielizeň najprv vyperieš (vnútorná funkcia g), potom vysušíš (vonkajšia f). Ak to urobíš v opačnom poradí, výsledok je úplne iný – suchá a potom mokrá bielizeň.',
@@ -168,6 +289,37 @@ const steps: Step[] = [
       q: 'f(x) = x², g(x) = sin x. Čo je (f ∘ g)(x)?',
       options: ['(sin x)² = sin² x', 'sin(x²)', 'x² · sin x', '2x · cos x'],
       explain: 'f ∘ g znamená: najprv g, teda sin x, a výsledok vložíš do f, ktorá ho umocní: (sin x)². Funkcia sin(x²) by bola g ∘ f.',
+    },
+  },
+  {
+    title: 'Zúženie a rozklad zloženej funkcie',
+    text: 'Zúženie (reštrikcia) funkcie znamená, že ponecháš predpis a iba zmenšíš definičný obor. Príklad z prednášky: f(x) = x³ s D(f) = ℝ a g(x) = x³ s D(g) = ⟨−1, 1⟩. Funkcia g je zúžením funkcie f na interval ⟨−1, 1⟩. Graf g je iba kúsok grafu f.\n\nZloženú funkciu f ∘ g prednáška definuje, keď H(g) leží v D(f): výsledky vnútornej funkcie musí vonkajšia vedieť spracovať. Funkcia f je vonkajšia (hlavná) zložka, g vnútorná zložka. Inými slovami, do premennej x vonkajšej funkcie dosadíš výraz g(x).\n\nOpačná úloha, rozložiť funkciu na zložky, sa ti bude hodiť pri derivovaní. Sleduj, čo sa postupne deje s číslom x, a každý úkon je jedna zložka. Pri tan³(x − π/4): najprv odčítaš π/4, potom urobíš tangens, nakoniec umocníš na tretiu.',
+    formula: {
+      f: 'x  →(− π/4)→  x − π/4  →(tan)→  tan(x − π/4)  →(³)→  tan³(x − π/4)',
+      what: 'Rozklad f(x) = tan³(x − π/4) = p ∘ q ∘ r (x)',
+      vars: [
+        ['r(x) = x − π/4', 'najvnútornejšia zložka, pôsobí prvá'],
+        ['q(x) = tan x', 'stredná zložka'],
+        ['p(x) = x³', 'vonkajšia zložka, pôsobí posledná'],
+        ['p ∘ q ∘ r', 'čítaj sprava doľava: najprv r, potom q, potom p'],
+        ['tan³ y', '= (tan y)³, mocnina patrí výsledku tangensu, nie uhlu'],
+      ],
+    },
+    worked: {
+      q: 'Porovnaj funkcie g ∘ h a h ∘ g, ak g(x) = √x a h(x) = x² (príklad z prednášky).',
+      steps: [
+        'g ∘ h: najprv h, potom g. g(h(x)) = √(x²). Do x² smieš dosadiť každé x, výsledok je ≥ 0, takže D = ℝ.',
+        '√(x²) = |x|, lebo odmocnina je vždy nezáporná: √((−3)²) = √9 = 3 = |−3|.',
+        'h ∘ g: najprv g, potom h. h(g(x)) = (√x)². Tu musí existovať √x, teda x ≥ 0, a D = ⟨0, ∞).',
+        'Pre x ≥ 0 je (√x)² = x.',
+        'Porovnanie: na ⟨0, ∞) majú obe hodnotu x (lebo |x| = x pre x ≥ 0), ale g ∘ h je definovaná aj pre záporné x.',
+      ],
+      result: 'g ∘ h(x) = |x| na ℝ, h ∘ g(x) = x na ⟨0, ∞). Nerovnajú sa, h ∘ g je zúžením g ∘ h.',
+    },
+    check: {
+      q: 'Funkciu sin(x²) rozložíš na zložky ako f(g(x)). Čo je vnútorná zložka g?',
+      options: ['g(x) = x²', 'g(x) = sin x', 'g(x) = sin x²', 'g(x) = x'],
+      explain: 'S číslom x sa najprv urobí x², až potom sínus. Vnútorná g(x) = x², vonkajšia f(x) = sin x. Pri sin²(x) by to bolo naopak.',
     },
   },
   {
@@ -228,6 +380,50 @@ const steps: Step[] = [
     },
   },
   {
+    title: 'Monotónnosť presne a pozor na zjednotenie',
+    text: 'Pozor na názvy, prednáška ich používa takto. Rýdzo (ostro) rastúca: z x₁ < x₂ vyplýva f(x₁) < f(x₂). Rastúca (neklesajúca): z x₁ < x₂ vyplýva f(x₁) ≤ f(x₂), teda graf smie aj chvíľu stáť. Podobne rýdzo klesajúca (>) a klesajúca, čiže nerastúca (≥). Konštantná: f(x₁) = f(x₂). Rýdzo monotónna je rýdzo rastúca alebo rýdzo klesajúca, monotónna je rastúca alebo klesajúca. V iných knihách (aj v predošlom kroku) sa „rastúca“ používa pre ostrú nerovnosť, na písomke sa drž prednášky.\n\nVlastnosť platiaca na celom D(f) je globálna, platiaca iba na nejakej časti A ⊂ D(f) je lokálna. Pri monotónnosti na tom veľmi záleží. Na obrázku je f(x) = 1/x³. Na (−∞, 0) aj na (0, ∞) rýdzo klesá, ale na zjednotení (−∞, 0) ∪ (0, ∞) klesajúca NIE JE: f(−1) = −1 < f(1) = 1, hoci −1 < 1.\n\nVeta z prednášky: ak je funkcia rýdzo monotónna na D(f), je prostá. Opačne to neplatí: 1/x³ je prostá, a pritom na celom D(f) monotónna nie je.',
+    fig: 'cube',
+    formula: {
+      f: 'ohraničená zhora: (∃M ∈ ℝ)(∀x ∈ D(f)) f(x) ≤ M     zdola: (∃m ∈ ℝ)(∀x ∈ D(f)) m ≤ f(x)',
+      what: 'Ohraničenosť funkcie',
+      vars: [
+        ['∃M ∈ ℝ', '„existuje reálne číslo M“ (horná hranica)'],
+        ['∀x ∈ D(f)', '„pre všetky x z definičného oboru“'],
+        ['f(x) ≤ M', 'žiadna hodnota nie je nad M'],
+        ['ohraničená', 'zhora AJ zdola'],
+        ['neohraničená', 'zhora ALEBO zdola neohraničená (stačí jedna strana)'],
+      ],
+    },
+    check: {
+      q: 'Funkcia f(x) = 1/x rýdzo klesá na (−∞, 0) aj na (0, ∞). Je klesajúca na celom D(f)?',
+      options: ['Nie, napr. f(−1) = −1 < f(1) = 1', 'Áno, klesá na oboch kusoch', 'Áno, lebo je prostá', 'Nie, lebo nie je prostá'],
+      explain: 'Z monotónnosti na dvoch disjunktných intervaloch nevyplýva monotónnosť na ich zjednotení. Stačí jeden protipríklad: −1 < 1, ale f(−1) < f(1). Prostá však 1/x je.',
+    },
+  },
+  {
+    title: 'Lokálne extrémy',
+    text: 'Lokálne maximum je bod, ktorý je najvyšší „v okolí“, aj keď inde môže byť graf vyššie. Ako vrchol kopca, ktorý nie je najvyšším vrchom pohoria. Podobne lokálne minimum je dno doliny.\n\nV definícii vystupuje malé kladné číslo ε (epsilon). Interval (x_M − ε, x_M + ε) je okolie bodu x_M: všetky x, ktoré sú od neho bližšie ako ε. Bod je lokálne maximum, ak sa dá nájsť AKÉKOĽVEK také okolie, v ktorom žiadna hodnota nie je väčšia ako f(x_M).\n\nFunkcia môže mať veľa (aj nekonečne veľa) lokálnych extrémov. Na obrázku si všimni dôležitú poznámku z prednášky: lokálne maximum môže byť dokonca NIŽŠIE ako niektoré lokálne minimum. Najväčšia hodnota na celom D(f) je globálne maximum a to je iný pojem.',
+    fig: 'localext',
+    formula: {
+      f: 'lok. maximum v x_M:  (∃ε > 0)(∀x ∈ (x_M − ε, x_M + ε) ∩ D(f))  f(x_M) ≥ f(x)',
+      what: 'Lokálne maximum (pre minimum je ≤)',
+      vars: [
+        ['x_M', 'bod, v ktorom je maximum (vzor)'],
+        ['f(x_M)', 'hodnota maxima (obraz)'],
+        ['ε', 'malé kladné číslo, polomer okolia'],
+        ['(x_M − ε, x_M + ε)', 'okolie bodu x_M'],
+        ['∩ D(f)', 'berieme len body, kde je f definovaná'],
+        ['f(x_M) ≥ f(x)', 'nikde v okolí nie je hodnota väčšia'],
+      ],
+    },
+    deeper: 'Ako lokálne extrémy POČÍTAŤ, sa naučíš v lekcii Priebeh funkcie: hľadajú sa tam, kde je derivácia nulová. Teraz ide iba o pojem. Pri jednoduchých funkciách ich vidíš z grafu, napríklad sin x má lokálne maximá v π/2 + 2kπ a minimá v −π/2 + 2kπ, teda nekonečne veľa.',
+    check: {
+      q: 'Funkcia má lokálne maximum s hodnotou 2 a lokálne minimum s hodnotou 5. Je to možné?',
+      options: ['Áno, lokálny extrém porovnáva len s okolím', 'Nie, maximum musí byť väčšie ako minimum', 'Len pri periodickej funkcii', 'Nie, funkcia by nebola spojitá'],
+      explain: 'Lokálne maximum je najvyššie iba vo svojom okolí. Minimum môže byť na úplne inom mieste grafu, ktoré je celé vyššie. Prednáška to ukazuje na obrázku.',
+    },
+  },
+  {
     title: 'Prostá funkcia a inverzná funkcia',
     text: 'Funkcia je prostá, ak rôzne vstupy dávajú rôzne výstupy: z x₁ ≠ x₂ vyplýva f(x₁) ≠ f(x₂). Overíš to testom vodorovnou priamkou: každá vodorovná priamka pretne graf najviac raz. Funkcia x² na celom ℝ prostá nie je (f(−2) = f(2) = 4), ale na ⟨0, ∞) už áno. Každá rastúca alebo klesajúca funkcia je prostá.\n\nInverzná funkcia f⁻¹ robí opačnú prácu: ak f premení a na b, tak f⁻¹ premení b späť na a. Existuje iba k prostej funkcii, inak by nevedela, ktorý z viacerých vstupov má vrátiť. Platí D(f⁻¹) = H(f) a H(f⁻¹) = D(f).\n\nGraf inverznej funkcie dostaneš zrkadlením podľa priamky y = x. Na obrázku je žltá eˣ a zelená ln x: bod [a, b] na jednej krivke má zrkadlový bod [b, a] na druhej. Pozor: f⁻¹(x) NIE JE 1/f(x), mínus jednotka tu neznamená prevrátenú hodnotu.',
     analogy: 'Šifrovanie: f zašifruje správu, f⁻¹ ju rozšifruje. Aby sa dalo jednoznačne rozšifrovať, nesmú sa dve rôzne správy zašifrovať rovnako – preto musí byť f prostá.',
@@ -263,6 +459,27 @@ const steps: Step[] = [
       q: 'Kedy existuje inverzná funkcia k funkcii f?',
       options: ['Keď je f prostá', 'Vždy', 'Keď je f párna', 'Keď f(0) = 0'],
       explain: 'Inverzná funkcia musí ku každému výstupu vrátiť jediný vstup, preto f musí byť prostá. Párna funkcia (okrem triviálneho prípadu D(f) = {0}) prostá nie je, lebo f(−x) = f(x).',
+    },
+  },
+  {
+    title: 'Inverzná funkcia: príklady z prednášky',
+    text: 'Prednáška definuje inverznú funkciu takto: nech f je prostá s D(f) = X a H(f) = Y. Potom f⁻¹ : Y → X je funkcia daná predpisom f⁻¹(y) = x práve vtedy, keď f(x) = y. Z toho hneď vyplýva D(f) = H(f⁻¹), D(f⁻¹) = H(f) a f⁻¹(f(x)) = x pre každé x z X.\n\nV prednáške sú tri funkcie, pri ktorých treba zistiť, či sú prosté, a nájsť inverznú. Postup je rovnaký ako pri priamke: napíšeš y = f(x), vyjadríš x a vymeníš x ↔ y. Ak sa x vyjadriť jednoznačne nedá (vyjdú dve možnosti, napríklad ±), funkcia prostá nie je.',
+    worked: {
+      q: 'Zisti, či sú prosté, a nájdi inverzné: h(x) = 5 + ln(x + 1), f(x) = (x³ − 3)/(2 + x³), g(x) = (x² − 3)/(2 + x²).',
+      steps: [
+        'h: y = 5 + ln(x + 1) → y − 5 = ln(x + 1) → e^(y − 5) = x + 1 → x = e^(y − 5) − 1. Jediné x, funkcia je prostá.',
+        'Výmena x ↔ y: h⁻¹(x) = e^(x − 5) − 1. Jej D(h⁻¹) = ℝ, a to je H(h).',
+        'f: y = (x³ − 3)/(2 + x³) → y·(2 + x³) = x³ − 3 → 2y + y·x³ = x³ − 3.',
+        'x³ dáš na jednu stranu: y·x³ − x³ = −3 − 2y → x³·(y − 1) = −(3 + 2y) → x³ = (3 + 2y)/(1 − y).',
+        'Tretia odmocnina je jednoznačná: x = ∛((3 + 2y)/(1 − y)). Teda f⁻¹(x) = ∛((3 + 2x)/(1 − x)), D(f⁻¹) = ℝ∖{1} = H(f).',
+        'g: g(−1) = (1 − 3)/(2 + 1) = −2/3 a g(1) = −2/3. Dva rôzne vstupy, rovnaký výstup, g nie je prostá a inverznú nemá (v x je iba x², g je párna).',
+      ],
+      result: 'h⁻¹(x) = e^(x − 5) − 1;  f⁻¹(x) = ∛((3 + 2x)/(1 − x));  g nie je prostá.',
+    },
+    check: {
+      q: 'Aká je inverzná funkcia k f(x) = e^(x − 2)?',
+      options: ['ln x + 2', 'ln(x + 2)', 'ln x − 2', 'e^(x + 2)'],
+      explain: 'y = e^(x − 2) → ln y = x − 2 → x = ln y + 2. Po výmene f⁻¹(x) = ln x + 2, s D = (0, ∞) = H(f).',
     },
   },
   {
@@ -425,6 +642,73 @@ const steps: Step[] = [
     },
   },
   {
+    title: 'Periodickosť presne',
+    text: 'Funkcia f je periodická, ak existuje číslo p > 0 také, že f(x) = f(x + p) pre každé x. Ak p je perióda, sú periódami aj 2p, 3p a ďalšie násobky: sínus sa opakuje po 2π, ale aj po 4π. Preto sa zavádza NAJMENŠIE také kladné číslo p̄ (p s pruhom) a volá sa primitívna (základná) perióda. Keď sa na písomke pýtajú „aká je perióda“, myslí sa práve tá najmenšia.\n\nZaujímavý prípad z prednášky: konštantná funkcia, napríklad f(x) = 1,5. Je periodická, lebo f(x) = f(x + p) platí pre úplne každé p > 0. Primitívnu periódu však nemá, lebo medzi všetkými kladnými číslami (interval (0, ∞)) neexistuje najmenšie. Pre každé malé p je p/2 ešte menšie.',
+    formula: {
+      f: '(∃p > 0)(∀x ∈ D(f))  f(x + p) = f(x)',
+      what: 'Periodická funkcia',
+      vars: [
+        ['p', 'perióda: posun, po ktorom sa graf zopakuje'],
+        ['p̄', 'primitívna (základná) perióda: najmenšie kladné p'],
+        ['x + p ∈ D(f)', 'potichu sa predpokladá, že aj posunutý bod je v D(f)'],
+        ['sin, cos', 'p̄ = 2π;  tg, cotg: p̄ = π;  sin(kx): p̄ = 2π/k'],
+      ],
+    },
+    check: {
+      q: 'Má konštantná funkcia f(x) = 3 primitívnu periódu?',
+      options: ['Nie, je periodická, ale najmenšie kladné p neexistuje', 'Áno, p̄ = 1', 'Áno, p̄ = 3', 'Nie je ani periodická'],
+      explain: 'f(x + p) = 3 = f(x) pre každé p > 0, takže je periodická. Najmenšie kladné číslo však neexistuje (vždy nájdeš menšie), preto primitívnu periódu nemá.',
+    },
+  },
+  {
+    title: 'Konvexnosť a konkávnosť',
+    text: 'Zober na grafe dva body s x-ovými súradnicami x₁ < x₂ a spoj ich úsečkou. Tejto spojnici (sečnici) prednáška hovorí p(x). Ak graf medzi x₁ a x₂ leží POD spojnicou, f(x) ≤ p(x), funkcia je na intervale konvexná. Ak leží NAD spojnicou, f(x) ≥ p(x), je konkávna. Ak platí ostrá nerovnosť (< alebo >), hovoríme rýdzo (ostro) konvexná alebo konkávna. Musí to platiť pre KAŽDÚ dvojicu bodov z intervalu.\n\nNa obrázku sa body x₁, x₂ aj bod x medzi nimi hýbu. Prepni si konvexnú a konkávnu funkciu a sleduj, na ktorej strane spojnice graf je. Pomôcka: konvexná vyzerá ako ∪ (miska, do ktorej by sa dala naliať voda), konkávna ako ∩ (kopec).\n\nBody, v ktorých sa konvexnosť mení na konkávnosť (alebo naopak), sú inflexné body. V nich funkcia mení zakrivenie. Vypočítať ich sa naučíš pomocou druhej derivácie v lekcii Priebeh funkcie.',
+    fig: 'chord',
+    formula: {
+      f: 'konvexná na I:  x₁ < x < x₂  ⇒  f(x) ≤ p(x)        konkávna:  f(x) ≥ p(x)',
+      what: 'Konvexnosť a konkávnosť pomocou spojnice',
+      vars: [
+        ['I', 'interval, na ktorom vlastnosť skúmame (I ⊂ D(f))'],
+        ['x₁, x₂', 'ľubovoľné dva body intervalu'],
+        ['x', 'ľubovoľný bod medzi nimi'],
+        ['p(x)', 'spojnica bodov [x₁, f(x₁)] a [x₂, f(x₂)]'],
+        ['inflexný bod', 'mení sa konvexnosť na konkávnosť alebo naopak'],
+      ],
+    },
+    deeper: 'Ako vyzerá p(x)? Je to priamka cez dva body, takže p(x) = f(x₁) + (f(x₂) − f(x₁))/(x₂ − x₁) · (x − x₁). Pre x² s x₁ = 0, x₂ = 2: p(x) = 0 + (4 − 0)/2 · x = 2x. V strede x = 1 je f(1) = 1 a p(1) = 2, graf je pod spojnicou, x² je konvexná.\n\nAk ti slovo „konvexná“ pripadá opačné, nie si sám. Zapamätaj si misku ∪: vnútro misky (nad grafom) je konvexná množina, každá úsečka medzi dvoma bodmi vnútri ostane vnútri.',
+    check: {
+      q: 'Graf funkcie leží na intervale I nad každou svojou spojnicou. Funkcia je na I…',
+      options: ['konkávna (tvar ∩)', 'konvexná (tvar ∪)', 'rastúca', 'periodická'],
+      explain: 'f(x) ≥ p(x) je definícia konkávnosti. Príklad: √x alebo ln x, ktoré sa „ohýbajú dole“.',
+    },
+  },
+  {
+    title: 'Celý rozbor vlastností funkcie',
+    text: 'Na konci prednášky sú tri funkcie, pri ktorých treba popísať všetky vlastnosti. Na písomke postupuj stále v tom istom poradí, nič tak nevynecháš: definičný obor, prostosť, monotónnosť, ohraničenosť a extrémy, párnosť, periodickosť.\n\nDve skratky z prednášky. Ak D(f) nie je súmerný podľa nuly, funkcia nemôže byť párna ani nepárna. Ak D(f) je ohraničený z jednej strany (napríklad (−∞, 5/2⟩), nemôže byť periodická. Kvadratickú funkciu najrýchlejšie popíšeš z grafu (paraboly) po doplnení na štvorec.',
+    bullets: [
+      'a) f(x) = (3x − 5)/(2 − 7x): D = (−∞, 2/7) ∪ (2/7, ∞), prostá, klesajúca na každom z dvoch intervalov, neohraničená, bez max a min, nie je párna ani nepárna, nie je periodická.',
+      'b) g(x) = 3 − √(5 − 2x): D = (−∞, 5/2⟩, prostá, rastúca, maximum 3 v bode 5/2, zhora ohraničená, zdola nie, nie je párna, nepárna ani periodická.',
+      'c) h(x) = x² + x + 4: nie je prostá, klesá na (−∞, −1/2), rastie na (−1/2, ∞), minimum 15/4 v bode −1/2, zdola ohraničená, zhora nie, graf súmerný podľa priamky x = −1/2.',
+    ],
+    worked: {
+      q: 'Rozober vlastnosti funkcie g(x) = 3 − √(5 − 2x) (príklad b z prednášky).',
+      steps: [
+        'D(g): 5 − 2x ≥ 0 → x ≤ 5/2. D(g) = (−∞, 5/2⟩.',
+        'Zložky: g₁: y = 5 − 2x (klesá), g₂: z = √y (rastie), g₃: w = 3 − z (klesá).',
+        'Monotónnosť: keď x rastie, 5 − 2x klesá, jeho odmocnina klesá a 3 mínus menšie číslo je väčšie. g je rastúca, a teda aj prostá.',
+        'Rastúca funkcia má najväčšiu hodnotu na pravom konci: g(5/2) = 3 − √0 = 3. Maximum 3, zhora ohraničená.',
+        'Pre x blízko −∞ je 5 − 2x obrovské, jeho odmocnina tiež a g(x) = 3 − (obrovské) ide do −∞. Zdola ohraničená nie je.',
+        'D(g) nie je súmerný podľa nuly a je zhora ohraničený: g nie je párna, nepárna ani periodická.',
+      ],
+      result: 'g: D = (−∞, 5/2⟩, rastúca, prostá, max g(5/2) = 3, ohraničená len zhora, nie párna/nepárna/periodická.',
+    },
+    check: {
+      q: 'Funkcia h(x) = x² + x + 4. Aké je jej minimum?',
+      options: ['15/4 v bode x = −1/2', '4 v bode x = 0', '0 v bode x = −1/2', 'Nemá minimum'],
+      explain: 'Doplnenie na štvorec: x² + x + 4 = (x + 1/2)² − 1/4 + 4 = (x + 1/2)² + 15/4. Štvorec je najmenej 0 pre x = −1/2, minimum je 15/4.',
+    },
+  },
+  {
     title: 'Zhrnutie: funkcie',
     text: 'Funkcia priradí každému x z definičného oboru práve jedno y. Pri každej funkcii sa pýtaš: čo smiem dosadiť (D), čo môže vyjsť (H), a aké má vlastnosti. Elementárne funkcie sú stavebné kocky, z ktorých operáciami a skladaním vznikajú všetky funkcie na skúške.\n\nOpakuj si grafy základných funkcií, kým ich nevieš nakresliť naspamäť. Ušetria ti čas pri definičných oboroch, limitách aj priebehu funkcie.',
     bullets: [
@@ -437,6 +721,13 @@ const steps: Step[] = [
       'eˣ > 0 vždy, ln x len pre x > 0; ln(u·v) = ln u + ln v, ln(uʳ) = r·ln u.',
       'Uhly v radiánoch, kalkulačka v RAD; sin² x + cos² x = 1; perióda sin, cos je 2π, tg je π.',
       'arcsin: D = ⟨−1, 1⟩, H = ⟨−π/2, π/2⟩; arctg: D = ℝ, H = (−π/2, π/2).',
+      'Rovnosť funkcií: rovnaký D(f) A rovnaké hodnoty; x + 2 ≠ (x² − 4)/(x − 2), √(x²) = |x|.',
+      'Graf: f(x) + c hore, f(x + c) DOĽAVA, −f(x) podľa osi x, f(−x) podľa osi y, |f(x)| preklopí spodok hore.',
+      'Prednáška: rýdzo rastúca (<) vs. rastúca = neklesajúca (≤). Rýdzo monotónna ⇒ prostá.',
+      'Monotónnosť na dvoch intervaloch neplatí automaticky na ich zjednotení (1/x³).',
+      'Lokálne maximum môže byť menšie ako lokálne minimum; globálne max je najväčšia hodnota na celom D(f).',
+      'Primitívna perióda = najmenšie p > 0; konštanta je periodická, ale primitívnu periódu nemá.',
+      'Konvexná (∪): graf POD spojnicou, f(x) ≤ p(x); konkávna (∩): NAD spojnicou; inflexný bod mení jedno na druhé.',
     ],
   },
 ];

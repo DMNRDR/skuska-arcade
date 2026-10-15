@@ -19,7 +19,7 @@ npx expo start
 
 ## Režimy
 
-- **Učebňa:** 16 tém (9 z Maty, 7 z Fyziky). Každá lekcia je klikacia prezentácia: jedna myšlienka na obrazovku, veľký text, vzorce, kde ťukneš na symbol a zistíš, čo znamená, riešené príklady odkrývané krok po kroku, mini otázky s okamžitou odozvou a 19 pokusov na dotyk (ťahanie bodov A, B s výpočtom AB = B − A, uhol a skalárny súčin s „KOLMÉ“ pri 90°, vektorový súčin „zakry stĺpec“, násobenie matíc klikom na políčko, Sarrus, sečnica → dotyčnica, obdĺžniky pod grafom, pružina, vlna, Doppler, Snellov zákon, šošovka, Malus, skladanie kmitov, boss príklad s odomykanými krokmi). Na konci boss témy a ťahák. Na webe funguje aj šípkami na klávesnici.
+- **Učebňa:** 24 tém (10 z Maty, 7 z Fyziky, 7 z Deskriptívy). Každá lekcia je klikacia prezentácia: jedna myšlienka na obrazovku, veľký text, vzorce, kde ťukneš na symbol a zistíš, čo znamená, riešené príklady odkrývané krok po kroku, mini otázky s okamžitou odozvou a 21 pokusov na dotyk (ťahanie bodov A, B s výpočtom AB = B − A, uhol a skalárny súčin s „KOLMÉ“ pri 90°, vektorový súčin „zakry stĺpec“, násobenie matíc klikom na políčko, Sarrus, hľadanie vlastného vektora otáčaním, sedem podôb grafu ln x, sečnica → dotyčnica, obdĺžniky pod grafom, pružina, vlna, Doppler, Snellov zákon, šošovka, Malus, skladanie kmitov, boss príklad s odomykanými krokmi). Na konci boss témy a ťahák. Na webe funguje aj šípkami na klávesnici.
 - **Dron geodet:** zameriavaš body na mape, dron letí podľa vektora, ktorý zadáš. Let stojí batériu podľa |v|, bezletové zóny a kontrolné body pýtajú otázky.
 - **Kasíno Istota:** ruleta vyberie tému a násobič, potom staviaš žetóny podľa toho, ako si istý odpoveďou. Len virtuálne žetóny. Na konci kalibrácia istoty.
 - **Cesta na skúšku:** stolová hra s kockou proti spolužiakovi, na farebnom políčku otázka z danej témy, rebríky a šmyky.
@@ -34,7 +34,7 @@ Za všetko sa zbiera XP a levely (Prvák → Nobelista). Postup sa ukladá v zar
 
 - `src/data/fyzika.ts` – z `ZS_2026-27/Fyzika_1/Prednasky/OsnovaSodpovedamiV3.pdf`, `Cvicenia/ZoznamPrikladov.pdf` a riešení v `Briefing_1`. Pri každej otázke je uvedená strana prednášky alebo číslo príkladu.
 - `src/data/deskriptiva.ts`, `src/data/lessons/dg.ts` – Metódy zobrazovania podľa téz na 1. písomku (`ZS_2026-27/Metody_zobrazovania/Skuska/1T_-_Okruh_otazok.pdf`). Rysovačky krok po kroku sú v `src/learn/widgets/dgGeo.ts` (geometria sa počíta) a `deskriptiva.tsx`.
-- `src/data/matematika.ts` – z tematického plánu `ZS_2026-27/Matematika_1/Skuska/Harmonogram_Mat1_GaK.pdf` (prednášky z Maty v repe zatiaľ nie sú).
+- `src/data/matematika.ts` – z tematického plánu `ZS_2026-27/Matematika_1/Skuska/Harmonogram_Mat1_GaK.pdf` a z prednášok doc. Minarechovej v `ZS_2026-27/Matematika_1/Prednasky/` (vlastné čísla: `Prednaska_5.pdf`, funkcie: `Funkcie_zakladne_vlastnosti.pdf`; otázky z prednášky majú pri sebe stranu alebo číslo príkladu).
 - `src/data/steps-fyz.ts`, `src/data/steps-mat.ts` – lekcie Učebne krok po kroku, `src/data/learn.ts` – ťaháky.
 - `src/components/diagrams.tsx`, `src/components/figures.tsx` – animované SVG obrázky (react-native-svg).
 - `src/learn/` – prehrávač lekcií (`Player.tsx`), delenie krokov na obrazovky (`slides.ts`), pokusy na dotyk (`widgets/`) a kde sa v lekciách objavia (`registry.ts`).

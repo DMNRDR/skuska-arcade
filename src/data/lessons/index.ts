@@ -17,6 +17,7 @@ import mat_limity from './mat-limity';
 import mat_matice from './mat-matice';
 import mat_priebeh from './mat-priebeh';
 import mat_vektory from './mat-vektory';
+import mat_vlastne from './mat-vlastne';
 import { DG_STEPS } from './dg';
 
 // Podrobné lekcie: každá téma má vlastný súbor <predmet>-<téma>.ts s `export default steps`.
@@ -38,6 +39,7 @@ const DETAILED: Record<string, Step[]> = {
   'mat:matice': mat_matice,
   'mat:priebeh': mat_priebeh,
   'mat:vektory': mat_vektory,
+  'mat:vlastne': mat_vlastne,
 };
 
 export const LESSON_STEPS: Record<string, Step[]> = { ...FYZ_STEPS, ...MAT_STEPS, ...DETAILED, ...DG_STEPS };
