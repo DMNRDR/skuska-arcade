@@ -17,6 +17,7 @@ export default function Home({
   setSubject,
   onCampaign,
   onTezy,
+  onNavod,
   onLearn,
   onPlay,
   onGame,
@@ -26,6 +27,7 @@ export default function Home({
   setSubject: (s: SubjectId) => void;
   onCampaign: () => void;
   onTezy: () => void;
+  onNavod: () => void;
   onLearn: (topic?: string) => void;
   onPlay: (c: GameConfig) => void;
   onGame: (g: GameId) => void;
@@ -54,7 +56,7 @@ export default function Home({
       <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
         <View style={{ flex: 1 }}>
           <Text style={s.word}>Skúška</Text>
-          <Text style={s.sub}>Mata 1, Fyzika 1, Deskriptíva · STU SvF · ZS 2026/27</Text>
+          <Text style={s.sub}>Mata 1, Fyzika 1, Deskriptíva, Geodézia 1 · STU SvF · ZS 2026/27</Text>
         </View>
         <Pressable onPress={() => setMuted(!muted)} hitSlop={10} style={s.iconBtn} accessibilityLabel={muted ? 'Zapnúť zvuk' : 'Vypnúť zvuk'}>
           <Icon name={muted ? 'soundOff' : 'soundOn'} size={22} />
@@ -75,7 +77,7 @@ export default function Home({
 
       {/* predmet ako záložky v zošite */}
       <View style={s.tabs}>
-        {(['mat', 'fyz', 'dg'] as SubjectId[]).map((id) => {
+        {(['mat', 'fyz', 'dg', 'geo'] as SubjectId[]).map((id) => {
           const on = id === subject;
           return (
             <Pressable
@@ -100,6 +102,18 @@ export default function Home({
             <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>DOKUMENT OD UČITEĽKY</Text>
             <Text style={s.bigBtn}>Tézy 1. písomky</Text>
             <Text style={[s.small, { color: '#fff' }]}>Každá otázka so vzorovou odpoveďou a obrázkom. Skúšanie na teóriu aj rysovanie.</Text>
+          </Press>
+        </View>
+      )}
+
+      {/* geodézia: praktický návod na dnešné cvičenie */}
+      {subject === 'geo' && (
+        <View style={{ gap: 10 }}>
+          <Text style={s.section}>Dnes na cvičení</Text>
+          <Press color={C.ink} onPress={onNavod} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>TUTORIÁL · PO 12:00 · B321</Text>
+            <Text style={s.bigBtn}>Zadanie 5 v praxi</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Krok po kroku: čo napísať do Excelu, aké vzorce a čo ti má vyjsť. S tvojimi číslami (zadanie č. 15).</Text>
           </Press>
         </View>
       )}
@@ -160,7 +174,7 @@ export default function Home({
 
       <Text style={s.foot}>
         {countQuestions(subject)} otázok + {countGenerators(subject)} generátorov príkladov.{' '}
-        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. písomku z Metód zobrazovania, pracovné listy a utorková písomka.' : 'Zdroj: prednášky doc. Minarechovej (týždne 1 až 4) a tematický plán Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
+        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. písomku z Metód zobrazovania, pracovné listy a utorková písomka.' : subject === 'geo' ? 'Zdroj: Zadanie 5 z Geodézie 1 (doc. Marčiš, AIS), vzorový príklad a individuálne zadanie č. 15.' : 'Zdroj: prednášky doc. Minarechovej (týždne 1 až 4) a tematický plán Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
       </Text>
     </ScrollView>
   );
@@ -225,9 +239,9 @@ const s = StyleSheet.create({
   iconBtn: { width: 44, height: 44, borderRadius: 8, borderWidth: 2, borderColor: C.ink, backgroundColor: C.sheet, alignItems: 'center', justifyContent: 'center' },
   level: { fontFamily: F.bodyBold, fontSize: 17, color: C.ink },
   mono: { fontFamily: F.mono, fontSize: 12, color: C.ink2 },
-  tabs: { flexDirection: 'row', gap: 6, borderBottomWidth: 2, borderBottomColor: C.ink },
-  tab: { paddingHorizontal: 12, paddingVertical: 10, borderWidth: 2, borderBottomWidth: 0, borderColor: C.ink, borderTopLeftRadius: 8, borderTopRightRadius: 8, backgroundColor: C.sheet, marginBottom: -2 },
-  tabText: { fontFamily: F.head, fontSize: 17, color: C.ink },
+  tabs: { flexDirection: 'row', gap: 4, borderBottomWidth: 2, borderBottomColor: C.ink },
+  tab: { paddingHorizontal: 9, paddingVertical: 10, borderWidth: 2, borderBottomWidth: 0, borderColor: C.ink, borderTopLeftRadius: 8, borderTopRightRadius: 8, backgroundColor: C.sheet, marginBottom: -2 },
+  tabText: { fontFamily: F.head, fontSize: 15, color: C.ink },
   section: { fontFamily: F.monoBold, fontSize: 12, letterSpacing: 1.6, color: C.ink2, textTransform: 'uppercase' },
   bigBtn: { fontFamily: F.headX, fontSize: 28, lineHeight: 32, color: '#fff' },
   small: { fontFamily: F.body, fontSize: 15, lineHeight: 20, color: C.ink2 },

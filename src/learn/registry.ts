@@ -5,6 +5,7 @@ import { MatMul, SarrusTap } from './widgets/matice';
 import { BossTriangle, CrossCover, VecAB, VecDot } from './widgets/vektory';
 import { rys } from './widgets/deskriptiva';
 import { EigenDrag } from './widgets/vlastne';
+import { GeoBossA, GeoBossB, GeoPodiel, GeoTabA } from './widgets/geodezia';
 
 export type WidgetDef = {
   title: string;
@@ -57,6 +58,11 @@ export const WIDGETS: Record<string, WidgetDef> = {
   'dg-t5': { title: 'Rysuj: rez terénu rovinou', lead: 'Rovina daná spádovým merítkom.', C: rys('dg-t5') },
   'dg-m': { title: 'Rysuj: bokorys bodu', lead: 'Z pôdorysu a nárysu.', C: rys('dg-m') },
   'dg-b': { title: 'Rysuj: teleso v troch priemetoch', lead: 'Nárys, pôdorys, bokorys a bod Q.', C: rys('dg-b') },
+  // geodézia: Zadanie 5
+  'geo-tab-a': { title: 'Vyskúšaj: tabuľka opráv', lead: 'Tvoje merania zo zadania č. 15. Ťukaj na riadky.', C: GeoTabA },
+  'geo-podiel': { title: 'Pokus: ktorá chyba škodí najviac', lead: 'Meň stredné chyby meraní a sleduj mΔh.', C: GeoPodiel },
+  'geo-boss-a': { title: 'Boss: celá úloha A', lead: 'Zadaj svoje výsledky, každé políčko sa hneď skontroluje.', C: GeoBossA, boss: true },
+  'geo-boss-b': { title: 'Boss: celá úloha B', lead: 'Zadaj svoje výsledky, každé políčko sa hneď skontroluje.', C: GeoBossB, boss: true },
 };
 
 /** Kam sa vložia pokusy: téma → { index kroku lekcie: id pokusov } (zobrazia sa po výklade kroku). */
@@ -82,4 +88,6 @@ export const EXTRAS: Record<string, Record<number, string[]>> = {
   'dg:kotovane': { 2: ['dg-k1'], 3: ['dg-k2'], 4: ['dg-k3'], 6: ['dg-k4'], 7: ['dg-k5'], 8: ['dg-k6'], 9: ['dg-k7'], 10: ['dg-k8'] },
   'dg:topo': { 1: ['dg-t1'], 2: ['dg-t2'], 4: ['dg-t3'], 5: ['dg-t4'], 6: ['dg-t5'] },
   'dg:monge': { 2: ['dg-m'], 4: ['dg-b'] },
+  'geo:ulohaA': { 2: ['geo-tab-a'], 7: ['geo-boss-a'] },
+  'geo:ulohaB': { 5: ['geo-podiel'], 6: ['geo-boss-b'] },
 };

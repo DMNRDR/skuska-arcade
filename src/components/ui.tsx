@@ -18,6 +18,7 @@ export const C = {
   orange: '#DE5A1E',
   blue: '#2A56B8',
   teal: '#1F7A70',
+  ochre: '#8A5A14',
   yellow: '#F2C230',
   mark: '#FFE27A',
   board: '#203630',

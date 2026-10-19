@@ -4,16 +4,18 @@ import { FYZ_QUESTIONS, FYZ_TOPICS } from './fyzika';
 import { GENERATORS } from './generators';
 import { MAT_QUESTIONS, MAT_TOPICS } from './matematika';
 import { DG_QUESTIONS, DG_TOPICS } from './deskriptiva';
+import { GEO_QUESTIONS, GEO_TOPICS } from './geodezia';
 
 export const SUBJECTS: Record<SubjectId, { name: string; short: string; color: string; color2: string; icon: string; boss: string; bossIcon: string }> = {
   fyz: { name: 'Fyzika 1', short: 'Fyzika', color: '#2A56B8', color2: '#1D3F8A', icon: 'F', boss: 'Kráľ Oscilátor', bossIcon: '' },
   mat: { name: 'Matematika 1', short: 'Mata', color: '#DE5A1E', color2: '#B4441A', icon: 'M', boss: 'Determinátor', bossIcon: '' },
   dg: { name: 'Metódy zobrazovania', short: 'Deskriptíva', color: '#1F7A70', color2: '#155A52', icon: 'D', boss: 'Veľký Priemetník', bossIcon: '' },
+  geo: { name: 'Geodézia 1', short: 'Geodézia', color: '#8A5A14', color2: '#6B450F', icon: 'G', boss: 'Pán Stredná Chyba', bossIcon: '' },
 };
 
-export const TOPICS: Record<SubjectId, Topic[]> = { fyz: FYZ_TOPICS, mat: MAT_TOPICS, dg: DG_TOPICS };
+export const TOPICS: Record<SubjectId, Topic[]> = { fyz: FYZ_TOPICS, mat: MAT_TOPICS, dg: DG_TOPICS, geo: GEO_TOPICS };
 
-const ALL: Question[] = [...FYZ_QUESTIONS, ...MAT_QUESTIONS, ...DG_QUESTIONS];
+const ALL: Question[] = [...FYZ_QUESTIONS, ...MAT_QUESTIONS, ...DG_QUESTIONS, ...GEO_QUESTIONS];
 
 let genCounter = 0;
 

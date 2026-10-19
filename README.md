@@ -1,6 +1,6 @@
 # Skúška Arcade
 
-Študijná hra na Fyziku 1, Matematiku 1 a Metódy zobrazovania (deskriptívu) (STU SvF, ZS 2026/27). Expo / React Native, beží na mobile cez Expo Go aj vo webe.
+Študijná hra na Fyziku 1, Matematiku 1, Metódy zobrazovania (deskriptívu) a Geodéziu 1 (STU SvF, ZS 2026/27). Expo / React Native, beží na mobile cez Expo Go aj vo webe.
 
 **Hraj online:** https://dmnrdr.github.io/skuska-arcade/
 **Android APK:** [Releases](https://github.com/DMNRDR/skuska-arcade/releases/latest)
@@ -34,6 +34,7 @@ Za všetko sa zbiera XP a levely (Prvák → Nobelista). Postup sa ukladá v zar
 
 - `src/data/fyzika.ts` – z `ZS_2026-27/Fyzika_1/Prednasky/OsnovaSodpovedamiV3.pdf`, `Cvicenia/ZoznamPrikladov.pdf` a riešení v `Briefing_1`. Pri každej otázke je uvedená strana prednášky alebo číslo príkladu.
 - `src/data/deskriptiva.ts`, `src/data/lessons/dg.ts` – Metódy zobrazovania podľa téz na 1. písomku (`ZS_2026-27/Metody_zobrazovania/Skuska/1T_-_Okruh_otazok.pdf`). Rysovačky krok po kroku sú v `src/learn/widgets/dgGeo.ts` (geometria sa počíta) a `deskriptiva.tsx`.
+- `src/data/geodezia.ts`, `src/data/lessons/geo.ts` – Geodézia 1, Zadanie 5 (zákon hromadenia stredných chýb) z AIS dokumentového servera, čísla z individuálneho zadania č. 15. Pokusy sú v `src/learn/widgets/geodezia.tsx`.
 - `src/data/matematika.ts` – z tematického plánu `ZS_2026-27/Matematika_1/Skuska/Harmonogram_Mat1_GaK.pdf` a z prednášok doc. Minarechovej v `ZS_2026-27/Matematika_1/Prednasky/` (vlastné čísla: `Prednaska_5.pdf`, funkcie: `Funkcie_zakladne_vlastnosti.pdf`; otázky z prednášky majú pri sebe stranu alebo číslo príkladu).
 - `src/data/steps-fyz.ts`, `src/data/steps-mat.ts` – lekcie Učebne krok po kroku, `src/data/learn.ts` – ťaháky.
 - `src/components/diagrams.tsx`, `src/components/figures.tsx` – animované SVG obrázky (react-native-svg).

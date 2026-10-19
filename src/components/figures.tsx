@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 import { DgPic } from '../learn/widgets/deskriptiva';
+import { GeoPic } from '../learn/widgets/geodezia';
 import { Arrow, AX, Chips, CY, fnPath, Frame, GR, GraphAxes, H, K as C, Label, PK, RD, TopicDiagram, useTime, VI, W, YE } from './diagrams';
 
 void W;
@@ -1235,6 +1236,7 @@ export function Figure({ fig }: { fig: string }) {
     return <TopicDiagram id={id} init={init} />;
   }
   if (fig.startsWith('dg-')) return <DgPic id={fig} />;
+  if (fig.startsWith('geo-')) return <GeoPic id={fig} />;
   const F = FIGS[fig];
   return F ? <F /> : null;
 }

@@ -494,4 +494,82 @@ export const LESSONS: Record<string, Lesson> = {
     ],
     tips: ['Nárys a pôdorys pod sebou, nárys a bokorys vedľa seba.', 'Pomenuj osi: x, y, z a priemetne π, ν, μ.'],
   },
+  // ───────────── GEODÉZIA 1 (Zadanie 5) ─────────────
+  'geo:z5': {
+    intro: 'Zadanie 5: zákon hromadenia stredných chýb. Jedno cvičenie, odovzdáva sa výpočtový protokol.',
+    points: [
+      'Úloha A: 6 meraní polomeru → r̄, m₀, mr, γ, O ± mO, P ± mP.',
+      'Úloha B: Δh = d·tg β + hp − hc a mΔh.',
+      'Si zadanie č. 15 v tabuľke vstupných hodnôt.',
+      'V protokole: vzorec → dosadenie → výsledok s jednotkou.',
+    ],
+    formulas: [
+      ['400 g = 360°', 'plný kruh v gradoch'],
+      ['1 g = 100c = 10 000cc', 'gradové minúty a sekundy'],
+    ],
+    tips: ['Kalkulačku prepni na GRAD (tlačidlo DRG alebo MODE).', 'Opravy píš v mm, výsledky v m.'],
+  },
+  'geo:chyby': {
+    intro: 'Z opakovaných meraní dostaneš priemer a jeho strednú chybu.',
+    points: [
+      'Priemer je najpravdepodobnejšia hodnota.',
+      'Oprava v = r̄ − rᵢ, súčet opráv musí byť 0.',
+      'm₀ je chyba jedného merania, mr chyba priemeru.',
+      'Pomerná chyba 1 : (r̄/mr), väčšie číslo = presnejšie.',
+    ],
+    formulas: [
+      ['r̄ = Σrᵢ / n', 'aritmetický priemer'],
+      ['vᵢ = r̄ − rᵢ', 'oprava'],
+      ['m₀ = √(Σv² / (n − 1))', 'jednotková stredná chyba'],
+      ['mr = m₀ / √n', 'stredná chyba priemeru'],
+      ['γ = 1 : (r̄ / mr)', 'pomerná chyba'],
+    ],
+    tips: ['Pri m₀ deľ n − 1, nie n.', 'Pri γ daj r̄ aj mr v metroch.'],
+    example: { q: 'm₀ = 26 mm, n = 6. mr = ?', a: '26 / √6 = 10,6 mm ≈ 0,011 m.' },
+  },
+  'geo:zakon': {
+    intro: 'Chyba výsledku z chýb meraní: derivácia krát chyba, na druhú, sčítať, odmocniť.',
+    points: [
+      'Derivuješ podľa každej meranej veličiny zvlášť (ostatné sú konštanty).',
+      'Chyby sa sčítavajú v druhých mocninách, lebo sú náhodné a nezávislé.',
+      'Chybu uhla v cc deľ ρ = 636 620, aby bola v radiánoch.',
+    ],
+    formulas: [
+      ['my = √( Σ (∂f/∂xᵢ · mᵢ)² )', 'zákon hromadenia stredných chýb'],
+      ['mO = 2π · mr', 'chyba obvodu kruhu'],
+      ['mP = 2π · r · mr', 'chyba plochy kruhu'],
+      ['ρ = 200/π · 10 000 ≈ 636 620 cc', 'cc v jednom radiáne'],
+    ],
+    tips: ['Znamienko derivácie nevadí, po umocnení zmizne.', '(tg β)′ = 1 / cos²β.'],
+  },
+  'geo:ulohaA': {
+    intro: 'Kruhová stavba, zadanie č. 15: šesť meraní polomeru.',
+    points: [
+      'Σr = 787,44 m, r̄ = 131,240 m.',
+      'v: −160, −50, +90, 0, +50, +70 mm, Σv = 0, Σv² = 43 600 mm².',
+      'm₀ = √(43 600 / 5) = 93,4 mm, mr = 93,4 / √6 = 38,1 mm.',
+      'γ = 1 : 3 443 ≈ 1 : 3 400.',
+    ],
+    formulas: [
+      ['O = 2πr̄ = 824,605 m', 'obvod'],
+      ['mO = 2π · mr = 0,24 m', 'chyba obvodu'],
+      ['P = πr̄² = 54 111 m²', 'plocha'],
+      ['mP = 2πr̄ · mr = 31 m²', 'chyba plochy'],
+    ],
+    tips: ['Najprv skontroluj Σv = 0, až potom počítaj m₀.'],
+  },
+  'geo:ulohaB': {
+    intro: 'Trigonometrický výškový rozdiel, zadanie č. 15.',
+    points: [
+      'd = 201,26 m, β = 19,5082 g, hp = 2,31 m, hc = 2,14 m.',
+      'tg β = 0,316400 (GRAD!), d·tg β = 63,679 m.',
+      'Členy chyby: 0,0095 (d), 0,0017 (β), 0,02 (hp), 0,01 (hc) m.',
+    ],
+    formulas: [
+      ['Δh = d·tg β + hp − hc = 63,85 m', 'výškový rozdiel'],
+      ['mΔh = √((tg β·md)² + (d/cos²β · mβ/ρ)² + mhp² + mhc²)', 'jeho stredná chyba'],
+      ['mΔh = 0,024 m ≈ 0,02 m', 'tvoj výsledok'],
+    ],
+    tips: ['cos²β = 0,909001.', 'mβ = 5cc → 5 / 636 620 rad.'],
+  },
 };

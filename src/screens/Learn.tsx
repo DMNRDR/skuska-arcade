@@ -15,7 +15,7 @@ import { GameConfig } from './Game';
 
 type View_ = { kind: 'list' } | { kind: 'lesson'; id: string; start: number } | { kind: 'done'; id: string } | { kind: 'tahak'; id: string } | { kind: 'boss'; id: string };
 
-export const SUBJ_COLOR: Record<SubjectId, string> = { fyz: C.blue, mat: C.orange, dg: C.teal };
+export const SUBJ_COLOR: Record<SubjectId, string> = { fyz: C.blue, mat: C.orange, dg: C.teal, geo: C.ochre };
 
 /** Učebňa: zoznam tém → lekcia po obrazovkách → boss kvíz / ťahák. */
 export default function Learn({
