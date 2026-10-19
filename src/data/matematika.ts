@@ -2,7 +2,8 @@ import { Question, Topic } from '../types';
 
 // Zdroj: ZS_2026-27/Matematika_1/Skuska/Harmonogram_Mat1_GaK.pdf (tematický plán prednášok)
 //        ZS_2026-27/Matematika_1/Skuska/Sylabus_a_podmienky.md
-//        ZS_2026-27/Matematika_1/Prednasky/ (prednášky doc. Minarechovej z Google Drive, týždne 1 až 4)
+//        ZS_2026-27/Matematika_1/Prednasky/ (prednášky doc. Minarechovej z Google Drive, týždne 1 až 6)
+//        Hárok K_prednaske_10.pdf (riešené príklady cvičiacej: delenie polynómov, Horner, parciálne zlomky)
 // Otázky z konkrétnej prednášky majú 6. prvok src. Nové otázky pripisuj NA KONIEC poľa rows:
 // id sa počíta z poradia a podľa neho si appka pamätá chyby na tréning.
 
@@ -13,11 +14,14 @@ export const MAT_TOPICS: Topic[] = [
   { id: 'determinanty', subject: 'mat', name: 'Determinanty a SLAR', icon: '🧮', src: 'Prednáška 4' },
   { id: 'vlastne', subject: 'mat', name: 'Vlastné čísla a vektory', icon: '🎯', src: 'Prednáška 5' },
   { id: 'funkcie', subject: 'mat', name: 'Funkcie a ich vlastnosti', icon: '📈', src: 'Prednáška Funkcie (4. týždeň)' },
+  { id: 'polynomy', subject: 'mat', name: 'Polynómy, Horner, parciálne zlomky', icon: '🧩', src: 'Cvičenie K prednáške 10 (5. týždeň)' },
   { id: 'limity', subject: 'mat', name: 'Limity a asymptoty', icon: '♾️', src: 'Prednáška 6' },
   { id: 'derivacie', subject: 'mat', name: 'Derivácie', icon: '📉', src: 'Prednášky 7–9' },
   { id: 'priebeh', subject: 'mat', name: 'Priebeh funkcie', icon: '🎢', src: 'Prednáška 10' },
   { id: 'integraly', subject: 'mat', name: 'Neurčitý integrál', icon: '∫', src: 'Prednášky 11–12' },
 ];
+
+const SRC = 'Cvičenie K prednáške 10';
 
 type Row = [topic: string, diff: 1 | 2 | 3, q: string, options: string[], explain: string, src?: string];
 
@@ -404,6 +408,38 @@ const rows: Row[] = [
     '(x + 1/2)² + 15/4. Graf je súmerný podľa priamky x = −1/2.', 'Prednáška Funkcie, s. 82'],
   ['funkcie', 3, 'Funkcia g(x) = 3 − √(5 − 2x) je na svojom definičnom obore…', ['rastúca s maximom 3 v bode 5/2', 'klesajúca s minimom 3 v bode 5/2', 'rastúca a zhora neohraničená', 'párna'],
     'D = (−∞, 5/2⟩. 5 − 2x klesá, odmocnina klesá, 3 mínus odmocnina rastie. g(5/2) = 3, zdola neohraničená.', 'Prednáška Funkcie, s. 79'],
+
+  // ───────────── POLYNÓMY (hárok K prednáške 10, 5. týždeň) ─────────────
+  ['polynomy', 1, 'Číslo a je koreňom polynómu P, ak…', ['P(a) = 0', 'P(0) = a', 'a je vedúci koeficient', 'P(a) = 1'],
+    'Koreň je číslo, po ktorého dosadení vyjde nula. Potom sa P dá deliť (x − a) bez zvyšku.', SRC],
+  ['polynomy', 1, 'Aký je koreňový činiteľ ku koreňu x = −2?', ['(x + 2)', '(x − 2)', '(2x)', '(x + 1/2)'],
+    'Činiteľ je (x − a) = (x − (−2)) = (x + 2).', SRC],
+  ['polynomy', 1, '(x³ − 1) : (x − 1) = ?', ['x² + x + 1', 'x² − x + 1', 'x² + 1', 'x² − 1'],
+    'Príklad 1b: (x − 1)(x² + x + 1) = x³ − 1, zvyšok 0.', SRC],
+  ['polynomy', 2, '(x³ − 1) : (x + 1) = ?', ['x² − x + 1 − 2/(x + 1)', 'x² + x + 1', 'x² − x + 1', 'x² − 1 + 2/(x + 1)'],
+    'Príklad 1a: (x + 1)(x² − x + 1) = x³ + 1, preto x³ − 1 = (x + 1)(x² − x + 1) − 2.', SRC],
+  ['polynomy', 2, '(3x³ + 5x² + 7x + 5) : (x + 1) = ?', ['3x² + 2x + 5', '3x² + 8x + 15', '3x² − 2x + 5', '3x² + 2x + 5 + 1/(x + 1)'],
+    'Príklad 1c. Horner s −1: 3 | 2 | 5 | 0, zvyšok 0.', SRC],
+  ['polynomy', 1, 'Čo je posledné číslo v dolnom riadku Hornerovej schémy pre číslo a?', ['Zvyšok, teda hodnota P(a)', 'Vedúci koeficient', 'Stupeň polynómu', 'Ďalší koreň'],
+    'Ak je 0, a je koreň. Ostatné čísla dolného riadku sú koeficienty podielu.', SRC],
+  ['polynomy', 1, 'Ktoré čísla skúšaš ako celočíselné korene x³ − x² − 8x + 12?', ['Delitele 12: ±1, ±2, ±3, ±4, ±6, ±12', 'Delitele 8', 'Len 1 a −1', 'Ľubovoľné čísla od −5 do 5'],
+    'Pri vedúcom koeficiente 1 delí každý celočíselný koreň absolútny člen.', SRC],
+  ['polynomy', 2, 'Rozklad x³ − x² − 8x + 12 na súčin je…', ['(x − 2)²(x + 3)', '(x + 2)²(x − 3)', '(x − 2)(x + 2)(x − 3)', '(x − 1)(x − 2)(x + 6)'],
+    'Príklad 2a: Horner s 2 → 1 | 1 | −6, znova s 2 → 1 | 3, teda x + 3.', SRC],
+  ['polynomy', 2, 'Horný riadok Hornerovej schémy pre x⁴ − 4x³ + 16x − 16 je…', ['1 | −4 | 0 | 16 | −16', '1 | −4 | 16 | −16', '1 | 4 | 0 | 16 | 16', '−4 | 16 | −16'],
+    'Chýbajúca mocnina x² má koeficient 0. Bez nej sa schéma pokazí.', SRC],
+  ['polynomy', 3, 'Rozklad x⁴ + 6x³ + 14x² + 18x + 9 je…', ['(x + 1)(x + 3)(x² + 2x + 3)', '(x + 1)²(x + 3)²', '(x + 1)(x + 3)³', '(x − 1)(x − 3)(x² + 2x + 3)'],
+    'Príklad 2d: korene −1 a −3, zvyšok x² + 2x + 3 má D = −8 < 0.', SRC],
+  ['polynomy', 1, 'Kedy môžeš zlomok hneď rozložiť na parciálne zlomky?', ['Keď má čitateľ menší stupeň ako menovateľ', 'Vždy', 'Keď má čitateľ väčší stupeň', 'Keď je menovateľ kvadratický'],
+    'Inak treba najprv polynómy vydeliť.', SRC],
+  ['polynomy', 2, '(2x − 5)/(x² − 5x + 6) = ?', ['1/(x − 3) + 1/(x − 2)', '2/(x − 3) − 5/(x − 2)', '1/(x + 3) + 1/(x + 2)', '−1/(x − 3) + 3/(x − 2)'],
+    'Príklad 3a: A + B = 2, −2A − 3B = −5 → A = B = 1.', SRC],
+  ['polynomy', 2, '5/((x − 2)(x − 7)) = ?', ['−1/(x − 2) + 1/(x − 7)', '1/(x − 2) − 1/(x − 7)', '5/(x − 2) + 5/(x − 7)', '1/(x − 2) + 1/(x − 7)'],
+    'Príklad 3b. Zakrývanie: x = 2 → 5/(2 − 7) = −1, x = 7 → 5/(7 − 2) = 1.', SRC],
+  ['polynomy', 3, '1/(x³ − x) = ?', ['−1/x + (1/2)/(x − 1) + (1/2)/(x + 1)', '1/x − 1/(x − 1) + 1/(x + 1)', '−1/x + 1/(x − 1) + 1/(x + 1)', '1/x + (1/2)/(x − 1) − (1/2)/(x + 1)'],
+    'Príklad 3c: x³ − x = x(x − 1)(x + 1). A = 1/((−1)·1) = −1, B = 1/(1·2), C = 1/((−1)·(−2)).', SRC],
+  ['polynomy', 2, 'Aký tvar má zlomok k nerozložiteľnému činiteľu x² + x + 1?', ['(Bx + C)/(x² + x + 1)', 'B/(x² + x + 1)', 'B/(x + 1)', 'Bx²/(x² + x + 1)'],
+    'Príklad 3d: k nerozložiteľnej kvadratickej zátvorke patrí lineárny čitateľ.', SRC],
 ];
 
 export const MAT_QUESTIONS: Question[] = rows.map(([topic, diff, q, options, explain, src], i) => ({

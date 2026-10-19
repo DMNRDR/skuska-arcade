@@ -174,7 +174,7 @@ export default function Home({
 
       <Text style={s.foot}>
         {countQuestions(subject)} otázok + {countGenerators(subject)} generátorov príkladov.{' '}
-        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. písomku z Metód zobrazovania, pracovné listy a utorková písomka.' : subject === 'geo' ? 'Zdroj: Zadanie 5 z Geodézie 1 (doc. Marčiš, AIS), vzorový príklad a individuálne zadanie č. 15.' : 'Zdroj: prednášky doc. Minarechovej (týždne 1 až 4) a tematický plán Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
+        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. písomku z Metód zobrazovania, pracovné listy a utorková písomka.' : subject === 'geo' ? 'Zdroj: Zadanie 5 z Geodézie 1 (doc. Marčiš, AIS), vzorový príklad a individuálne zadanie č. 15.' : 'Zdroj: prednášky doc. Minarechovej (týždne 1 až 6), hárok z cvičenia K prednáške 10 a tematický plán Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
       </Text>
     </ScrollView>
   );

@@ -15,6 +15,7 @@ import mat_geometria from './mat-geometria';
 import mat_integraly from './mat-integraly';
 import mat_limity from './mat-limity';
 import mat_matice from './mat-matice';
+import mat_polynomy from './mat-polynomy';
 import mat_priebeh from './mat-priebeh';
 import mat_vektory from './mat-vektory';
 import mat_vlastne from './mat-vlastne';
@@ -38,6 +39,7 @@ const DETAILED: Record<string, Step[]> = {
   'mat:integraly': mat_integraly,
   'mat:limity': mat_limity,
   'mat:matice': mat_matice,
+  'mat:polynomy': mat_polynomy,
   'mat:priebeh': mat_priebeh,
   'mat:vektory': mat_vektory,
   'mat:vlastne': mat_vlastne,

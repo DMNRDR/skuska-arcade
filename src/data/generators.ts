@@ -457,6 +457,43 @@ export const GENERATORS: Generator[] = [
     },
   },
   {
+    subject: 'mat', topic: 'polynomy',
+    make: () => {
+      // monický polynóm 3. stupňa s celými koreňmi r1, r2, r3
+      const r = [rnd(-4, 4), rnd(-4, 4), rnd(-4, 4)].map((v) => v || 1).sort((a, b) => a - b);
+      const c = [1, -(r[0] + r[1] + r[2]), r[0] * r[1] + r[0] * r[2] + r[1] * r[2], -r[0] * r[1] * r[2]];
+      const f = (v: number) => (v < 0 ? `(x + ${fmt(-v)})` : `(x − ${fmt(v)})`);
+      const prod = (rs: number[]) => rs.map(f).join('');
+      return {
+        diff: 2, q: `Rozlož na súčin: ${poly(c.map((v, i) => [v, 3 - i] as [number, number]))}`,
+        options: uniq([prod(r), prod(r.map((v) => -v)), prod([r[0], -r[1], r[2]]), prod([-r[0], r[1], r[2]])]),
+        explain: `Kandidáti sú delitele ${fmt(c[3])}. Horner nájde koreň ${fmt(r[0])}, potom pokračuješ s podielom. Skúška: dosaď korene ${r.map((v) => fmt(v)).join(', ')}.`,
+        src: 'Cvičenie K prednáške 10 (generované)',
+      };
+    },
+  },
+  {
+    subject: 'mat', topic: 'polynomy',
+    make: () => {
+      const a = rnd(-5, 5);
+      let b = rnd(-5, 5);
+      if (b === a) b = a + rnd(1, 3);
+      const A = pick([-3, -2, -1, 1, 2, 3]);
+      const B = pick([-3, -2, -1, 1, 2, 3]);
+      // A/(x − a) + B/(x − b) = ((A + B)x − (A·b + B·a)) / ((x − a)(x − b))
+      const num = poly([[A + B, 1], [-(A * b + B * a), 0]]);
+      const f = (v: number) => (v === 0 ? 'x' : v < 0 ? `(x + ${fmt(-v)})` : `(x − ${fmt(v)})`);
+      const z = (k: number, v: number, first: boolean) => (first ? (k < 0 ? '−' : '') : k < 0 ? ' − ' : ' + ') + `${fmt(Math.abs(k))}/${f(v)}`;
+      const ans = z(A, a, true) + z(B, b, false);
+      return {
+        diff: 2, q: `Rozlož na parciálne zlomky: ${num.includes('x') ? `(${num})` : num} / (${f(a)}${f(b)})`,
+        options: uniq([ans, z(B, a, true) + z(A, b, false), z(-A, a, true) + z(-B, b, false), z(A, -a, true) + z(B, -b, false)]),
+        explain: `Zakrývacie pravidlo: A = čitateľ/${f(b)} v x = ${fmt(a)} = ${fmt(A)}, B = čitateľ/${f(a)} v x = ${fmt(b)} = ${fmt(B)}.`,
+        src: 'Cvičenie K prednáške 10 (generované)',
+      };
+    },
+  },
+  {
     subject: 'mat', topic: 'limity',
     make: () => {
       const a = rnd(1, 9);

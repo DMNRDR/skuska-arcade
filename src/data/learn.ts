@@ -308,6 +308,31 @@ export const LESSONS: Record<string, Lesson> = {
     ],
     example: { q: 'Definičný obor √(4 − x²)?', a: '4 − x² ≥ 0 → x ∈ ⟨−2, 2⟩.' },
   },
+  'mat:polynomy': {
+    intro: 'Delenie polynómov, Hornerova schéma a rozklad na parciálne zlomky. Presne tieto tri typy úloh sú na hárku cvičiacej „K prednáške 10“.',
+    points: [
+      'Koreň a: P(a) = 0. Koreňový činiteľ (x − a), pre a = −3 je to (x + 3).',
+      'Delenie pod sebou: deľ vždy najvyšší člen, vynásob, odčítaj, opakuj. Zvyšok píš ako zvyšok/deliteľ.',
+      'Horner: koeficienty hore (chýbajúca mocnina = 0), a vľavo, zhoď prvý, potom krát a a sčítaj.',
+      'Posledné číslo dole je zvyšok = P(a). Nula → a je koreň, ostatné čísla sú podiel.',
+      'Kandidáti na celé korene: delitele absolútneho člena (ak je vedúci koeficient 1).',
+      'Parciálne zlomky len pre rýdzi zlomok (čitateľ má menší stupeň), inak najprv deľ.',
+      '(x − a) → A/(x − a), (x − a)² → A/(x − a) + B/(x − a)², nerozložiteľné x² + px + q → (Bx + C)/(…).',
+    ],
+    formulas: [
+      ['P(x) = (x − a)·S(x) + P(a)', 'delenie dvojčlenom (x − a)'],
+      ['bₖ₋₁ = aₖ + a·bₖ', 'jeden krok Hornerovej schémy'],
+      ['P/((x − a)(x − b)) = A/(x − a) + B/(x − b)', 'parciálne zlomky'],
+      ['A = [P(x) / ostatné činitele] v x = a', 'zakrývacie pravidlo'],
+    ],
+    tips: [
+      'Pri delení (x + 4) píš do Hornera −4.',
+      'Ten istý koreň skús aj druhýkrát: môže byť násobný.',
+      'Skúška: dosaď koreň do pôvodného polynómu alebo zlomky spätne sčítaj.',
+      'Ostane kvadratická zátvorka s D < 0? Nechaj ju tak.',
+    ],
+    example: { q: 'Rozlož x³ − x² − 8x + 12 (príklad 2a).', a: 'Horner s 2: 1 | 1 | −6 | 0, znova s 2: 1 | 3 | 0. Výsledok (x − 2)²(x + 3).' },
+  },
   'mat:limity': {
     intro: 'Limita hovorí, k čomu sa funkcia blíži. Pomocou nej definujeme spojitosť a asymptoty.',
     points: [

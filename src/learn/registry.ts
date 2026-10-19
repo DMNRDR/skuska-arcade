@@ -5,6 +5,7 @@ import { MatMul, SarrusTap } from './widgets/matice';
 import { BossTriangle, CrossCover, VecAB, VecDot } from './widgets/vektory';
 import { rys } from './widgets/deskriptiva';
 import { EigenDrag } from './widgets/vlastne';
+import { HornerTap } from './widgets/polynomy';
 import { GeoBossA, GeoBossB, GeoPodiel, GeoTabA } from './widgets/geodezia';
 
 export type WidgetDef = {
@@ -22,6 +23,7 @@ export const WIDGETS: Record<string, WidgetDef> = {
   'boss-triangle': { title: 'Boss príklad', lead: 'Celý skúškový príklad, krok po kroku. Ďalší krok sa odomkne, až keď je predošlý správne.', C: BossTriangle, boss: true },
   matmul: { title: 'Vyskúšaj: riadok krát stĺpec', lead: 'Ťukni na políčko výsledku a uvidíš, odkiaľ sa vzalo.', C: MatMul },
   'eigen-drag': { title: 'Vyskúšaj: smer, ktorý matica neotočí', lead: 'Otáčaj vektor v a hľadaj, kedy A·v ostane na tej istej priamke.', C: EigenDrag },
+  horner: { title: 'Vyskúšaj: Hornerova schéma', lead: 'Vyber kandidáta na koreň a vypĺňaj tabuľku. Príklady sú z hárku cvičiacej.', C: HornerTap },
   sarrus: { title: 'Vyskúšaj: Sarrusovo pravidlo', lead: 'Ťukaj na šesť uhlopriečok a skladaj determinant.', C: SarrusTap },
   secant: { title: 'Vyskúšaj: zo sečnice dotyčnica', lead: 'Zmenšuj krok h a sleduj, kam sa blíži sklon.', C: SecantTangent },
   riemann: { title: 'Vyskúšaj: plocha z obdĺžnikov', lead: 'Pridávaj obdĺžniky a sleduj, ako sa súčet blíži k integrálu.', C: Riemann },
@@ -76,6 +78,7 @@ export const EXTRAS: Record<string, Record<number, string[]>> = {
   'mat:limity': { 8: ['limit'] },
   'mat:priebeh': { 1: ['monotony'] },
   'mat:funkcie': { 8: ['lntrans'], 17: ['parabola'] },
+  'mat:polynomy': { 4: ['horner'] },
   'mat:geometria': { 1: ['lineparam'] },
   'fyz:kmity': { 9: ['spring'] },
   'fyz:skladanie': { 3: ['phase'] },
