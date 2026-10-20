@@ -12,6 +12,8 @@ export type GameConfig = {
   mode: Mode;
   subject: SubjectId;
   topic?: string;
+  /** Voliteľný filter pre mix viacerých tém (napr. príprava na písomku). */
+  topics?: string[];
   title: string;
 };
 
@@ -97,7 +99,7 @@ export default function Game({
       const list = shuffle(questionsByIds(progress.missed, config.subject)).slice(0, 12);
       return { next: () => list.shift() ?? null, total: list.length };
     }
-    const gen = makeEndlessSource(config.subject);
+    const gen = makeEndlessSource(config.subject, config.topics);
     return { next: () => gen(), total: 0 };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

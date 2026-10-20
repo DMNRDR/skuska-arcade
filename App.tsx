@@ -15,6 +15,7 @@ import Campaign from './src/screens/Campaign';
 import Game, { GameConfig, GameResult } from './src/screens/Game';
 import Home from './src/screens/Home';
 import Learn from './src/screens/Learn';
+import MathTest2 from './src/screens/MathTest2';
 import Results from './src/screens/Results';
 import Tezy from './src/screens/Tezy';
 import Navod from './src/screens/Navod';
@@ -27,6 +28,7 @@ type Screen =
   | { name: 'campaign' }
   | { name: 'tezy' }
   | { name: 'navod' }
+  | { name: 'matTest2' }
   | { name: 'learn'; topic?: string }
   | { name: 'game'; config: GameConfig; key: number }
   | { name: 'results'; result: GameResult }
@@ -123,6 +125,7 @@ export default function App() {
         onCampaign={() => setScreen({ name: 'campaign' })}
         onTezy={() => setScreen({ name: 'tezy' })}
         onNavod={() => setScreen({ name: 'navod' })}
+        onMatTest2={() => setScreen({ name: 'matTest2' })}
         onLearn={(topic) => setScreen({ name: 'learn', topic })}
         onPlay={play}
         onGame={(game) => setScreen({ name: 'play', game, key: Date.now() })}
@@ -130,6 +133,8 @@ export default function App() {
     );
   else if (screen.name === 'navod') body = <Navod onBack={home} />;
   else if (screen.name === 'tezy') body = <Tezy onBack={home} onXp={(xp) => update((p) => ({ ...p, xp: p.xp + xp }))} />;
+  else if (screen.name === 'matTest2')
+    body = <MathTest2 onBack={home} onLearn={(topic) => setScreen({ name: 'learn', topic })} onPlay={play} />;
   else if (screen.name === 'campaign') body = <Campaign progress={progress} subject={subject} onBack={home} onPlay={play} />;
   else if (screen.name === 'learn')
     body = (

@@ -394,3 +394,148 @@ export function PhaseSum({ onWin }: { onWin?: () => void }) {
     </View>
   );
 }
+
+// ───────────────────────── dve kolmé rovinné vlny: príklad 5.1 ─────────────────────────
+
+export function CrossedPlaneWaves({ onWin }: { onWin?: () => void }) {
+  const [offset, setOffset] = useState(0.125); // (x - y) / λ
+  const [ratio, setRatio] = useState(1.25); // A₂ / A₁
+  const [mode, setMode] = useState<'priecne' | 'pozdlzne'>('priecne');
+  const [g, setG] = useState({ line: false, circle: false, longitudinal: false });
+  const t = useClock();
+  const delta = 2 * Math.PI * offset;
+  const A1 = 1;
+  const A2 = ratio;
+  const omegaT = 2 * Math.PI * 0.32 * t;
+  const cx = 160;
+  const cy = 105;
+  const scale = 67 / Math.max(A1, A2);
+
+  // Vlna idúca po osi x má fázu ωt-kx, vlna po osi y fázu ωt-ky.
+  // Ich rozdiel je k(x-y). Pri priečnych vlnách sa len vymenia osi výchyliek.
+  const point = (q: number) => {
+    const fromX = A1 * Math.sin(q);
+    const fromY = A2 * Math.sin(q + delta);
+    return mode === 'priecne' ? { x: fromY, y: fromX } : { x: fromX, y: fromY };
+  };
+
+  const trajectory = Array.from({ length: 121 }, (_, i) => {
+    const p = point((2 * Math.PI * i) / 120);
+    return `${i ? 'L' : 'M'}${(cx + p.x * scale).toFixed(2)} ${(cy - p.y * scale).toFixed(2)}`;
+  }).join(' ');
+  const now = point(omegaT);
+  const line = Math.abs(Math.sin(delta)) < 0.001;
+  const quadrature = Math.abs(Math.cos(delta)) < 0.001;
+  const circle = quadrature && Math.abs(A1 - A2) < 0.001;
+  const shape = line ? 'PRIAMKA' : circle ? 'KRUŽNICA' : 'ELIPSA';
+  const shapeColor = line ? C.orange : circle ? C.good : C.blue;
+
+  const remember = (nextOffset: number, nextRatio: number, nextMode: 'priecne' | 'pozdlzne') => {
+    const nextDelta = 2 * Math.PI * nextOffset;
+    const isLine = Math.abs(Math.sin(nextDelta)) < 0.001;
+    const isCircle = Math.abs(Math.cos(nextDelta)) < 0.001 && Math.abs(nextRatio - 1) < 0.001;
+    setG((old) => ({
+      line: old.line || isLine,
+      circle: old.circle || isCircle,
+      longitudinal: old.longitudinal || nextMode === 'pozdlzne',
+    }));
+  };
+  useOnce(g.line && g.circle && g.longitudinal, () => onWin?.());
+
+  const markerX = 30 + offset * 260;
+  const phaseText = offset === 0 ? '0' : offset === 0.25 ? 'π/2' : offset === 0.5 ? 'π' : offset === 0.75 ? '3π/2' : offset === 1 ? '2π' : `${sk(delta / Math.PI, 2)}π`;
+  const componentFormula =
+    mode === 'priecne'
+      ? 'sₓ = A₂·sin(ωt − ky),  sᵧ = A₁·sin(ωt − kx)'
+      : 'sₓ = A₁·sin(ωt − kx),  sᵧ = A₂·sin(ωt − ky)';
+
+  return (
+    <View style={{ gap: 12 }}>
+      <Chalk h={250} grid={0}>
+        <Line x1={55} y1={cy} x2={265} y2={cy} stroke={CH.axis} />
+        <Line x1={cx} y1={10} x2={cx} y2={195} stroke={CH.axis} />
+        <Label x={268} y={cy + 4} color={CH.dim} size={11}>sₓ</Label>
+        <Label x={cx + 6} y={16} color={CH.dim} size={11}>sᵧ</Label>
+        <Path d={trajectory} stroke={CH.b} strokeWidth={3} fill="none" />
+        <Line x1={cx} y1={cy} x2={cx + now.x * scale} y2={cy} stroke={CH.a} strokeWidth={2.5} />
+        <Line x1={cx + now.x * scale} y1={cy} x2={cx + now.x * scale} y2={cy - now.y * scale} stroke={CH.d} strokeWidth={2.5} />
+        <Circle cx={cx + now.x * scale} cy={cy - now.y * scale} r={7} fill={shapeColor} />
+        <Label x={10} y={18} color={shapeColor} size={14}>{shape}</Label>
+        <Label x={310} y={18} color={CH.dim} size={10} anchor="end">Δφ = {phaseText}</Label>
+
+        <Line x1={30} y1={222} x2={290} y2={222} stroke={CH.axis} strokeWidth={2} />
+        {[0, 0.25, 0.5, 0.75, 1].map((v) => {
+          const x = 30 + v * 260;
+          const specialLine = v === 0 || v === 0.5 || v === 1;
+          return (
+            <G key={v}>
+              <Line x1={x} y1={214} x2={x} y2={230} stroke={specialLine ? CH.a : CH.c} strokeWidth={2} />
+              <Label x={x} y={244} color={specialLine ? CH.a : CH.c} size={9} anchor="middle">
+                {v === 0 ? '0' : v === 0.25 ? 'λ/4' : v === 0.5 ? 'λ/2' : v === 0.75 ? '3λ/4' : 'λ'}
+              </Label>
+            </G>
+          );
+        })}
+        <Line x1={markerX} y1={207} x2={markerX} y2={232} stroke={shapeColor} strokeWidth={4} />
+        <Circle cx={markerX} cy={207} r={5} fill={shapeColor} />
+      </Chalk>
+
+      <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+        <Toggle
+          on={mode === 'priecne'}
+          label="Priečne vlny"
+          onPress={() => {
+            setMode('priecne');
+            remember(offset, ratio, 'priecne');
+          }}
+        />
+        <Toggle
+          on={mode === 'pozdlzne'}
+          label="Pozdĺžne vlny"
+          onPress={() => {
+            setMode('pozdlzne');
+            remember(offset, ratio, 'pozdlzne');
+          }}
+        />
+      </View>
+
+      <Slider
+        label="Poloha bodu (x − y) / λ"
+        value={offset}
+        min={0}
+        max={1}
+        step={0.125}
+        fmt={(x) => sk(x, 3)}
+        onChange={(v) => {
+          setOffset(v);
+          remember(v, ratio, mode);
+        }}
+        color={C.orange}
+        marks={[{ v: 0, l: '0' }, { v: 0.5, l: 'λ/2' }, { v: 1, l: 'λ' }]}
+      />
+      <Slider
+        label="Pomer amplitúd A₂ / A₁"
+        value={ratio}
+        min={0.5}
+        max={1.5}
+        step={0.25}
+        fmt={(x) => sk(x, 2)}
+        onChange={(v) => {
+          setRatio(v);
+          remember(offset, v, mode);
+        }}
+        color={C.blue}
+      />
+
+      <Eq size={15} parts={[componentFormula]} />
+      <Eq size={17} parts={['Δφ = k(x − y) = 2π·(x − y)/λ = ', [phaseText, shapeColor]]} />
+      <Text style={T.small}>
+        Modré značky 0, λ/2, λ dávajú priamkový pohyb. Zelené λ/4 a 3λ/4 dávajú pri rovnakých amplitúdach kružnicu; pri rôznych amplitúdach elipsu.
+      </Text>
+      <Goal done={g.line}>Nájdi bod, ktorého častica sa pohybuje po priamke</Goal>
+      <Goal done={g.circle}>Nastav kružnicu (A₂/A₁ = 1 a správna poloha)</Goal>
+      <Goal done={g.longitudinal}>Porovnaj priečne a pozdĺžne vlny</Goal>
+      <Stamp show={g.line && g.circle && g.longitudinal} />
+    </View>
+  );
+}

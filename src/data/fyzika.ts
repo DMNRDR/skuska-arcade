@@ -8,6 +8,7 @@ export const FYZ_TOPICS: Topic[] = [
   { id: 'kmity', subject: 'fyz', name: 'Harmonické kmity', icon: '〰️', src: 'Prednáška 1.1–1.3' },
   { id: 'skladanie', subject: 'fyz', name: 'Skladanie kmitov', icon: '➰', src: 'Prednáška 1.4–1.5' },
   { id: 'vlny', subject: 'fyz', name: 'Mechanické vlnenie', icon: '🌊', src: 'Prednáška 2.1–2.4' },
+  { id: 'rovninne', subject: 'fyz', name: 'Kolmé rovinné vlny', icon: '🌀', src: 'Cvičenie 5 · príklad 5.1' },
   { id: 'doppler', subject: 'fyz', name: 'Doppler a interferencia', icon: '🚑', src: 'Prednáška 2.5–2.8' },
   { id: 'em', subject: 'fyz', name: 'EM vlny a polarizácia', icon: '⚡', src: 'Prednáška 2.9' },
   { id: 'optika', subject: 'fyz', name: 'Geometrická optika', icon: '🔦', src: 'Prednáška 3.1–3.2' },
@@ -296,6 +297,28 @@ const rows: Row[] = [
     'Optická symetria: R₁ ↦ −R₂, R₂ ↦ −R₁ dá rovnaké D.', 'P str. 63'],
   ['sosovky', 3, 'Šošovka (n = 1,52) má vo vzduchu +5 dpt, v kvapaline −1 dpt. Index lomu kvapaliny?', ['≈ 1,70', '≈ 1,33', '≈ 1,52', '≈ 1,10'],
     'G = 5/0,52; (1,52/n_k − 1)·G = −1 → 1,52/n_k = 0,896 → n_k ≈ 1,70.', 'C 11, pr. 41'],
+
+  // ───────────── KOLMÉ ROVINNÉ VLNY ─────────────
+  ['rovninne', 1, 'Priečna rovinná vlna sa šíri v smere osi x. V akom smere kmitajú častice?', ['Kolmo na os x', 'Pozdĺž osi x', 'Vždy v smere osi z', 'Častice nekmitajú'],
+    'Pri priečnej vlne je výchylka kolmá na smer šírenia. V 2D ju môžeme zvoliť v smere osi y.', 'C 5, pr. 5.1'],
+  ['rovninne', 1, 'Dve rovnaké vlny sa šíria v smeroch x a y. Aký je ich fázový rozdiel v bode (x, y)?', ['Δφ = k(x − y)', 'Δφ = k(x + y)', 'Δφ = ω(x − y)', 'Δφ = 2π(x + y)'],
+    'Fázy sú ωt − kx a ωt − ky. Ich rozdiel je k(x − y); znamienko nemení tvar trajektórie.', 'C 5, pr. 5.1'],
+  ['rovninne', 1, 'Ak x − y = λ/4, aký je fázový rozdiel?', ['π/2', 'π', '2π', 'π/4'],
+    'Δφ = 2π(x − y)/λ = 2π·1/4 = π/2.', 'C 5, pr. 5.1'],
+  ['rovninne', 2, 'Aký tvar má trajektória častice pri Δφ = nπ?', ['Úsečka', 'Kružnica', 'Parabola', 'Hyperbola'],
+    'Pri fázovom rozdiele 0 alebo π sú zložky synfázne alebo protifázne, preto sa elipsa zrúti na priamku.', 'C 5, pr. 5.1'],
+  ['rovninne', 2, 'Kedy vznikne kružnica?', ['Pri rovnakých amplitúdach a Δφ = (2n + 1)π/2', 'Pri ľubovoľných amplitúdach a Δφ = nπ', 'Iba pri Δφ = 2π', 'Pri nulovej amplitúde jednej vlny'],
+    'Posun o štvrť periódy dá dve kolmé zložky sínus a kosínus. Ak majú rovnakú amplitúdu, polomer je konštantný.', 'C 5, pr. 5.1'],
+  ['rovninne', 2, 'Fázový rozdiel je π/2, ale amplitúdy nie sú rovnaké. Trajektória je…', ['elipsa', 'kružnica', 'úsečka', 'bod'],
+    'Štvrťfázový posun dá osi elipsy. Kružnica je iba špeciálny prípad A₁ = A₂.', 'C 5, pr. 5.1'],
+  ['rovninne', 2, 'Na ktorých priamkach vzniká priamočiary pohyb?', ['x − y = nλ/2', 'x + y = nλ', 'x − y = (2n + 1)λ/4', 'x = y + λ/4 vždy'],
+    'Pre x − y = nλ/2 je Δφ = nπ, takže trajektória je úsečka.', 'C 5, pr. 5.1'],
+  ['rovninne', 2, 'Na ktorých priamkach vznikne pri rovnakých amplitúdach kruhový pohyb?', ['x − y = (2n + 1)λ/4', 'x − y = nλ/2', 'x + y = nλ/2', 'x = nλ a y = 0'],
+    'Tieto priamky dávajú Δφ = (2n + 1)π/2. Medzi nimi sú všeobecne elipsy.', 'C 5, pr. 5.1'],
+  ['rovninne', 3, 'Ktorá rovnica opisuje normovanú trajektóriu X = u/A₁, Y = v/A₂?', ['X² + Y² − 2XY·cos Δφ = sin² Δφ', 'X² + Y² = cos² Δφ', 'X·Y = sin Δφ', 'X² − Y² = 1'],
+    'Po vylúčení času z dvoch kolmých harmonických zložiek vznikne rovnica elipsy. Pre sin Δφ = 0 degeneruje na priamku.', 'C 5, pr. 5.1'],
+  ['rovninne', 2, 'Ako sa zmenia smery výchyliek, ak sú obe vlny pozdĺžne?', ['Každá výchylka je rovnobežná so smerom svojej vlny', 'Obe výchylky sú kolmé na smer šírenia', 'Výchylky zaniknú', 'Vždy sa vymenia amplitúdy'],
+    'Pozdĺžna vlna kmitá v smere šírenia: vlna pozdĺž x dá x-zložku a vlna pozdĺž y dá y-zložku.', 'C 5, pr. 5.1'],
 ];
 
 export const FYZ_QUESTIONS: Question[] = rows.map(([topic, diff, q, options, explain, src], i) => ({

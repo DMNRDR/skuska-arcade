@@ -5,6 +5,7 @@ import fyz_doppler from './fyz-doppler';
 import fyz_em from './fyz-em';
 import fyz_kmity from './fyz-kmity';
 import fyz_optika from './fyz-optika';
+import fyz_rovninne from './fyz-rovninne';
 import fyz_skladanie from './fyz-skladanie';
 import fyz_sosovky from './fyz-sosovky';
 import fyz_vlny from './fyz-vlny';
@@ -29,6 +30,7 @@ const DETAILED: Record<string, Step[]> = {
   'fyz:em': fyz_em,
   'fyz:kmity': fyz_kmity,
   'fyz:optika': fyz_optika,
+  'fyz:rovninne': fyz_rovninne,
   'fyz:skladanie': fyz_skladanie,
   'fyz:sosovky': fyz_sosovky,
   'fyz:vlny': fyz_vlny,

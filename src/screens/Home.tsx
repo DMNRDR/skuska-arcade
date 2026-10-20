@@ -18,6 +18,7 @@ export default function Home({
   onCampaign,
   onTezy,
   onNavod,
+  onMatTest2,
   onLearn,
   onPlay,
   onGame,
@@ -28,6 +29,7 @@ export default function Home({
   onCampaign: () => void;
   onTezy: () => void;
   onNavod: () => void;
+  onMatTest2: () => void;
   onLearn: (topic?: string) => void;
   onPlay: (c: GameConfig) => void;
   onGame: (g: GameId) => void;
@@ -114,6 +116,18 @@ export default function Home({
             <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>TUTORIÁL · PO 12:00 · B321</Text>
             <Text style={s.bigBtn}>Zadanie 5 v praxi</Text>
             <Text style={[s.small, { color: '#fff' }]}>Krok po kroku: čo napísať do Excelu, aké vzorce a čo ti má vyjsť. S tvojimi číslami (zadanie č. 15).</Text>
+          </Press>
+        </View>
+      )}
+
+      {/* matematika: sústredená príprava z materiálov po 1. písomke */}
+      {subject === 'mat' && (
+        <View style={{ gap: 10 }}>
+          <Text style={s.section}>2. písomka</Text>
+          <Press color={C.orange} onPress={onMatTest2} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>AKTUÁLNE · 5.–6. TÝŽDEŇ</Text>
+            <Text style={s.bigBtn}>Príprava na druhú písomku</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Polynómy a Horner, elementárne funkcie, spojitosť, limity a asymptoty — výklad aj spoločný tréning.</Text>
           </Press>
         </View>
       )}

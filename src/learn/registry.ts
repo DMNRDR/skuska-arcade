@@ -1,6 +1,6 @@
 import React from 'react';
 import { LimitApproach, LineParam, LnTransform, MonotonyDrag, ParabolaShift, Riemann, SecantTangent } from './widgets/analyza';
-import { DopplerMove, LensDrag, MalusTurn, PhaseSum, SnellDrag, SpringPeriod, WaveLambda } from './widgets/fyzika';
+import { CrossedPlaneWaves, DopplerMove, LensDrag, MalusTurn, PhaseSum, SnellDrag, SpringPeriod, WaveLambda } from './widgets/fyzika';
 import { MatMul, SarrusTap } from './widgets/matice';
 import { BossTriangle, CrossCover, VecAB, VecDot } from './widgets/vektory';
 import { rys } from './widgets/deskriptiva';
@@ -39,6 +39,11 @@ export const WIDGETS: Record<string, WidgetDef> = {
   lens: { title: 'Pokus: spojka', lead: 'Ťahaj predmet (ružová šípka) k šošovke a od nej.', C: LensDrag },
   malus: { title: 'Pokus: polarizačný filter', lead: 'Otáčaj analyzátor.', C: MalusTurn },
   phase: { title: 'Pokus: dva kmity naraz', lead: 'Meň fázový rozdiel a amplitúdu druhého kmitu.', C: PhaseSum },
+  'crossed-waves': {
+    title: 'Pokus: dve kolmé rovinné vlny',
+    lead: 'Posúvaj bod v rovine, meň amplitúdy a sleduj, kedy častica kreslí priamku, elipsu alebo kružnicu.',
+    C: CrossedPlaneWaves,
+  },
   // deskriptíva: rysovačky krok po kroku
   'dg-elipsa': { title: 'Rysuj: 4 body elipsy', lead: 'Dané F₁, F₂ a 2a. Ťukaj Ďalší krok.', C: rys('dg-elipsa') },
   'dg-elipsa-osk': { title: 'Rysuj: oskulačné kružnice elipsy', lead: 'Dané osi AB a CD.', C: rys('dg-elipsa-osk') },
@@ -83,6 +88,7 @@ export const EXTRAS: Record<string, Record<number, string[]>> = {
   'fyz:kmity': { 9: ['spring'] },
   'fyz:skladanie': { 3: ['phase'] },
   'fyz:vlny': { 3: ['wave'] },
+  'fyz:rovninne': { 2: ['crossed-waves'] },
   'fyz:doppler': { 2: ['doppler'] },
   'fyz:optika': { 5: ['snell'] },
   'fyz:sosovky': { 10: ['lens'] },

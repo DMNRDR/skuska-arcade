@@ -89,6 +89,33 @@ export const LESSONS: Record<string, Lesson> = {
     tips: ['Uzol a susedná kmitňa sú od seba λ/4.', 'Fázový rozdiel dvoch bodov: Δφ = 2π·Δx/λ.'],
     example: { q: 'Body 12 m a 16 m od zdroja, T = 0,04 s, c = 300 m/s. Fázový rozdiel?', a: 'λ = c·T = 12 m, Δφ = 2π·4/12 = 2π/3.' },
   },
+  'fyz:rovninne': {
+    intro: 'Dve rovnaké rovinné vlny idú kolmo na seba. V každom bode skladajú dve kolmé harmonické výchylky a častica kreslí úsečku, elipsu alebo kružnicu.',
+    points: [
+      'Vlna v smere x má fázu ωt − kx, vlna v smere y má fázu ωt − ky.',
+      'O tvare trajektórie rozhoduje iba fázový rozdiel Δφ = k(x − y). Čas z neho vypadne.',
+      'Pri Δφ = nπ vzniká priamočiary pohyb. Pri ostatných hodnotách vzniká elipsa.',
+      'Pri Δφ = (2n + 1)π/2 a rovnakých amplitúdach je elipsa kružnicou.',
+      'Rovnaký tvar sa opakuje na rovnobežných priamkach x − y = konštanta.',
+      'Pri priečnych vlnách je výchylka kolmá na smer šírenia; pri pozdĺžnych je s ním rovnobežná.',
+    ],
+    formulas: [
+      ['u = A₁·sin(ωt − ky),  v = A₂·sin(ωt − kx)', 'dve kolmé priečne výchylky v bode (x, y)'],
+      ['Δφ = k(x − y) = 2π(x − y)/λ', 'fázový rozdiel v danom bode'],
+      ['X² + Y² − 2XY·cos Δφ = sin² Δφ', 'trajektória, X = u/A₁ a Y = v/A₂'],
+      ['x − y = nλ/2', 'priamková trajektória'],
+      ['x − y = (2n + 1)λ/4', 'kružnica pri A₁ = A₂, inak elipsa'],
+    ],
+    tips: [
+      'Najprv vypočítaj (x − y)/λ. Hodnota 0 alebo 1/2 znamená priamku; 1/4 alebo 3/4 kružnicu pri rovnakých amplitúdach.',
+      'Ak A₁ ≠ A₂, pri štvrťfázovom posune nevznikne kružnica, ale elipsa.',
+      'Zámena poradia x − y otočí znamienko Δφ a smer obiehania, nie tvar trajektórie.',
+    ],
+    example: {
+      q: 'V bode je x − y = λ/4 a A₁ = A₂ = A. Akú dráhu opisuje častica?',
+      a: 'Δφ = 2π·(1/4) = π/2. Zložky sa líšia o štvrť periódy a majú rovnakú amplitúdu, preto u² + v² = A²: častica opisuje kružnicu.',
+    },
+  },
   'fyz:doppler': {
     intro: 'Pohyb zdroja alebo prijímača mení frekvenciu, ktorú počujeme. Dve vlny z dvoch zdrojov sa môžu zosilniť aj vyrušiť.',
     points: [
