@@ -125,9 +125,9 @@ export default function Home({
         <View style={{ gap: 10 }}>
           <Text style={s.section}>2. písomka</Text>
           <Press color={C.orange} onPress={onMatTest2} inner={{ padding: 18, gap: 6 }}>
-            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>AKTUÁLNE · 5.–6. TÝŽDEŇ</Text>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>DNES · STREDA 21. 10.</Text>
             <Text style={s.bigBtn}>Príprava na druhú písomku</Text>
-            <Text style={[s.small, { color: '#fff' }]}>Polynómy a Horner, elementárne funkcie, spojitosť, limity a asymptoty — výklad aj spoločný tréning.</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Inverzná matica a sústavy rovníc (Gauss, Cramer). Výklad aj spoločný tréning.</Text>
           </Press>
         </View>
       )}

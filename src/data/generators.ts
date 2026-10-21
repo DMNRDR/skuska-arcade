@@ -457,6 +457,61 @@ export const GENERATORS: Generator[] = [
     },
   },
   {
+    subject: 'mat', topic: 'determinanty',
+    make: () => {
+      const m = [0, 1, 2].map(() => [0, 1, 2].map(() => rnd(-3, 4)));
+      const [[a, b, c], [d, e, f], [g, h, k]] = m;
+      const plus = a * e * k + b * f * g + c * d * h;
+      const minus = c * e * g + a * f * h + b * d * k;
+      const det = plus - minus;
+      return {
+        diff: 2, q: `Vypočítaj det [[${m.map((r) => r.map((x) => fmt(x)).join(', ')).join('], [')}]]`,
+        options: numOptions(det, [plus + minus, -det, plus, det + 2 * c], 0),
+        explain: `Sarrus: plusové uhlopriečky ${pn(a)}·${pn(e)}·${pn(k)} + ${pn(b)}·${pn(f)}·${pn(g)} + ${pn(c)}·${pn(d)}·${pn(h)} = ${fmt(plus)}. Mínusové ${pn(c)}·${pn(e)}·${pn(g)} + ${pn(a)}·${pn(f)}·${pn(h)} + ${pn(b)}·${pn(d)}·${pn(k)} = ${fmt(minus)}. det = ${fmt(plus)} − ${pn(minus)} = ${fmt(det)}.`,
+        src: 'Prednáška 4, Sarrusovo pravidlo (generované)',
+      };
+    },
+  },
+  {
+    subject: 'mat', topic: 'determinanty',
+    make: () => {
+      // det = ±1, aby A⁻¹ mala celé čísla
+      let a = 0, b = 0, c = 0, d = 0;
+      do {
+        a = rnd(-4, 5); b = rnd(-4, 5); c = rnd(-4, 5); d = rnd(-4, 5);
+      } while (Math.abs(a * d - b * c) !== 1);
+      const D = a * d - b * c;
+      const M = (p: number, q: number, r: number, t: number) => `[[${fmt(p)}, ${fmt(q)}], [${fmt(r)}, ${fmt(t)}]]`;
+      const ok = M(d / D, -b / D, -c / D, a / D);
+      return {
+        diff: 2, q: `Inverzná matica k A = ${M(a, b, c, d)} je…`,
+        options: uniq([ok, M(d / D, b / D, c / D, a / D), M(a / D, -b / D, -c / D, d / D), M(-d / D, b / D, c / D, -a / D), M(d, -c, -b, a)]),
+        explain: `det A = ${pn(a)}·${pn(d)} − ${pn(b)}·${pn(c)} = ${fmt(D)}. Vymeň a a d, zmeň znamienka b a c: ${M(d, -b, -c, a)}, potom vydeľ det A = ${fmt(D)}. Skúška: A·A⁻¹ = E.`,
+        src: 'Prednáška 4, inverzná matica 2×2 (generované)',
+      };
+    },
+  },
+  {
+    subject: 'mat', topic: 'determinanty',
+    make: () => {
+      const x = rnd(-4, 4), y = rnd(-4, 4);
+      let a = 0, b = 0, c = 0, d = 0;
+      do {
+        a = rnd(-3, 4); b = rnd(-3, 4); c = rnd(-3, 4); d = rnd(-3, 4);
+      } while (a * d - b * c === 0);
+      const e = a * x + b * y, f = c * x + d * y;
+      const D = a * d - b * c, Dx = e * d - b * f, Dy = a * f - e * c;
+      const eq = (p: number, q: number, r: number) => `${[p ? (p === 1 ? '' : p === -1 ? '−' : fmt(p)) + 'x' : '', q ? (p ? (q < 0 ? ' − ' : ' + ') : q < 0 ? '−' : '') + (Math.abs(q) === 1 ? '' : fmt(Math.abs(q))) + 'y' : ''].join('')} = ${fmt(r)}`;
+      const sol = (u: number, v: number) => `x = ${fmt(u)}, y = ${fmt(v)}`;
+      return {
+        diff: 2, q: `Vyrieš Cramerovým pravidlom: ${eq(a, b, e)};  ${eq(c, d, f)}`,
+        options: uniq([sol(x, y), sol(y, x), sol(-x, y), sol(x, -y), sol(x + 1, y)]),
+        explain: `D = ${pn(a)}·${pn(d)} − ${pn(b)}·${pn(c)} = ${fmt(D)}. Dx (1. stĺpec nahradíš pravou stranou) = ${pn(e)}·${pn(d)} − ${pn(b)}·${pn(f)} = ${fmt(Dx)}. Dy = ${pn(a)}·${pn(f)} − ${pn(e)}·${pn(c)} = ${fmt(Dy)}. x = Dx/D = ${fmt(x)}, y = Dy/D = ${fmt(y)}.`,
+        src: 'Prednáška 4, Cramerovo pravidlo (generované)',
+      };
+    },
+  },
+  {
     subject: 'mat', topic: 'polynomy',
     make: () => {
       // monický polynóm 3. stupňa s celými koreňmi r1, r2, r3

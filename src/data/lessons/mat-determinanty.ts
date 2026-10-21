@@ -179,6 +179,40 @@ const steps: Step[] = [
     },
   },
   {
+    title: 'Inverzná matica 3×3 cez algebraické doplnky',
+    text: 'Pre maticu 3×3 je hotový postup v piatich krokoch. Najprv vypočítaš det A. Ak je 0, inverzná neexistuje a môžeš skončiť.\n\nPotom pre KAŽDÝ z deviatich prvkov vypočítaš algebraický doplnok Aᵢⱼ: zakryješ riadok a stĺpec prvku, zo zvyšnej matice 2×2 vypočítaš determinant a dáš mu znamienko zo šachovnice (+ − + / − + − / + − +).\n\nDoplnky zapíšeš do matice a tú TRANSPONUJEŠ, čiže riadky prepíšeš ako stĺpce. Tomu sa hovorí adjungovaná matica. Nakoniec ju vydelíš det A.',
+    analogy: 'Je to ten istý vzorec ako pri 2×2. Aj tam vymeníš a a d a zmeníš znamienka b a c, len pri 2×2 sú „doplnky“ jednotlivé čísla, takže to ide z hlavy.',
+    formula: {
+      f: 'A⁻¹ = 1/det A · (Aᵢⱼ)ᵀ,   Aᵢⱼ = (−1)ⁱ⁺ʲ · Mᵢⱼ',
+      what: 'Inverzná matica cez adjungovanú maticu',
+      vars: [
+        ['det A', 'determinant, nesmie byť 0'],
+        ['Mᵢⱼ', 'minor: determinant 2×2 po zakrytí i-teho riadku a j-teho stĺpca'],
+        ['(−1)ⁱ⁺ʲ', 'znamienko zo šachovnice'],
+        ['Aᵢⱼ', 'algebraický doplnok = minor so znamienkom'],
+        ['ᵀ', 'transpozícia: doplnok z miesta (i, j) ide na miesto (j, i)'],
+      ],
+    },
+    worked: {
+      q: 'Nájdi A⁻¹ pre A = [[1, 2, 3], [0, 1, 4], [5, 6, 0]].',
+      steps: [
+        'det A (Sarrus): 1·1·0 + 2·4·5 + 3·0·6 − 3·1·5 − 1·4·6 − 2·0·0 = 0 + 40 + 0 − 15 − 24 − 0 = 1. Je ≠ 0, inverzná existuje.',
+        '1. riadok doplnkov: A₁₁ = +(1·0 − 4·6) = −24, A₁₂ = −(0·0 − 4·5) = 20, A₁₃ = +(0·6 − 1·5) = −5.',
+        '2. riadok: A₂₁ = −(2·0 − 3·6) = 18, A₂₂ = +(1·0 − 3·5) = −15, A₂₃ = −(1·6 − 2·5) = 4.',
+        '3. riadok: A₃₁ = +(2·4 − 3·1) = 5, A₃₂ = −(1·4 − 3·0) = −4, A₃₃ = +(1·1 − 2·0) = 1.',
+        'Matica doplnkov [[−24, 20, −5], [18, −15, 4], [5, −4, 1]]. Transponuj: [[−24, 18, 5], [20, −15, −4], [−5, 4, 1]].',
+        'Vydeľ det A = 1, nič sa nezmení.',
+        'Skúška 1. riadok A krát 1. stĺpec A⁻¹: 1·(−24) + 2·20 + 3·(−5) = −24 + 40 − 15 = 1 ✓. 1. riadok krát 2. stĺpec: 1·18 + 2·(−15) + 3·4 = 0 ✓.',
+      ],
+      result: 'A⁻¹ = [[−24, 18, 5], [20, −15, −4], [−5, 4, 1]]',
+    },
+    check: {
+      q: 'Vypočítal si maticu algebraických doplnkov. Čo urobíš pred delením det A?',
+      options: ['Transponujem ju', 'Nič, rovno delím', 'Zmením všetky znamienka', 'Vynásobím ju maticou A'],
+      explain: 'Doplnok z miesta (i, j) patrí do inverznej na miesto (j, i). Bez transpozície vyjde zlá matica, pokiaľ A nie je súmerná.',
+    },
+  },
+  {
     title: 'Sústavy rovníc a Frobeniova veta',
     text: 'SLAR znamená sústava lineárnych algebraických rovníc: neznáme sú v nej iba v prvej mocnine (žiadne x², xy ani sin x). Zapíšeš ju maticovo A·x = b a k nej rozšírenú maticu (A|b).\n\nKoľko riešení má sústava, rozhodne Frobeniova veta pomocou hodností. Na obrázku vidíš tri možnosti pre 2 rovnice s 2 neznámymi ako dve priamky: pretnú sa, sú rovnobežné alebo splývajú.\n\nHomogénna sústava má pravú stranu b = 0. Tá má vždy aspoň triviálne riešenie x = 0. Netriviálne (nenulové) riešenie má práve vtedy, keď h(A) < n, pri štvorcovej matici teda keď det A = 0. To budeš potrebovať pri vlastných vektoroch.',
     fig: 'lines2',

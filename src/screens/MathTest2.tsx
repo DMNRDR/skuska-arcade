@@ -3,29 +3,43 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { C, F, GButton, Header, Icon, Press } from '../components/ui';
 import { GameConfig } from './Game';
 
-const TEST_TOPICS = ['polynomy', 'funkcie', 'limity'];
+const TEST_TOPICS = ['determinanty'];
 
+// Rozsah: mail cvičiacej A. A. Ožvat z 20. 10. 2026 (písomka 21. 10., jeden príklad, „od determinantov“)
+// a upresnenie od spolužiakov: inverzná matica a sústava rovníc.
 const blocks = [
   {
     no: '01',
-    topic: 'polynomy',
-    title: 'Polynómy a parciálne zlomky',
-    source: '5. týždeň · K prednáške 10',
-    items: ['delenie polynómov', 'Hornerova schéma a násobné korene', 'rozklad na súčin', 'parciálne zlomky'],
+    topic: 'determinanty',
+    title: 'Inverzná matica',
+    source: 'Prednáška 4 · Učebňa: Determinanty a SLAR, kroky 6 až 8 a 13',
+    items: [
+      '2×2: vymeň a a d, zmeň znamienka b a c, vydeľ det A',
+      '3×3: algebraické doplnky (šachovnica + − +) → transponuj → vydeľ det A',
+      'alebo Gauss-Jordan: [A | E] → [E | A⁻¹]',
+      'det A = 0 → inverzná neexistuje',
+      'skúška: A·A⁻¹ = E',
+    ],
   },
   {
     no: '02',
-    topic: 'funkcie',
-    title: 'Elementárne funkcie',
-    source: '5. týždeň · Funkcie – klasifikácia',
-    items: ['polynomické, racionálne a mocninové', 'exponenciálne a logaritmické', 'goniometrické a cyklometrické', 'definičný obor, obor hodnôt a graf'],
+    topic: 'determinanty',
+    title: 'Sústavy lineárnych rovníc',
+    source: 'Prednáška 4 · Učebňa: Determinanty a SLAR, kroky 9 až 13',
+    items: [
+      'Gaussova eliminácia: rozšírená matica (A | b) → stupňovitý tvar',
+      'Frobeniova veta: h(A) = h(A | b) → riešiteľná, menej ako n → nekonečne veľa riešení',
+      'Cramerovo pravidlo: xᵢ = det Aᵢ / det A (iba štvorcová, det A ≠ 0)',
+      'cez inverznú: A·x = b → x = A⁻¹·b',
+      'skúška: dosaď riešenie do všetkých rovníc',
+    ],
   },
   {
     no: '03',
-    topic: 'limity',
-    title: 'Spojitosť, limity a asymptoty',
-    source: '6. týždeň · Limity, 1. a 2. časť',
-    items: ['spojitosť a jednostranné limity', 'neurčité typy a úpravy výrazov', 'lim sin x / x a limita s číslom e', 'zvislé, vodorovné a šikmé asymptoty'],
+    topic: 'determinanty',
+    title: 'Determinant ako nástroj',
+    source: 'Prednáška 4 · Učebňa: kroky 1 až 5',
+    items: ['potrebuješ ho na A⁻¹ aj na Cramera', '2×2: a·d − b·c', '3×3: Sarrusovo pravidlo alebo rozvoj podľa riadku s nulami'],
   },
 ] as const;
 
@@ -43,19 +57,19 @@ export default function MathTest2({
       <Header kicker="Matematika 1" title="2. písomka" onBack={onBack} />
       <ScrollView contentContainerStyle={s.page}>
         <View style={s.hero}>
-          <Text style={s.kicker}>ČO PRIBUDLO OD 1. PÍSOMKY</Text>
-          <Text style={s.heroTitle}>Aktuálne učivo z 5. a 6. týždňa</Text>
-          <Text style={s.lead}>Tri bloky podľa materiálov v školskom priečinku. Začni výkladom a potom ich premiešaj v jednom tréningu.</Text>
+          <Text style={s.kicker}>STREDA 21. 10. · JEDEN PRÍKLAD</Text>
+          <Text style={s.heroTitle}>Učivo od determinantov</Text>
+          <Text style={s.lead}>Podľa mailu cvičiacej Ožvatovej: písomka je z učiva od determinantov (vektory a analytická geometria už nie). Podľa spolužiakov príde inverzná matica alebo sústava rovníc, determinant sám o sebe nie.</Text>
         </View>
 
         <View style={s.note}>
           <Icon name="info" size={20} color={C.orange} />
-          <Text style={s.noteText}>Hyperbolické a hyperbolometrické funkcie sú v prednáške výslovne označené, že sa neskúšajú.</Text>
+          <Text style={s.noteText}>Celý výklad je v Učebni v téme 04 Determinanty a SLAR. Na konci každého výpočtu urob skúšku, na písomke ťa zachráni.</Text>
         </View>
 
         <Text style={s.section}>Plán prípravy</Text>
         {blocks.map((block) => (
-          <View key={block.topic} style={s.block}>
+          <View key={block.no} style={s.block}>
             <View style={s.blockHead}>
               <Text style={s.no}>{block.no}</Text>
               <View style={{ flex: 1, gap: 2 }}>
@@ -81,9 +95,9 @@ export default function MathTest2({
           onPress={() => onPlay({ mode: 'boss', subject: 'mat', topics: TEST_TOPICS, title: '2. písomka · mix' })}
           inner={{ padding: 18, gap: 6 }}
         >
-          <Text style={s.whiteKicker}>VŠETKY 3 BLOKY</Text>
+          <Text style={s.whiteKicker}>VŠETKY BLOKY</Text>
           <Text style={s.whiteTitle}>Boss druhej písomky</Text>
-          <Text style={s.whiteText}>Otázky iba z polynómov, elementárnych funkcií a limít. Tri životy, pomôcky a okamžité vysvetlenie.</Text>
+          <Text style={s.whiteText}>Otázky a generované príklady: inverzná matica, Cramer, Gauss, Frobenius a determinanty. Tri životy, pomôcky a okamžité vysvetlenie.</Text>
         </Press>
         <GButton
           icon="target"
@@ -93,7 +107,7 @@ export default function MathTest2({
           onPress={() => onPlay({ mode: 'arcade', subject: 'mat', topics: TEST_TOPICS, title: '60 s · 2. písomka' })}
         />
 
-        <Text style={s.foot}>Zdroj: prednáškové materiály doc. Minarechovej uložené v priečinkoch 5. a 6. týždeň.</Text>
+        <Text style={s.foot}>Zdroj: mail A. A. Ožvat z 20. 10. 2026 (AIS), prednášky 4 a 5 doc. Minarechovej a hárok K prednáške 10.</Text>
       </ScrollView>
     </View>
   );
