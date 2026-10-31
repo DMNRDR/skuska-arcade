@@ -240,7 +240,7 @@ function SlideBody({ sl, rev, color, onWin }: { sl: Slide; rev: number; color: s
 
 /** Text so zvýraznenými slovami PÍSANÝMI VEĽKÝM (dôležité pojmy v lekciách). */
 function Marked({ text }: { text: string }) {
-  const parts = text.split(/(\b[A-ZÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]{3,}(?:\s+[A-ZÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]{2,})*\b)/);
+  const parts = text.split(/(?<![A-Za-zÀ-ž])([A-ZÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]{3,}(?:\s+[A-ZÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ]{2,})*)(?![A-Za-zÀ-ž])/);
   return (
     <Text style={s.body}>
       {parts.map((p, k) =>

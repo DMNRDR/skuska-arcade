@@ -19,6 +19,8 @@ export default function Home({
   onTezy,
   onNavod,
   onMatTest2,
+  onExam,
+  onMatTest3,
   onLearn,
   onPlay,
   onGame,
@@ -30,6 +32,8 @@ export default function Home({
   onTezy: () => void;
   onNavod: () => void;
   onMatTest2: () => void;
+  onExam: () => void;
+  onMatTest3: () => void;
   onLearn: (topic?: string) => void;
   onPlay: (c: GameConfig) => void;
   onGame: (g: GameId) => void;
@@ -120,15 +124,25 @@ export default function Home({
         </View>
       )}
 
-      {/* matematika: sústredená príprava z materiálov po 1. písomke */}
+      {/* matematika: príprava na skúšku (týždne 1 až 6) a staršia 2. písomka */}
       {subject === 'mat' && (
         <View style={{ gap: 10 }}>
-          <Text style={s.section}>2. písomka</Text>
-          <Press color={C.orange} onPress={onMatTest2} inner={{ padding: 18, gap: 6 }}>
-            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>DNES · STREDA 21. 10.</Text>
-            <Text style={s.bigBtn}>Príprava na druhú písomku</Text>
-            <Text style={[s.small, { color: '#fff' }]}>Inverzná matica a sústavy rovníc (Gauss, Cramer). Výklad aj spoločný tréning.</Text>
+          <Text style={s.section}>3. písomka</Text>
+          <Press color={C.orange} onPress={onMatTest3} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>IBA DEFINIČNÝ OBOR</Text>
+            <Text style={s.bigBtn}>3. písomka: definičný obor</Text>
+            <Text style={[s.small, { color: '#fff' }]}>5 pravidiel s obrázkom, kombinácie a tabuľka znamienok, 12 príkladov na precvičenie a test.</Text>
           </Press>
+          <Text style={[s.section, { marginTop: 12 }]}>Skúška</Text>
+          <Press color={C.ink} onPress={onExam} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>6 OKRUHOV · TÝŽDNE 1 AŽ 6</Text>
+            <Text style={s.bigBtn}>Príprava na skúšku z Matematiky 1</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Ťaháky vzorcov po symboloch, riešený typový príklad, generované príklady a na konci skúškový test so známkou.</Text>
+          </Press>
+          <Pressable onPress={onMatTest2} style={({ pressed }) => [s.link, pressed && { opacity: 0.6 }]}>
+            <Text style={s.linkText}>2. písomka (21. 10.): inverzná matica a sústavy</Text>
+            <Icon name="next" size={16} />
+          </Pressable>
         </View>
       )}
 

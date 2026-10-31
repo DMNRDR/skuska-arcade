@@ -12,10 +12,12 @@ import Casino from './src/games/Casino';
 import Drone from './src/games/Drone';
 import { GameId, GameReport } from './src/games/types';
 import Campaign from './src/screens/Campaign';
+import Exam from './src/screens/Exam';
 import Game, { GameConfig, GameResult } from './src/screens/Game';
 import Home from './src/screens/Home';
 import Learn from './src/screens/Learn';
 import MathTest2 from './src/screens/MathTest2';
+import MathTest3 from './src/screens/MathTest3';
 import Results from './src/screens/Results';
 import Tezy from './src/screens/Tezy';
 import Navod from './src/screens/Navod';
@@ -29,6 +31,8 @@ type Screen =
   | { name: 'tezy' }
   | { name: 'navod' }
   | { name: 'matTest2' }
+  | { name: 'exam' }
+  | { name: 'matTest3' }
   | { name: 'learn'; topic?: string }
   | { name: 'game'; config: GameConfig; key: number }
   | { name: 'results'; result: GameResult }
@@ -126,6 +130,8 @@ export default function App() {
         onTezy={() => setScreen({ name: 'tezy' })}
         onNavod={() => setScreen({ name: 'navod' })}
         onMatTest2={() => setScreen({ name: 'matTest2' })}
+        onExam={() => setScreen({ name: 'exam' })}
+        onMatTest3={() => setScreen({ name: 'matTest3' })}
         onLearn={(topic) => setScreen({ name: 'learn', topic })}
         onPlay={play}
         onGame={(game) => setScreen({ name: 'play', game, key: Date.now() })}
@@ -135,6 +141,31 @@ export default function App() {
   else if (screen.name === 'tezy') body = <Tezy onBack={home} onXp={(xp) => update((p) => ({ ...p, xp: p.xp + xp }))} />;
   else if (screen.name === 'matTest2')
     body = <MathTest2 onBack={home} onLearn={(topic) => setScreen({ name: 'learn', topic })} onPlay={play} />;
+  else if (screen.name === 'matTest3')
+    body = (
+      <MathTest3
+        progress={progress}
+        onBack={home}
+        onLearned={(k, n) => {
+          if ((progress.learned[k] ?? 0) < n) update((p) => ({ ...p, learned: { ...p.learned, [k]: Math.max(p.learned[k] ?? 0, n) } }));
+        }}
+        onXp={(xp) => update((p) => ({ ...p, xp: p.xp + xp }))}
+        onScore={(pct) => update((p) => ({ ...p, gameBest: { ...p.gameBest, 'df:test': Math.max(p.gameBest['df:test'] ?? 0, pct) } }))}
+      />
+    );
+  else if (screen.name === 'exam')
+    body = (
+      <Exam
+        progress={progress}
+        onBack={home}
+        onLearn={(topic) => setScreen({ name: 'learn', topic })}
+        onLearned={(k, n) => {
+          if ((progress.learned[k] ?? 0) < n) update((p) => ({ ...p, learned: { ...p.learned, [k]: Math.max(p.learned[k] ?? 0, n) } }));
+        }}
+        onXp={(xp) => update((p) => ({ ...p, xp: p.xp + xp }))}
+        onScore={(pct) => update((p) => ({ ...p, gameBest: { ...p.gameBest, 'exam:test': Math.max(p.gameBest['exam:test'] ?? 0, pct) } }))}
+      />
+    );
   else if (screen.name === 'campaign') body = <Campaign progress={progress} subject={subject} onBack={home} onPlay={play} />;
   else if (screen.name === 'learn')
     body = (

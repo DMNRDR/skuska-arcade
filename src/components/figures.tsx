@@ -4,6 +4,7 @@ import { Circle, G, Line, Path, Polygon, Rect } from 'react-native-svg';
 import { DgPic } from '../learn/widgets/deskriptiva';
 import { GeoPic } from '../learn/widgets/geodezia';
 import { Arrow, AX, Chips, CY, fnPath, Frame, GR, GraphAxes, H, K as C, Label, PK, RD, TopicDiagram, useTime, VI, W, YE } from './diagrams';
+import { NumberLine } from './numberLine';
 
 void W;
 
@@ -1231,6 +1232,7 @@ const FIGS: Record<string, () => React.ReactElement> = {
 
 /** fig = názov malého obrázka, alebo "fyz:kmity" / "fyz:vlny@stoj" pre interaktívny diagram témy */
 export function Figure({ fig }: { fig: string }) {
+  if (fig.startsWith('os|') || fig.startsWith('zn|')) return <NumberLine spec={fig} />;
   if (fig.includes(':')) {
     const [id, init] = fig.split('@');
     return <TopicDiagram id={id} init={init} />;

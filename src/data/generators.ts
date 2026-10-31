@@ -1,5 +1,6 @@
 import { Generator } from '../types';
 import { fmt, numOptions, pick, poly, rnd, uniq } from '../util';
+import { EXAM_GENS } from './exam-gen';
 
 // Generátory náhodných výpočtových príkladov, aby sa otázky neopakovali donekonečna.
 // Vzorce sú tie isté ako v prednáškach (Fyzika) a v tematickom pláne (Matematika).
@@ -639,4 +640,6 @@ export const GENERATORS: Generator[] = [
       };
     },
   },
+  // príprava na skúšku z Matematiky 1 (exam-gen.ts)
+  ...EXAM_GENS,
 ];
