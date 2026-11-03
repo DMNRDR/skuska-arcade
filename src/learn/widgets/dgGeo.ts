@@ -317,6 +317,212 @@ function figOsi(){const O=[200,170,0],q=(a)=>poly(a.map(S3),'wall');
   +tx(P3(-25,170,0)[0]-4,P3(-25,170,0)[1]-8,'x')+tx(P3(200,-25,0)[0]+8,P3(200,-25,0)[1]+4,'y')+tx(P3(200,170,175)[0]+8,P3(200,170,175)[1]+4,'z')
   +tx(P3(40,30,0)[0],P3(40,30,0)[1],'π pôdorysňa','mutl')+tx(P3(20,170,120)[0],P3(20,170,120)[1],'ν nárysňa','mutl')+tx(P3(200,40,120)[0]+4,P3(200,40,120)[1],'μ bokorysňa','mutl')}
 
+// ---------- 2. písomka: axonometria, perspektíva, rotačné plochy, fotogrametria ----------
+// Všetko sa počíta z rovnakých vzťahov, aké sú v prednáškach P4 až P7 (Rückschlossová).
+const AXO=(O,ex,ey,ez)=>(x,y,z)=>[O[0]+x*ex[0]+y*ey[0]+z*ez[0],O[1]+x*ex[1]+y*ey[1]+z*ez[1]];
+function axSys(O,ex,ey,ez,n,ticks=true){let s='';const A=(v,k)=>[O[0]+v[0]*k,O[1]+v[1]*k];
+  for(const [v,l,k] of [[ex,'x',n[0]],[ey,'y',n[1]],[ez,'z',n[2]]]){const e=A(v,k+0.7);s+=arrow(O,e,'thin');
+    if(ticks)for(let i=1;i<=k;i++)s+=tick(A(v,i),v,3);
+    s+=tx(e[0]+(v[0]<-0.01?-12:5),e[1]+(v[1]<-0.5?-2:v[1]>0.5?12:-5),l,'mutl')}
+  return s}
+const pathOf=(ps,c='res',close=true)=>`<path d="${ps.map((p,i)=>(i?'L':'M')+f(p[0])+' '+f(p[1])).join('')}${close?'Z':''}" class="${c}"/>`;
+const circ3=(P,c3,r,plane)=>{const out=[];for(let i=0;i<=72;i++){const t=i/72*2*Math.PI,a=r*Math.cos(t),b=r*Math.sin(t);
+  out.push(plane=='xy'?P(c3[0]+a,c3[1]+b,c3[2]):plane=='xz'?P(c3[0]+a,c3[1],c3[2]+b):P(c3[0],c3[1]+a,c3[2]+b))}return out};
+
+/** jedna kocka s vpísanými kružnicami v danej axonometrii (panel 200 × 150) */
+function axPanel(ox,oy,u,ex,ey,ez,title,sub,keep,tx0,ty0){
+  const P=AXO([ox,oy],V.mul(ex,u),V.mul(ey,u),V.mul(ez,u));let s=axSys([ox,oy],V.mul(ex,u),V.mul(ey,u),V.mul(ez,u),[2,2,2],false);
+  const C=[[0,0,0],[2,0,0],[2,2,0],[0,2,0],[0,0,2],[2,0,2],[2,2,2],[0,2,2]],E=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  for(const[a,b]of E)s+=ln(P(...C[a]),P(...C[b]),'given');
+  for(const pl of['xy','xz','yz']){const c3=pl=='xy'?[1,1,2]:pl=='xz'?[1,2,1]:[2,1,1];s+=pathOf(circ3(P,c3,1,pl),keep.includes(pl)?'res':'aux')}
+  return s+tx(tx0,ty0,title,'lab')+tx(tx0,ty0+16,sub,'mutl')}
+function figAxTypy(){const r2=Math.SQRT1_2;
+  return ln([200,8],[200,292],'dash')+ln([8,150],[392,150],'dash')
+  +axPanel(110,92,22,[-0.866,0.5],[0.5,0.866],[0,-1],'Vojenská','x ⊥ y, j_x = j_y = j_z',['xy'],8,20)
+  +axPanel(318,84,22,[-1,0],[r2,r2],[0,-1],'Kavalierna','x ⊥ z, j_x = j_y = j_z',['xz'],208,20)
+  +axPanel(118,232,22,[-1,0],[r2/2,r2/2],[0,-1],'Šikmé premietanie','x ⊥ z, j_x = j_z, j_y &lt; j',['xz'],8,170)
+  +axPanel(310,238,22,[-0.9,0.32],[0.62,0.42],[0.12,-0.86],'Všeobecná šikmá','osi aj jednotky ľubovoľné',[],208,170)}
+
+function figPohlke(){const O=[110,150],a=[-70,40],b=[65,30],c=[8,-80];
+  const O2=[290,150];const P=(x,y,z)=>[O2[0]+x*a[0]+y*b[0]+z*c[0],O2[1]+x*a[1]+y*b[1]+z*c[1]];
+  let s=ln(O,V.add(O,a),'res')+ln(O,V.add(O,b),'res')+ln(O,V.add(O,c),'res')+pt(O,'O',6,14)
+   +tx(O[0]+a[0]/2-24,O[1]+a[1]/2+10,'j_x','resl')+tx(O[0]+b[0]/2+4,O[1]+b[1]/2+14,'j_y','resl')+tx(O[0]+c[0]/2+6,O[1]+c[1]/2,'j_z','resl');
+  const C=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]],E=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  for(const[i,k]of E)s+=ln(P(...C[i]),P(...C[k]),(i==0||k==0)?'res':'aux');
+  return s+arrow([170,150],[215,150],'thin')+tx(20,24,'Tri úsečky zo spoločného bodu,','lab')+tx(20,40,'každá na inej priamke …','lab')
+   +tx(222,24,'… sú vždy rovnobežným','lab')+tx(222,40,'priemetom hrán kocky.','lab')}
+
+const stAxKruh=(()=>{const O=[255,72],u=22,r2=Math.SQRT1_2,ex=[-u,0],ey=[u*r2,u*r2],ez=[0,-u],P=AXO(O,ex,ey,ez);
+  const S=P(4,5,0),Sx=P(4,0,0),Q=(a,b)=>P(4+3*a,5+3*b,0); // a smer x, b smer y
+  const K=Q(1,0),L=Q(-1,0),M=Q(0,1),N=Q(0,-1),X=Q(1,1),Y=Q(-1,1),Z=Q(-1,-1),W=Q(1,-1);
+  // priečková konštrukcia v súradniciach kružnice: K(1,0), L(-1,0), M(0,1), X(1,1)
+  const pts=[1,2,3].map(k=>{const i=[0,1-k/4],j=[k/4,1];return LX([-1,0],V.sub(i,[-1,0]),[1,0],V.sub(j,[1,0]))});
+  const all=[];for(const[a,b]of pts)for(const sa of[1,-1])for(const sb of[1,-1])all.push(Q(sa*a,sb*b));
+  const ell=[];for(let i=0;i<=72;i++){const t=i/72*2*Math.PI;ell.push(Q(Math.cos(t),Math.sin(t)))}
+  const iM=[1,2,3].map(k=>V.lerp(M,S,k/4)),iX=[1,2,3].map(k=>V.lerp(M,X,k/4));
+  return[
+  {t:'<b>Dané:</b> kavalierna axonometria x ⊥ z, j_x = j_y = j_z = j (os y je pod 45°). Kružnica k(S, r = 3) leží v pôdorysni, S(4, 5, 0).',d:()=>axSys(O,ex,ey,ez,[8,9,2])+pt(O,'O',8,-4)+scaleBar(20,255,u,3)},
+  {t:'<b>Stred S:</b> na os x nanes 4 jednotky (bod S_x), odtiaľ rovnobežne s osou y 5 jednotiek. V kavaliernej je j_y = j, nič neskracuješ.',d:()=>ln(Sx,S,'aux')+pt(Sx,'S_x',-6,-9,'adot','auxl')+pt(S,'S',-14,-6)},
+  {t:'<b>Združené priemery:</b> KL rovnobežne s osou x, MN rovnobežne s osou y, od S vždy r = 3 j. Sú to obrazy dvoch kolmých priemerov kružnice.',d:()=>ln(K,L,'given')+ln(M,N,'given')+pt(K,'K',-14,-6)+pt(L,'L',6,-6)+pt(M,'M',6,12)+pt(N,'N',-14,-6)},
+  {t:'<b>Dotyčnice:</b> v K a L rovnobežky s osou y, v M a N rovnobežky s osou x. Vznikne rovnobežník XYZW, obraz štvorca opísaného kružnici.',d:()=>poly([X,Y,Z,W],'cont')+pt(X,'X',-12,14,'adot','auxl')+pt(Y,'Y',6,12,'adot','auxl')+pt(Z,'Z',6,-6,'adot','auxl')+pt(W,'W',-16,-4,'adot','auxl')},
+  {t:'<b>Priečková konštrukcia:</b> úsečku MS aj úsečku MX rozdeľ na 4 rovnaké diely. Na MS sú body 1, 2, 3, na MX body 1′, 2′, 3′ (číslujú sa od M).',d:()=>iM.map((p,k)=>pt(p,''+(k+1),5,4,'adot','auxl')).join('')+iX.map((p,k)=>pt(p,(k+1)+'′',-4,14,'adot','auxl')).join('')},
+  {t:'Spoj <b>L</b> s bodmi 1, 2, 3 a <b>K</b> s bodmi 1′, 2′, 3′. Priesečníky L1 ∩ K1′, L2 ∩ K2′, L3 ∩ K3′ sú body elipsy medzi K a M.',d:()=>iM.map(p=>ln(L,p)).join('')+iX.map(p=>ln(K,p)).join('')+pts.map(([a,b])=>pt(Q(a,b),'',0,0,'rdot')).join('')},
+  {t:'Rovnako v ostatných štvrtinách (alebo súmerne podľa S). Máš 12 bodov a k tomu K, L, M, N.',d:()=>all.map(p=>pt(p,'',0,0,'rdot')).join('')},
+  {t:'Elipsu načrtni cez všetky body. V bodoch K, L, M, N sa dotýka strán rovnobežníka. Do písomky napíš aj vzťah jednotiek: <b>j_x = j_y = j_z = j</b>.',d:()=>pathOf(ell)+tx(250,262,'k = obraz kružnice','resl')}]})();
+
+// ---------- stredové premietanie a lineárna perspektíva ----------
+const OB=(x,y,z,c=[200,150],k=0.8)=>{const th=0.62,el=0.38,X=x*Math.cos(th)+y*Math.sin(th),D=-x*Math.sin(th)+y*Math.cos(th);return[c[0]+k*X,c[1]-k*(z*Math.cos(el)+D*Math.sin(el))]};
+function figSPdef(){const d=95,c=[205,150],Pp=(x,y,z)=>OB(x,y,z,c,0.82);
+  const S=[0,-d,0],H=[0,0,0],A=[70,90,55],t=d/(A[1]+d),As=[t*A[0],0,t*A[2]],A1=[A[0],0,A[2]];
+  const kr=[];for(let i=0;i<=72;i++){const a=i/72*2*Math.PI;kr.push(Pp(d*Math.cos(a),0,d*Math.sin(a)))}
+  return poly([Pp(-150,0,-115),Pp(150,0,-115),Pp(150,0,115),Pp(-150,0,115)],'plane')+tx(...V.add(Pp(130,0,95),[-10,0]),'π','mutl')
+  +pathOf(kr,'aux')+ln(Pp(...S),Pp(...H),'ang')+tx(...V.add(Pp(0,-d/2,0),[-6,14]),'d','lab')
+  +ln(Pp(...S),Pp(...A),'given')+ln(Pp(...A),Pp(...A1),'dash')+pt(Pp(...S),'S',-14,8)+pt(Pp(...H),'H',6,-6)+pt(Pp(...A),'A',6,-6)+pt(Pp(...As),'A_S',4,-8,'rdot','resl')+pt(Pp(...A1),'A_1',6,12,'adot','auxl')
+  +tx(...V.add(Pp(-150,0,-115),[4,14]),'dištančná kružnica (H, r = d)','auxl')}
+
+function figUbeznik(){const h=110,U=[240,h],U2=[30,h];let s=ln([0,h],[400,h],'given')+tx(372,h-6,'h','lab');
+  for(const x of[150,260,370])s+=ln([x,290],U,'res');
+  for(const x of[330,400])s+=ln([x,250],U2,'aux');
+  return s+pt(U,'U',4,-8,'rdot','resl')+pt(U2,'U_2',4,-8,'adot','auxl')+tx(160,282,'a','resl')+tx(250,282,'b','resl')+tx(352,282,'c','resl')
+   +tx(12,30,'Rovnobežky a, b, c sa na obraze stretnú v úbežníku U.','lab')+tx(12,48,'Všetky úbežníky vodorovných smerov ležia na h:','lab')+tx(12,66,'h je úbežnica vodorovnej roviny (horizont).','lab')}
+
+function figLPpojmy(){const c=[200,170],Pp=(x,y,z)=>OB(x,y,z,c,0.72),v=70,d=110;
+  const S=[0,-d,v],H=[0,0,v];const kr=[];for(let i=0;i<=72;i++){const a=i/72*2*Math.PI;kr.push(Pp(d*0.55*Math.cos(a),0,v+d*0.55*Math.sin(a)))}
+  return poly([Pp(-210,-170,0),Pp(210,-170,0),Pp(210,170,0),Pp(-210,170,0)],'plane')+tx(...V.add(Pp(150,120,0),[-90,0]),'ρ predmetová rovina','mutl')
+  +poly([Pp(-170,0,0),Pp(170,0,0),Pp(170,0,170),Pp(-170,0,170)],'wall')+tx(...V.add(Pp(150,0,150),[-6,0]),'π','mutl')
+  +ln(Pp(-170,0,0),Pp(170,0,0),'res')+tx(...V.add(Pp(170,0,0),[4,4]),'z','resl')
+  +ln(Pp(-170,0,v),Pp(170,0,v),'res')+tx(...V.add(Pp(170,0,v),[4,4]),'h','resl')
+  +ln(Pp(...S),Pp(...H),'ang')+tx(...V.add(Pp(0,-d/2,v),[-4,-6]),'d','lab')+ln(Pp(0,-d,0),Pp(...S),'dash')+tx(...V.add(Pp(0,-d,v/2),[-26,4]),'výška','mutl')
+  +pt(Pp(...S),'S',-14,0)+pt(Pp(...H),'H',6,-6)+ln(Pp(...S),Pp(0,60,v),'thin')+tx(...V.add(Pp(0,60,v),[4,-4]),'o','mutl')}
+
+/** kváder v perspektíve: roh A a úbežníky (null = nevlastný, smer d) */
+function boxPersp(A,U1,U2,Uc,t1,t2,t3){const to=(P,U,t)=>U.dir?V.add(P,V.mul(U.dir,t)):V.lerp(P,U,t);
+  const thru=(P,U)=>U.dir?U.dir:V.sub(U,P);
+  const B=to(A,U1,t1),D=to(A,U2,t2),E=to(A,Uc,t3);
+  const C=LX(B,thru(B,U2),D,thru(D,U1)),F=LX(B,thru(B,Uc),E,thru(E,U1)),G=LX(D,thru(D,Uc),E,thru(E,U2)),Hh=LX(F,thru(F,U2),G,thru(G,U1));
+  return{A,B,C,D,E,F,G,H:Hh}}
+const boxDraw=(b,c='given')=>[['A','B'],['A','D'],['A','E'],['B','C'],['D','C'],['B','F'],['E','F'],['D','G'],['E','G'],['F','H'],['G','H'],['C','H']].map(([p,q])=>ln(b[p],b[q],c)).join('');
+function figLPpolohy(){let s=ln([200,8],[200,292],'dash');
+  // priečelná: predná stena v skutočnom tvare, hĺbkové hrany do H
+  const h=120,H1=[100,h];s+=ln([10,h],[190,h],'thin')+tx(178,h-5,'h','mutl')+ln([10,250],[190,250],'thin')+tx(178,245,'z','mutl')+pt(H1,'H',4,-7,'rdot','resl');
+  const fr=[[40,250],[120,250],[120,170],[40,170]];s+=poly(fr,'face');const bk=fr.map(p=>V.lerp(p,H1,0.32));s+=poly(bk,'cont');
+  fr.forEach((p,i)=>{s+=ln(p,bk[i],'given')+ln(bk[i],H1,'dash')});
+  s+=tx(14,30,'Priečelná poloha','lab')+tx(14,46,'stena ∥ π: skutočný tvar,','mutl')+tx(14,60,'hĺbkové hrany smerujú do H','mutl');
+  // nepriečelná: dva úbežníky na h
+  const U1=[215,h],U2=[392,h];s+=ln([205,h],[395,h],'thin')+ln([205,250],[395,250],'thin')+pt([300,h],'H',4,-7,'dot','mutl');
+  const b=boxPersp([300,272],U1,U2,{dir:[0,-1]},0.4,0.38,180);s+=boxDraw(b);
+  for(const[P,U]of[[b.B,U1],[b.F,U1],[b.D,U2],[b.G,U2]])s+=ln(P,U,'dash');
+  return s+pt(U1,'U_1',2,-8,'rdot','resl')+pt(U2,'U_2',-22,-8,'rdot','resl')+tx(214,30,'Nepriečelná poloha','lab')+tx(214,46,'žiadna stena nie je ∥ π:','mutl')+tx(214,60,'dva úbežníky na h','mutl')}
+function figLPvtacia(){let s=ln([200,8],[200,292],'dash');
+  // budova spredu (priečelná): zvislé hrany sa na šikmej snímke zbiehajú do U_c
+  const bld=(cx,yb,yt,wb,Uc,up)=>{const at=y=>{const k=(y-Uc[1])/(yb-Uc[1]);return wb*k};let t='';
+    const L=y=>[cx-at(y),y],R=y=>[cx+at(y),y];t+=poly([L(yb),R(yb),R(yt),L(yt)],'face');
+    for(let i=1;i<5;i++){const y=yb+(yt-yb)*i/5;t+=ln(L(y),R(y),'thin')}
+    t+=ln(L(yt),Uc,'dash')+ln(R(yt),Uc,'dash');return t};
+  const hz=250,Hz=[100,150],Uc1=[100,-260];s+=ln([10,hz],[190,hz],'thin')+tx(178,hz-5,'h','mutl')+bld(100,280,60,46,Uc1,1)+pt(Hz,'H',8,-4,'adot','auxl');
+  s+=tx(8,18,'Žabia: h pod H (pohľad hore)','lab')+tx(8,36,'zvislé hrany sa zbiehajú hore','resl');
+  const hv=50,Hv=[300,150],Uc2=[300,560];s+=ln([210,hv],[390,hv],'thin')+tx(378,hv-5,'h','mutl')+bld(300,70,260,46,Uc2,0)+pt(Hv,'H',8,-4,'adot','auxl');
+  return s+tx(208,18,'Vtáčia: h nad H (pohľad dole)','lab')+tx(208,286,'zvislé hrany sa zbiehajú dole','resl')}
+
+// ---------- rotačné plochy ----------
+function figRotPojmy(){const cx=200,top=40,bot=262,R=y=>62+28*Math.sin(2*Math.PI*(y-top)/(bot-top));
+  const L=[],Rt=[];for(let y=top;y<=bot;y+=4){L.push([cx-R(y),y]);Rt.push([cx+R(y),y])}
+  const el=(y,c)=>`<ellipse cx="${cx}" cy="${f(y)}" rx="${f(R(y))}" ry="${f(R(y)*0.2)}" class="${c}"/>`;
+  const yR=top+(bot-top)/4,yH=top+3*(bot-top)/4,yA=top+(bot-top)*0.08;
+  return ln([cx,14],[cx,290],'dash')+tx(cx+5,24,'o (os rotácie)','mutl')+pl(L,'res')+pl(Rt,'given')
+  +el(yR,'aux')+el(yH,'aux')+el(yA,'cont')+tx(cx+R(yR)+6,yR+4,'k_R rovník','auxl')+tx(cx+R(yH)+6,yH+4,'k_H hrdlo','auxl')+tx(cx+R(yA)+6,yA+6,'k_A','mutl')
+  +tx(cx-R(160)-56,165,'m','resl')+tx(18,286,'m = polmeridián (meridián = rez rovinou cez os)','mutl')+pt([cx+R(yA)*0.5,yA+R(yA)*0.2*0.866],'A',4,12)}
+function figGulaValec(){const r=52;let s='';const pan=(cx,w,title,lab)=>{const O=[cx,140];let t=ci(O,r,'given')+ln([cx,40],[cx,250],'dash')+pt(O,'O',5,12);
+  t+=ln([cx-w,52],[cx-w,228],'aux')+ln([cx+w,52],[cx+w,228],'aux');
+  const hh=Math.sqrt(Math.max(0,r*r-w*w));
+  if(hh<0.5)t+=ln([cx-w,140],[cx+w,140],'res')+pt([cx-w,140],'',0,0,'rdot')+pt([cx+w,140],'',0,0,'rdot')+tx(cx+w+4,136,'k','resl');
+  else for(const sg of[-1,1]){const y=140+sg*hh;t+=ln([cx-w,y],[cx+w,y],'res')+pt([cx-w,y],'',0,0,'rdot')+pt([cx+w,y],'',0,0,'rdot')+tx(cx+w+4,y+4,sg<0?'_1k':'_2k','resl')}
+  return t+tx(cx-90,24,title,'lab')+tx(cx-90,272,lab,'mutl')};
+  return ln([200,8],[200,292],'dash')+pan(100,r,'Dotyková valcová plocha','prienik: rovník k')+pan(300,34,'Sečná valcová plocha','prienik: 2 rovnobežkové kružnice')}
+function figGulaKuzel(){const r=50;let s='';const pan=(cx,Vy,half,title,lab)=>{const O=[cx,150],Vv=[cx,Vy];let t=ci(O,r,'given')+ln([cx,Vy-14],[cx,262],'dash')+pt(O,'O',5,12)+pt(Vv,'V',6,0);
+  const dirs=[-1,1].map(sg=>[Math.sin(half)*sg,Math.cos(half)]);
+  const hits=[];for(const d of dirs){t+=ln(Vv,V.add(Vv,V.mul(d,215)),'aux');
+    // priesečníky priamky V + s·d s kružnicou
+    const w=V.sub(Vv,O),b=V.dot(w,d),c=V.dot(w,w)-r*r,D=b*b-c;if(D<0.5)hits.push([V.add(Vv,V.mul(d,-b))]);else hits.push([V.add(Vv,V.mul(d,-b-Math.sqrt(D))),V.add(Vv,V.mul(d,-b+Math.sqrt(D)))])}
+  hits[0].forEach((p,i)=>{const q=hits[1][i];t+=ln(p,q,'res')+pt(p,'',0,0,'rdot')+pt(q,'',0,0,'rdot')+tx(q[0]+5,q[1]+4,hits[0].length==1?'k':(i?'_2k':'_1k'),'resl')});
+  return t+tx(cx-90,24,title,'lab')+tx(cx-90,284,lab,'mutl')};
+  const Vy=52,dist=150-Vy,tang=Math.asin(r/dist);
+  return ln([200,8],[200,292],'dash')+pan(100,Vy,tang,'Dotyková kužeľová plocha','prienik: 1 kružnica k')+pan(300,Vy,tang*0.62,'Sečná kužeľová plocha','prienik: 2 kružnice')}
+
+const stGule2=(()=>{const O1=[150,150],r1=88,O2=[272,166],r2=66,[K,K2]=CX(O1,r1,O2,r2),Pm=LX(K,V.sub(K2,K),O1,V.sub(O2,O1));
+  return[
+  {t:'<b>Dané:</b> dve guľové plochy, kreslíme ich meridiány _1m(_1O) a _2m(_2O) v priemetni.',d:()=>ci(O1,r1,'given')+ci(O2,r2,'given')+pt(O1,'_1O',-18,-4)+pt(O2,'_2O',6,-4)+tx(O1[0]-r1+4,O1[1]-r1+20,'_1m','mutl')+tx(O2[0]+r2-14,O2[1]-r2+8,'_2m','mutl')},
+  {t:'Každá priamka cez stred gule je jej osou. Preto majú dve gule <b>spoločnú os</b>: spojnicu stredov _1O_2O.',d:()=>xl(O1,O2,'aux',60)+tx(O2[0]+70,O2[1]+16,'o','auxl')},
+  {t:'Meridiány sa pretnú v bodoch K, K′.',d:()=>pt(K,'K',4,-8,'rdot','resl')+pt(K2,"K′",4,14,'rdot','resl')},
+  {t:'Rotáciou bodu K okolo osi vznikne <b>kružnica k</b> v rovine kolmej na os. V priemete je to úsečka KK′ kolmá na _1O_2O, skutočný polomer je |KS_k|.',d:()=>ln(K,K2,'res')+pt(Pm,'S_k',6,12,'adot','auxl')+tx(K[0]+8,(K[1]+K2[1])/2,'k','resl')}]})();
+
+const stGule3=(()=>{const A=[70,250],B=[330,250],C=[205,62],foot=(P,Q,R)=>{const d=V.unit(V.sub(R,Q));return V.add(Q,V.mul(d,V.dot(V.sub(P,Q),d)))};
+  const Pc=foot(C,A,B),Pa=foot(A,B,C),Pb=foot(B,C,A),Vv=LX(C,V.sub(Pc,C),A,V.sub(Pa,A));
+  const M=V.lerp(C,Pc,0.5),rr=V.len(V.sub(C,Pc))/2,u=V.unit(V.sub(Pc,C)),n=V.perp(u),hgt=Math.sqrt(V.len(V.sub(Vv,C))*V.len(V.sub(Pc,Vv))),R0=V.add(Vv,V.mul(n,hgt));
+  const half=(P,Q)=>{const m=V.lerp(P,Q,.5),r=V.len(V.sub(Q,P))/2;return `<path d="M${f(P[0])} ${f(P[1])} A${f(r)} ${f(r)} 0 0 0 ${f(Q[0])} ${f(Q[1])}" class="aux"/>`};
+  return[
+  {t:'<b>Dané:</b> ostrouhlý trojuholník ABC. Guľové plochy majú priemery AB, BC a CA (ich meridiány sú Tálesove kružnice nad stranami).',d:()=>poly([A,B,C],'cont')+ci(V.lerp(A,B,.5),V.len(V.sub(B,A))/2,'cont')+ci(V.lerp(B,C,.5),V.len(V.sub(C,B))/2,'cont')+ci(V.lerp(C,A,.5),V.len(V.sub(A,C))/2,'cont')+pt(A,'A',-14,4)+pt(B,'B',6,4)+pt(C,'C',6,-6)},
+  {t:'Gule nad AC a BC: obe prechádzajú bodom C aj pätou výšky P_c (lebo uhol AP_cC = BP_cC = 90°). Prienikom je kružnica _1k, jej priemet je <b>výška</b> CP_c.',d:()=>ln(C,Pc,'res')+pt(Pc,'P_c',4,14,'rdot','resl')},
+  {t:'Rovnako ďalšie dve dvojice gúľ: priemety kružníc _2k, _3k sú výšky z A a z B.',d:()=>ln(A,Pa,'res')+ln(B,Pb,'res')+pt(Pa,'',0,0,'rdot')+pt(Pb,'',0,0,'rdot')},
+  {t:'Tri kružnice sa pretnú v bodoch R, R′. Ich priemet je <b>priesečník výšok</b> V.',d:()=>pt(Vv,'V',8,-6,'rdot','resl')},
+  {t:'<b>Výška bodu R:</b> sklop rovinu kružnice _1k do priemetne. Kružnica má priemer CP_c, teda nad CP_c Tálesova polkružnica. V bode V kolmica na CP_c dá (R). Výška = |V(R)|.',d:()=>half(C,Pc)+ln(Vv,R0,'ang')+pt(R0,'(R)',6,-2,'rdot','resl')},
+  {t:'R′ je súmerný s R podľa priemetne (rovnaká výška, na druhej strane). Presne takto sa hľadá aj projekčné centrum šikmej snímky kvádra.',d:()=>''}]})();
+
+// ---------- fotogrametria ----------
+/** množina G(AB, α): dva súmerné oblúky; vráti SVG */
+function setG(A,B,al,c='res'){const d=V.len(V.sub(B,A)),r=d/(2*Math.sin(al)),m=V.lerp(A,B,.5),n=V.perp(V.unit(V.sub(B,A))),off=r*Math.cos(al);
+  const big=al<Math.PI/2?1:0;let s='';
+  for(const sg of[1,-1]){const O=V.add(m,V.mul(n,sg*off));
+    // oblúk na strane stredu O pre ostrý uhol, na opačnej strane pre tupý
+    const sweep=(sg>0)?0:1;s+=`<path d="M${f(A[0])} ${f(A[1])} A${f(r)} ${f(r)} 0 ${big} ${sweep} ${f(B[0])} ${f(B[1])}" class="${c}"/>`}
+  return s}
+function figFgMnoziny(){let s=ln([133,10],[133,200],'dash')+ln([266,10],[266,200],'dash');
+  const pan=(cx,al,title,sub)=>{const A=[cx-38,110],B=[cx+38,110];let t=al==90?ci([cx,110],38,'res'):setG(A,B,al*Math.PI/180);
+    return t+ln(A,B,'given')+pt(A,'U_a',-10,16)+pt(B,'U_b',-6,16)+tx(cx-60,22,title,'lab')+tx(cx-60,192,sub,'mutl')};
+  return s+pan(66,60,'α = 60°','melonoid (oblúky G)')+pan(200,90,'α = 90°','guľová plocha')+pan(333,120,'α = 120°','časť anuloidu')}
+function figFgNevl(){let s=ln([200,8],[200,232],'dash');const b=[1,0];
+  const A=[70,130],al=40*Math.PI/180;s+=xl(A,V.add(A,b),'dash',40)+arrow([30,40],[90,40],'thin')+tx(34,30,'smer b ∥ π','mutl');
+  for(const sg of[1,-1])s+=ln(V.sub(A,V.mul([Math.cos(al),sg*Math.sin(al)],60)),V.add(A,V.mul([Math.cos(al),sg*Math.sin(al)],120)),'res');
+  s+=angArc(A,34,V.add(A,[1,0]),V.add(A,[Math.cos(al),-Math.sin(al)]))+tx(A[0]+38,A[1]-6,'α','lab')+pt(A,'U_a',-6,18)+tx(14,214,'α ≠ 90°: kužeľová plocha','lab')+tx(14,228,'s vrcholom U_a a osou ∥ b','mutl');
+  const A2=[300,130];s+=xl(A2,V.add(A2,b),'dash',80)+ln([300,40],[300,220],'res')+pt(A2,'U_a',6,18)+angArc(A2,16,V.add(A2,[1,0]),V.add(A2,[0,-1]))+arrow([330,40],[390,40],'thin')+tx(326,30,'smer b ∥ π','mutl');
+  return s+tx(214,214,'α = 90°: rovina cez U_a','lab')+tx(214,228,'kolmá na smer b','mutl')}
+
+const stG=(()=>{const A=[140,165],B=[260,165],al=50*Math.PI/180,d=[Math.cos(al),-Math.sin(al)],Qp=V.add(A,V.mul(d,95)),n=[Math.sin(al),Math.cos(al)],
+  t=60/Math.sin(al),O=V.add(A,V.mul(n,t)),r=t,O2=[O[0],2*A[1]-O[1]],X=V.add(O,[r*Math.cos(1.25),r*Math.sin(1.25)]);
+  return[
+  {t:'<b>Dané:</b> úsečka AB a uhol α = 50°. Hľadáme všetky body, z ktorých vidíme AB pod uhlom 50° (množina G(AB, 50°)).',d:()=>ln(A,B,'given')+pt(A,'A',-14,-4)+pt(B,'B',6,-4)},
+  {t:'Zostroj os o_AB úsečky AB.',d:()=>ln([200,20],[200,300],'aux')+tx(204,32,'o_{AB}','auxl')},
+  {t:'V bode A nanes uhol BAQ = 50°.',d:()=>ln(A,Qp,'aux')+angArc(A,30,B,Qp)+tx(A[0]+34,A[1]-10,'50°','lab')+pt(Qp,'Q',4,-6,'adot','auxl')},
+  {t:'Bodom A veď priamku q kolmo na AQ. Priesečník q s osou o_AB je stred O.',d:()=>xl(A,O,'aux',30)+tx(O[0]-60,O[1]+40,'q','auxl')+pt(O,'O',6,12,'adot','auxl')},
+  {t:'Oblúk k(O, |OA|) na strane stredu O a súmerný oblúk k′ podľa AB tvoria množinu G. Body A, B do nej nepatria.',d:()=>setG(A,B,al)+pt(O2,"O′",6,-4,'adot','auxl')},
+  {t:'<b>Kontrola:</b> z hociktorého bodu X oblúka vidíš AB pod uhlom 50°. Pre tupý uhol (napr. 120°) berieš opačné (menšie) časti oblúkov.',d:()=>ln(X,A,'thin')+ln(X,B,'thin')+angArc(X,26,A,B)+pt(X,'X',4,14,'rdot','resl')+tx(X[0]-20,X[1]-30,'50°','lab')}]})();
+
+const stFgSq=(()=>{const h=125,H=[200,h],fo=105,S=[200,h+fo],U=phi=>[200+fo*Math.tan(phi*Math.PI/180),h];
+  const Ua=U(-35),Ub=U(55),Uu=U(10),T=V.lerp(Ua,Ub,.5),rT=V.len(V.sub(Ub,Ua))/2;
+  return[
+  {t:'<b>Dané:</b> zvislá snímka štvorcovej siete na podlahe a zvislého stĺpa. Na horizonte h sú úbežníky strán U_a, U_b a úbežník uhlopriečky U_u. Zvislé hrany sú na snímke kolmé na h, ich úbežník U_c je nevlastný.',d:()=>ln([0,h],[400,h],'given')+tx(386,h-6,'h','lab')+pt(Ua,'U_a',-8,-8)+pt(Ub,'U_b',-8,-8)+pt(Uu,'U_u',2,-8)+arrow([30,250],[30,200],'thin')+tx(36,214,'U_c nevlastný','mutl')},
+  {t:'U_a a U_c: smery zvierajú 90° a U_c je nevlastný, takže S leží v <b>rovine</b> cez U_a kolmej na zvislý smer, teda vo vodorovnej rovine cez h. Sklopíme ju do snímky okolo h.',d:()=>tx(12,h+20,'sklopená rovina (vodorovná rovina oka)','mutl')},
+  {t:'U_a a U_b: strany štvorca zvierajú 90°, S leží na guli s priemerom U_aU_b. V sklopení je to <b>Tálesova kružnica</b> nad U_aU_b.',d:()=>ci(T,rT,'aux')},
+  {t:'U_u a U_b: uhlopriečka so stranou zvierajú 45°, S leží na melonoide. V sklopení sú to <b>oblúky G(U_uU_b, 45°)</b>.',d:()=>setG(Uu,Ub,Math.PI/4,'aux')},
+  {t:'Prienik pod horizontom je sklopené projekčné centrum <b>(S)</b>. Prienik nad h je (S′), druhá možnosť súmerná podľa snímky.',d:()=>pt(S,'(S)',6,14,'rdot','resl')+pt([200,h-fo],"(S′)",6,-4,'adot','auxl')},
+  {t:'Kolmica z (S) na h dá <b>hlavný bod H</b>, ohnisková vzdialenosť <b>f = |(S)H|</b>. (Prienik gule a melonoidu je kružnica so stredom H a polomerom f.)',d:()=>ln(S,H,'ang')+pt(H,'H',-16,-8,'rdot','resl')+tx(206,h+fo/2,'f','resl')}]})();
+
+const stFgKv=(()=>{const H0=[195,150],Ua=[85,95],Ub=[320,85];const a=V.sub(Ua,H0),b=V.sub(Ub,H0),f2=-V.dot(a,b);
+  // U_c z podmienok kolmosti: (U_c−H)·a = (U_c−H)·b = −f²
+  const det=a[0]*b[1]-a[1]*b[0],p=(-f2*b[1]+f2*a[1])/det,q=(-a[0]*f2+b[0]*f2)/det,Uc=V.add(H0,[p,q]);
+  const foot=(P,Q,R)=>{const d=V.unit(V.sub(R,Q));return V.add(Q,V.mul(d,V.dot(V.sub(P,Q),d)))};
+  const Pc=foot(Uc,Ua,Ub),Pa=foot(Ua,Ub,Uc),Pb=foot(Ub,Uc,Ua),Hc=LX(Uc,V.sub(Pc,Uc),Ua,V.sub(Pa,Ua));
+  const u=V.unit(V.sub(Pc,Uc)),n=V.perp(u),fl=Math.sqrt(V.len(V.sub(Hc,Uc))*V.len(V.sub(Pc,Hc))),S0=V.add(Hc,V.mul(n,-fl));
+  const bx=boxPersp([205,235],Ua,Ub,Uc,0.22,0.2,0.3);
+  const half=(P,Q)=>{const r=V.len(V.sub(Q,P))/2;return `<path d="M${f(P[0])} ${f(P[1])} A${f(r)} ${f(r)} 0 0 1 ${f(Q[0])} ${f(Q[1])}" class="aux"/>`};
+  return[
+  {t:'<b>Dané:</b> šikmá snímka kvádra a úbežníky U_a, U_b, U_c jeho troch navzájom kolmých hrán.',d:()=>boxDraw(bx,'cont')+[[bx.B,Ua],[bx.D,Ub],[bx.E,Uc]].map(([P,U])=>ln(P,U,'dash')).join('')+pt(Ua,'U_a',-24,-6)+pt(Ub,'U_b',6,-6)+pt(Uc,'U_c',6,4)},
+  {t:'Každé dva smery zvierajú 90°, takže S leží na troch guliach s priemermi U_aU_b, U_bU_c, U_aU_c. Spoj úbežníky do trojuholníka.',d:()=>poly([Ua,Ub,Uc],'cont')},
+  {t:'Gule nad U_aU_c a U_bU_c sa pretnú v kružnici k. Jej kolmý priemet k_1 je <b>výška</b> z U_c na stranu U_aU_b (päta P).',d:()=>ln(Uc,Pc,'aux')+pt(Pc,'P',6,-6,'adot','auxl')+tx(Uc[0]+6,(Uc[1]+Pc[1])/2+30,'k_1','auxl')},
+  {t:'Rovnako výšky z U_a a U_b (priemety kružníc l, n). Priesečník výšok je <b>hlavný bod H</b>.',d:()=>ln(Ua,Pa,'aux')+ln(Ub,Pb,'aux')+pt(Hc,'H',8,10,'rdot','resl')},
+  {t:'Sklop rovinu kružnice k do snímky. Kružnica k má priemer U_cP, nad ním nakresli <b>Tálesovu polkružnicu</b>.',d:()=>half(Uc,Pc)},
+  {t:'V bode H veď kolmicu na U_cP. Pretne polkružnicu v (S). <b>f = |(S)H|</b>. Kontrola: f² = |HU_c|·|HP|.',d:()=>ln(Hc,S0,'ang')+pt(S0,'(S)',-28,4,'rdot','resl')+tx((Hc[0]+S0[0])/2-4,(Hc[1]+S0[1])/2-6,'f','resl')}]})();
+
 export type RysStep = { t: string; d: () => string };
 export type Rys = { vb: string; steps: RysStep[] };
 const one = (d, vb = '0 0 400 300') => ({ vb, steps: [{ t: '', d }] });
@@ -343,6 +549,13 @@ export const RYS: Record<string, Rys> = {
   'dg-t5': { vb: '0 0 400 240', steps: stT5 },
   'dg-m': { vb: '0 0 400 300', steps: stM },
   'dg-b': { vb: '0 0 400 300', steps: stB },
+  // 2. písomka
+  'dg-ax-kruh': { vb: '0 0 400 275', steps: stAxKruh },
+  'dg-g': { vb: '0 0 400 310', steps: stG },
+  'dg-gule2': { vb: '0 0 400 300', steps: stGule2 },
+  'dg-gule3': { vb: '0 0 400 300', steps: stGule3 },
+  'dg-fg-stvorec': { vb: '0 0 400 250', steps: stFgSq },
+  'dg-fg-kvader': { vb: '0 0 400 340', steps: stFgKv },
 };
 
 /** statické obrázky */
@@ -370,6 +583,19 @@ export const DG_PICS: Record<string, Rys> = {
   'dg-monge2d': one(figMonge2D),
   'dg-body': one(figBody, '0 0 400 290'),
   'dg-osi': one(figOsi),
+  // 2. písomka
+  'dg-ax-typy': one(figAxTypy),
+  'dg-pohlke': one(figPohlke, '0 0 400 240'),
+  'dg-sp-def': one(figSPdef),
+  'dg-ubeznik': one(figUbeznik),
+  'dg-lp-pojmy': one(figLPpojmy),
+  'dg-lp-polohy': one(figLPpolohy),
+  'dg-lp-vtacia': one(figLPvtacia),
+  'dg-rot': one(figRotPojmy),
+  'dg-gula-valec': one(figGulaValec),
+  'dg-gula-kuzel': one(figGulaKuzel),
+  'dg-fg-mnoziny': one(figFgMnoziny, '0 0 400 210'),
+  'dg-fg-nevl': one(figFgNevl, '0 0 400 240'),
 };
 
 // kriedová tabuľa: farby podľa CH v learn/kit.tsx

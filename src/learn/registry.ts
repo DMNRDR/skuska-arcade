@@ -4,6 +4,7 @@ import { CrossedPlaneWaves, DopplerMove, LensDrag, MalusTurn, PhaseSum, SnellDra
 import { MatMul, SarrusTap } from './widgets/matice';
 import { BossTriangle, CrossCover, VecAB, VecDot } from './widgets/vektory';
 import { rys } from './widgets/deskriptiva';
+import { AngleLocus, AxTypes, PerspBox } from './widgets/dg2';
 import { EigenDrag } from './widgets/vlastne';
 import { HornerTap } from './widgets/polynomy';
 import { GeoBossA, GeoBossB, GeoPodiel, GeoTabA } from './widgets/geodezia';
@@ -65,6 +66,16 @@ export const WIDGETS: Record<string, WidgetDef> = {
   'dg-t5': { title: 'Rysuj: rez terénu rovinou', lead: 'Rovina daná spádovým merítkom.', C: rys('dg-t5') },
   'dg-m': { title: 'Rysuj: bokorys bodu', lead: 'Z pôdorysu a nárysu.', C: rys('dg-m') },
   'dg-b': { title: 'Rysuj: teleso v troch priemetoch', lead: 'Nárys, pôdorys, bokorys a bod Q.', C: rys('dg-b') },
+  // deskriptíva, 2. písomka
+  'ax-typy': { title: 'Vyskúšaj: štyri typy šikmej axonometrie', lead: 'Prepínaj typy a sleduj, ktorá kružnica ostane kružnicou.', C: AxTypes },
+  'dg-ax-kruh': { title: 'Rysuj: kružnica v kavaliernej axonometrii', lead: 'Úloha z okruhu: k(S, 3) v pôdorysni, S(4, 5, 0).', C: rys('dg-ax-kruh') },
+  'lp-kvader': { title: 'Vyskúšaj: kváder v perspektíve', lead: 'Otáčaj kváder, meň výšku oka a sklon. Sleduj horizont a úbežníky.', C: PerspBox },
+  'dg-gule2': { title: 'Rysuj: prienik dvoch gúľ', lead: 'Spoločná os, priesečníky meridiánov, kružnica.', C: rys('dg-gule2') },
+  'dg-gule3': { title: 'Rysuj: prienik troch gúľ', lead: 'Priemery gúľ sú strany trojuholníka ABC.', C: rys('dg-gule3') },
+  'fg-mnozina': { title: 'Vyskúšaj: kde môže byť S', lead: 'Ťahaj projekčné centrum S, kým nevidí UaUb pod uhlom α.', C: AngleLocus },
+  'dg-g': { title: 'Rysuj: množina G(AB, 50°)', lead: 'Konštrukcia z prednášky, príklad 3.1.', C: rys('dg-g') },
+  'dg-fg-stvorec': { title: 'Rysuj: vnútorná orientácia zvislej snímky štvorca', lead: 'Príklad 3.2: Tálesova kružnica a oblúky G.', C: rys('dg-fg-stvorec') },
+  'dg-fg-kvader': { title: 'Rysuj: vnútorná orientácia šikmej snímky kvádra', lead: 'Príklad 3.6: výšky trojuholníka úbežníkov a sklopenie.', C: rys('dg-fg-kvader') },
   // geodézia: Zadanie 5
   'geo-tab-a': { title: 'Vyskúšaj: tabuľka opráv', lead: 'Tvoje merania zo zadania č. 15. Ťukaj na riadky.', C: GeoTabA },
   'geo-podiel': { title: 'Pokus: ktorá chyba škodí najviac', lead: 'Meň stredné chyby meraní a sleduj mΔh.', C: GeoPodiel },
@@ -97,6 +108,10 @@ export const EXTRAS: Record<string, Record<number, string[]>> = {
   'dg:kotovane': { 2: ['dg-k1'], 3: ['dg-k2'], 4: ['dg-k3'], 6: ['dg-k4'], 7: ['dg-k5'], 8: ['dg-k6'], 9: ['dg-k7'], 10: ['dg-k8'] },
   'dg:topo': { 1: ['dg-t1'], 2: ['dg-t2'], 4: ['dg-t3'], 5: ['dg-t4'], 6: ['dg-t5'] },
   'dg:monge': { 2: ['dg-m'], 4: ['dg-b'] },
+  'dg:axonometria': { 4: ['ax-typy'], 7: ['dg-ax-kruh'] },
+  'dg:perspektiva': { 8: ['lp-kvader'] },
+  'dg:rotacne': { 3: ['dg-gule2'], 4: ['dg-gule3'] },
+  'dg:fotogrametria': { 3: ['fg-mnozina'], 4: ['dg-g'], 7: ['dg-fg-stvorec'], 9: ['dg-fg-kvader'] },
   'geo:ulohaA': { 2: ['geo-tab-a'], 7: ['geo-boss-a'] },
   'geo:ulohaB': { 5: ['geo-podiel'], 6: ['geo-boss-b'] },
 };

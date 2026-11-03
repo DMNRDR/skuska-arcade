@@ -29,7 +29,7 @@ export default function Home({
   subject: SubjectId;
   setSubject: (s: SubjectId) => void;
   onCampaign: () => void;
-  onTezy: () => void;
+  onTezy: (set?: 1 | 2) => void;
   onNavod: () => void;
   onMatTest2: () => void;
   onExam: () => void;
@@ -103,12 +103,36 @@ export default function Home({
       {/* deskriptíva: tézy na 1. písomku */}
       {subject === 'dg' && (
         <View style={{ gap: 10 }}>
-          <Text style={s.section}>Písomka</Text>
-          <Press color={C.ink} onPress={onTezy} inner={{ padding: 18, gap: 6 }}>
-            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>DOKUMENT OD UČITEĽKY</Text>
-            <Text style={s.bigBtn}>Tézy 1. písomky</Text>
-            <Text style={[s.small, { color: '#fff' }]}>Každá otázka so vzorovou odpoveďou a obrázkom. Skúšanie na teóriu aj rysovanie.</Text>
+          <Text style={s.section}>2. písomka · pi 13. 11.</Text>
+          <Press color={C.orange} onPress={() => onLearn('pisomka2')} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>4 TÉMY · KLIKACIE LEKCIE</Text>
+            <Text style={s.bigBtn}>Nauč sa na 2. písomku</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Axonometria, lineárna perspektíva, rotačné plochy, fotogrametria. Rysovačky krok po kroku a pokusy na dotyk.</Text>
           </Press>
+          <Press color={C.ink} onPress={() => onTezy(2)} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>OKRUH 2T OD UČITEĽKY · 38 OTÁZOK</Text>
+            <Text style={s.bigBtn}>Tézy 2. písomky</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Každá otázka zo zverejneného okruhu so vzorovou odpoveďou a náčrtom. Skúšanie na teóriu aj rysovanie.</Text>
+          </Press>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 4 }}>
+            {(
+              [
+                ['axonometria', 'Axonometria'],
+                ['perspektiva', 'Perspektíva'],
+                ['rotacne', 'Rotačné plochy'],
+                ['fotogrametria', 'Fotogrametria'],
+              ] as const
+            ).map(([id, l]) => (
+              <Pressable key={id} onPress={() => onLearn(id)} style={({ pressed }) => [s.link, { marginRight: 10 }, pressed && { opacity: 0.6 }]}>
+                <Text style={s.linkText}>{l}</Text>
+                <Icon name="next" size={16} />
+              </Pressable>
+            ))}
+          </View>
+          <Pressable onPress={() => onTezy(1)} style={({ pressed }) => [s.link, pressed && { opacity: 0.6 }]}>
+            <Text style={s.linkText}>Tézy 1. písomky (16. 10.)</Text>
+            <Icon name="next" size={16} />
+          </Pressable>
         </View>
       )}
 
@@ -202,7 +226,7 @@ export default function Home({
 
       <Text style={s.foot}>
         {countQuestions(subject)} otázok + {countGenerators(subject)} generátorov príkladov.{' '}
-        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. písomku z Metód zobrazovania, pracovné listy a utorková písomka.' : subject === 'geo' ? 'Zdroj: Zadanie 5 z Geodézie 1 (doc. Marčiš, AIS), vzorový príklad a individuálne zadanie č. 15.' : 'Zdroj: prednášky doc. Minarechovej (týždne 1 až 6), hárok z cvičenia K prednáške 10 a tematický plán Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
+        {subject === 'fyz' ? 'Zdroj: prednáška OsnovaSodpovedamiV3 a zoznam príkladov z cvičení.' : subject === 'dg' ? 'Zdroj: tézy na 1. a 2. písomku z Metód zobrazovania (AIS), prednášky a cvičenia T. Rückschlossovej, pracovné listy a utorková písomka.' : subject === 'geo' ? 'Zdroj: Zadanie 5 z Geodézie 1 (doc. Marčiš, AIS), vzorový príklad a individuálne zadanie č. 15.' : 'Zdroj: prednášky doc. Minarechovej (týždne 1 až 6), hárok z cvičenia K prednáške 10 a tematický plán Matematiky 1.'} Zvuky, ikony a herné prvky: Kenney.nl (CC0). Písma: Bricolage Grotesque, Source Sans 3, JetBrains Mono (OFL).
       </Text>
     </ScrollView>
   );

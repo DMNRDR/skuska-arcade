@@ -28,7 +28,7 @@ import { SubjectId } from './src/types';
 type Screen =
   | { name: 'home' }
   | { name: 'campaign' }
-  | { name: 'tezy' }
+  | { name: 'tezy'; set?: 1 | 2 }
   | { name: 'navod' }
   | { name: 'matTest2' }
   | { name: 'exam' }
@@ -127,7 +127,7 @@ export default function App() {
         subject={subject}
         setSubject={setSubject}
         onCampaign={() => setScreen({ name: 'campaign' })}
-        onTezy={() => setScreen({ name: 'tezy' })}
+        onTezy={(set) => setScreen({ name: 'tezy', set })}
         onNavod={() => setScreen({ name: 'navod' })}
         onMatTest2={() => setScreen({ name: 'matTest2' })}
         onExam={() => setScreen({ name: 'exam' })}
@@ -138,7 +138,7 @@ export default function App() {
       />
     );
   else if (screen.name === 'navod') body = <Navod onBack={home} />;
-  else if (screen.name === 'tezy') body = <Tezy onBack={home} onXp={(xp) => update((p) => ({ ...p, xp: p.xp + xp }))} />;
+  else if (screen.name === 'tezy') body = <Tezy set={screen.set ?? 1} onBack={home} onXp={(xp) => update((p) => ({ ...p, xp: p.xp + xp }))} />;
   else if (screen.name === 'matTest2')
     body = <MathTest2 onBack={home} onLearn={(topic) => setScreen({ name: 'learn', topic })} onPlay={play} />;
   else if (screen.name === 'matTest3')
