@@ -30,7 +30,7 @@ export default function Home({
   setSubject: (s: SubjectId) => void;
   onCampaign: () => void;
   onTezy: (set?: 1 | 2) => void;
-  onNavod: () => void;
+  onNavod: (zadanie: 5 | 7) => void;
   onMatTest2: () => void;
   onExam: () => void;
   onMatTest3: () => void;
@@ -140,11 +140,15 @@ export default function Home({
       {subject === 'geo' && (
         <View style={{ gap: 10 }}>
           <Text style={s.section}>Dnes na cvičení</Text>
-          <Press color={C.ink} onPress={onNavod} inner={{ padding: 18, gap: 6 }}>
-            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>TUTORIÁL · PO 12:00 · B321</Text>
-            <Text style={s.bigBtn}>Zadanie 5 v praxi</Text>
-            <Text style={[s.small, { color: '#fff' }]}>Krok po kroku: čo napísať do Excelu, aké vzorce a čo ti má vyjsť. S tvojimi číslami (zadanie č. 15).</Text>
+          <Press color={C.ink} onPress={() => onNavod(7)} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>TUTORIÁL · PO 9. 11. · DT-2 A TRIMBLE C5</Text>
+            <Text style={s.bigBtn}>Zadanie 7 v praxi: zvislé uhly</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Krok po kroku: čo si vziať, meranie v I. a II. polohe, 3 skupiny, indexová chyba so vzorcami a kalkulačka na overenie.</Text>
           </Press>
+          <Pressable onPress={() => onNavod(5)} style={({ pressed }) => [s.link, pressed && { opacity: 0.6 }]}>
+            <Text style={s.linkText}>Zadanie 5 v praxi (zákon hromadenia chýb, Excel)</Text>
+            <Icon name="next" size={16} />
+          </Pressable>
         </View>
       )}
 

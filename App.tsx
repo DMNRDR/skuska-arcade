@@ -29,7 +29,7 @@ type Screen =
   | { name: 'home' }
   | { name: 'campaign' }
   | { name: 'tezy'; set?: 1 | 2 }
-  | { name: 'navod' }
+  | { name: 'navod'; zadanie?: 5 | 7 }
   | { name: 'matTest2' }
   | { name: 'exam' }
   | { name: 'matTest3' }
@@ -128,7 +128,7 @@ export default function App() {
         setSubject={setSubject}
         onCampaign={() => setScreen({ name: 'campaign' })}
         onTezy={(set) => setScreen({ name: 'tezy', set })}
-        onNavod={() => setScreen({ name: 'navod' })}
+        onNavod={(zadanie) => setScreen({ name: 'navod', zadanie })}
         onMatTest2={() => setScreen({ name: 'matTest2' })}
         onExam={() => setScreen({ name: 'exam' })}
         onMatTest3={() => setScreen({ name: 'matTest3' })}
@@ -137,7 +137,7 @@ export default function App() {
         onGame={(game) => setScreen({ name: 'play', game, key: Date.now() })}
       />
     );
-  else if (screen.name === 'navod') body = <Navod onBack={home} />;
+  else if (screen.name === 'navod') body = <Navod onBack={home} zadanie={screen.zadanie ?? 7} />;
   else if (screen.name === 'tezy') body = <Tezy set={screen.set ?? 1} onBack={home} onXp={(xp) => update((p) => ({ ...p, xp: p.xp + xp }))} />;
   else if (screen.name === 'matTest2')
     body = <MathTest2 onBack={home} onLearn={(topic) => setScreen({ name: 'learn', topic })} onPlay={play} />;

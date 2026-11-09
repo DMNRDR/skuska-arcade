@@ -10,6 +10,10 @@ export type NavodStep = {
   todo: string[];
   /** čo napísať do buniek Excelu */
   cells?: Cell[];
+  /** nadpis nad bunkami (predvolene „Napíš do Excelu“) */
+  cellsTitle?: string;
+  /** interaktívna kalkulačka indexovej chyby (Zadanie 7) */
+  calc?: boolean;
   /** čo ti má vyjsť (kontrola) */
   expect?: string[];
   tip?: string;
