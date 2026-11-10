@@ -2,8 +2,9 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Bar, C, Confetti, F, GButton, haptic, Header, Icon, Press } from '../components/ui';
 import { DF_COMBO, DF_LECTURE, DF_RULES } from '../data/df-mat';
+import { DF_L1, DF_L2, DF_L3, DF_L4 } from '../data/df-levels';
 import { DF_KINDS, DF_LABEL, DfKind, dfMake } from '../data/exam-gen';
-import type { Step } from '../data/steps';
+import type { Check, Step } from '../data/steps';
 import Player from '../learn/Player';
 import { buildSlides, Slide } from '../learn/slides';
 import { Progress } from '../storage';
@@ -36,21 +37,46 @@ const check = (k: DfKind) => {
   return { q: q.q, options: q.options, explain: q.explain };
 };
 
+// Úrovne otázok (ručne zostavené, overené skriptom): L1 ľahké → L3 ťažké, L4 skúšobná písomka na čas.
+const LEVELS: { id: string; no: string; title: string; text: string; checks: Check[] }[] = [
+  { id: 'l1', no: '04', title: 'Level 1 · ľahké', text: 'Polynóm, zlomok, odmocnina. Jedna podmienka, aj pasce (x² + 1, krátenie zlomku, ∛).', checks: DF_L1 },
+  { id: 'l2', no: '05', title: 'Level 2 · stredné', text: 'Logaritmus, dve podmienky naraz, zlomok pod √ a v ln (tabuľka znamienok).', checks: DF_L2 },
+  { id: 'l3', no: '06', title: 'Level 3 · ťažké', text: 'arcsin, arccos, log so základom 0,5, log + √ + zlomok naraz, ako na slajdoch 30 a 31.', checks: DF_L3 },
+];
+const L4_N = 8;
+const L4_MIN = 25;
+const L4_GROUPS = [
+  { id: 'l1', no: 'L1', title: 'Ľahké: zlomok, odmocnina' },
+  { id: 'l2', no: 'L2', title: 'Stredné: logaritmus, tabuľka znamienok' },
+  { id: 'l3', no: 'L3', title: 'Ťažké: arcsin, arccos, kombinácie' },
+  { id: 'l4', no: 'L4', title: 'Písomkové: tri a viac podmienok' },
+];
+/** skúšobná písomka: 1 ľahký, 2 stredné, 2 ťažké, 3 písomkové, poradie od ľahších */
+function l4Build() {
+  const take = (arr: Check[], n: number, g: number) => shuffle(arr).slice(0, n).map((c) => ({ ...c, topic: L4_GROUPS[g] }));
+  return [...take(DF_L1, 1, 0), ...take(DF_L2, 2, 1), ...take(DF_L3, 2, 2), ...take(DF_L4, 3, 3)];
+}
+function levelSlides(id: string, checks: Check[]): Slide[] {
+  const qs = shuffle(checks);
+  return qs.map((c, i) => ({ step: i, stepTitle: `${LEVELS.find((l) => l.id === id)!.title} · ${i + 1}/${qs.length}`, first: true, kind: 'check', check: c }) as Slide);
+}
+
 function praxSlides(): Slide[] {
   return kinds(PRAX).map((k, i) => ({ step: i, stepTitle: `Príklad ${i + 1}/${PRAX} · ${DF_LABEL[k]}`, first: true, kind: 'check', check: check(k) }) as Slide);
 }
 
-type Part = { id: string; no: string; title: string; text: string; steps?: Step[] };
+type Part = { id: string; no: string; title: string; text: string; steps?: Step[]; checks?: Check[] };
 const PARTS: Part[] = [
   { id: 'rules', no: '01', title: '5 pravidiel', text: 'zlomok, odmocnina, logaritmus, tg/cotg, arcsin/arccos. Každé s obrázkom na osi a mini príkladom.', steps: DF_RULES },
   { id: 'combo', no: '02', title: 'Kombinácie a zápis', text: 'zátvorky ( ) a ⟨ ⟩, zjednotenie ∪, prienik na osi, tabuľka znamienok. Príklady z Pauliných poznámok.', steps: DF_COMBO },
   { id: 'lect', no: '03', title: 'Príklady z prednášky', text: 'Šesť riešených príkladov doc. Minarechovej: nepárna odmocnina, ln(2cos x − √3), log so základom 0,5, arcsin, arctg.', steps: DF_LECTURE },
-  { id: 'prax', no: '04', title: `Precvičovanie (${PRAX} príkladov)`, text: 'Každý príklad iného typu, nové pri každom otvorení. Zlá odpoveď ťa nechá skúsiť znova, potom postup.' },
+  ...LEVELS,
+  { id: 'prax', no: '07', title: `Precvičovanie (${PRAX} príkladov)`, text: 'Každý príklad iného typu, nové pri každom otvorení. Zlá odpoveď ťa nechá skúsiť znova, potom postup.' },
 ];
 const key = (id: string) => `df:${id}`;
-const lenOf = (p: Part) => (p.steps ? p.steps.length : PRAX);
+const lenOf = (p: Part) => (p.steps ? p.steps.length : p.checks ? p.checks.length : PRAX);
 
-type View_ = { kind: 'list' } | { kind: 'part'; id: string; seed: number } | { kind: 'done'; id: string } | { kind: 'test'; seed: number };
+type View_ = { kind: 'list' } | { kind: 'part'; id: string; seed: number } | { kind: 'done'; id: string } | { kind: 'test'; seed: number } | { kind: 'l4'; seed: number };
 
 export default function MathTest3({
   progress,
@@ -63,16 +89,36 @@ export default function MathTest3({
   onBack: () => void;
   onLearned: (key: string, step: number) => void;
   onXp: (xp: number) => void;
-  onScore: (pct: number) => void;
+  onScore: (pct: number, key?: string) => void;
 }) {
   const [v, setV] = useState<View_>({ kind: 'list' });
   const open = (id: string) => setV({ kind: 'part', id, seed: Date.now() });
   const test = () => setV({ kind: 'test', seed: Date.now() });
+  const l4 = () => setV({ kind: 'l4', seed: Date.now() });
 
   if (v.kind === 'part') {
     const p = PARTS.find((x) => x.id === v.id)!;
     return <PartPlayer key={v.seed} p={p} onClose={() => setV({ kind: 'list' })} onDone={() => setV({ kind: 'done', id: p.id })} onLearned={onLearned} onXp={onXp} />;
   }
+
+  if (v.kind === 'l4')
+    return (
+      <QuizTest
+        key={v.seed}
+        title="Level 4 · skúšobná písomka"
+        minutes={L4_MIN}
+        points={L4_N}
+        build={l4Build}
+        groups={L4_GROUPS}
+        onClose={() => setV({ kind: 'list' })}
+        onOpen={(id) => open(id === 'l4' ? 'lect' : id)}
+        onAgain={l4}
+        onFinish={(ok, total) => {
+          onXp(ok * 8);
+          onScore(Math.round((100 * ok) / total), key('l4'));
+        }}
+      />
+    );
 
   if (v.kind === 'test')
     return (
@@ -113,6 +159,7 @@ export default function MathTest3({
   }
 
   const best = progress.gameBest[key('test')] ?? 0;
+  const bestL4 = progress.gameBest[key('l4')] ?? 0;
   const total = PARTS.reduce((a, p) => a + lenOf(p), 0);
   const done = PARTS.reduce((a, p) => a + Math.min(progress.learned[key(p.id)] ?? 0, lenOf(p)), 0);
   return (
@@ -160,8 +207,15 @@ export default function MathTest3({
             );
           })}
         </View>
+        <Press color={C.orange} onPress={l4} inner={{ padding: 18, gap: 6 }}>
+          <Text style={[s.kicker, { color: '#fff', opacity: 0.9 }]}>08 · LEVEL 4</Text>
+          <Text style={s.bigBtn}>Skúšobná písomka</Text>
+          <Text style={[s.small, { color: '#fff' }]}>
+            {L4_N} príkladov od ľahkého po ťažký, {L4_MIN} minút, výsledok v bodoch z {L4_N}. Na papieri si pri každom napíš podmienky, až potom klikni.{bestL4 ? ` Rekord: ${bestL4} %.` : ''}
+          </Text>
+        </Press>
         <Press color={C.ink} onPress={test} inner={{ padding: 18, gap: 6 }}>
-          <Text style={[s.kicker, { color: '#fff', opacity: 0.9 }]}>05 · NA KONIEC</Text>
+          <Text style={[s.kicker, { color: '#fff', opacity: 0.9 }]}>09 · NAVYŠE</Text>
           <Text style={s.bigBtn}>Test ako na písomke</Text>
           <Text style={[s.small, { color: '#fff' }]}>
             {TEST} príkladov rôznych typov, jeden pokus, na konci známka a čo ešte potrénovať.{best ? ` Rekord: ${best} %.` : ''}
@@ -174,7 +228,7 @@ export default function MathTest3({
 }
 
 function PartPlayer({ p, onClose, onDone, onLearned, onXp }: { p: Part; onClose: () => void; onDone: () => void; onLearned: (k: string, n: number) => void; onXp: (xp: number) => void }) {
-  const slides = useMemo(() => (p.steps ? buildSlides(key(p.id), p.steps) : praxSlides()), [p]);
+  const slides = useMemo(() => (p.steps ? buildSlides(key(p.id), p.steps) : p.checks ? levelSlides(p.id, p.checks) : praxSlides()), [p]);
   return (
     <Player
       slides={slides}

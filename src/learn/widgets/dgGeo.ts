@@ -4,6 +4,8 @@
 // prevedú na farby kriedovej tabule v dgStyle(). Kód je prenesený z HTML prezentácie
 // „Deskriptíva po kúskoch“, preto je bez typov.
 
+import { PICS_KART, RYS_KART } from './dgKart';
+
 // ---------- geometry + svg helpers ----------
 const V={add:(a,b)=>[a[0]+b[0],a[1]+b[1]],sub:(a,b)=>[a[0]-b[0],a[1]-b[1]],mul:(a,k)=>[a[0]*k,a[1]*k],
   len:a=>Math.hypot(a[0],a[1]),dot:(a,b)=>a[0]*b[0]+a[1]*b[1],
@@ -556,6 +558,7 @@ export const RYS: Record<string, Rys> = {
   'dg-gule3': { vb: '0 0 400 300', steps: stGule3 },
   'dg-fg-stvorec': { vb: '0 0 400 250', steps: stFgSq },
   'dg-fg-kvader': { vb: '0 0 400 340', steps: stFgKv },
+  ...RYS_KART,
 };
 
 /** statické obrázky */
@@ -596,6 +599,7 @@ export const DG_PICS: Record<string, Rys> = {
   'dg-gula-kuzel': one(figGulaKuzel),
   'dg-fg-mnoziny': one(figFgMnoziny, '0 0 400 210'),
   'dg-fg-nevl': one(figFgNevl, '0 0 400 240'),
+  ...PICS_KART,
 };
 
 // kriedová tabuľa: farby podľa CH v learn/kit.tsx

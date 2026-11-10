@@ -17,6 +17,13 @@ export const DG_TOPICS: Topic[] = [
   { id: 'perspektiva', subject: 'dg', name: 'Lineárna perspektíva', icon: '🛤️', src: 'Prednášky 5 a 6, cvičenia 6 a 7' },
   { id: 'rotacne', subject: 'dg', name: 'Rotačné plochy a prieniky', icon: '🏺', src: 'Prednáška 7, cvičenie 8, PL 8a' },
   { id: 'fotogrametria', subject: 'dg', name: 'Fotogrametria: vnútorná orientácia', icon: '📷', src: 'Prednáška 7, cvičenie 8, PL 8-9' },
+  { id: 'pisomka3', subject: 'dg', name: 'Písomka 3: kartografia (13. týždeň)', icon: '📝', src: 'Harmonogram, témy 9 až 13' },
+  { id: 'kart-uvod', subject: 'dg', name: 'Kartografia: úvod a skreslenie', icon: '🌍', src: 'Vajsáblová, Metódy zobrazovania pre GaK' },
+  { id: 'kart-azimut', subject: 'dg', name: 'Azimutálne projekcie', icon: '🧭', src: 'Typy úloh s. 198' },
+  { id: 'kart-valcove', subject: 'dg', name: 'Valcové zobrazenia', icon: '🗺️', src: 'Typy úloh s. 137' },
+  { id: 'kart-kuzelove', subject: 'dg', name: 'Kužeľové zobrazenia', icon: '🍦', src: 'Typy úloh s. 150' },
+  { id: 'kart-ortodroma', subject: 'dg', name: 'Ortodróma a loxodróma', icon: '✈️', src: 'Typy úloh s. 198' },
+  { id: 'kart-neprave', subject: 'dg', name: 'Nepravé a polykónické zobrazenia', icon: '🫀', src: 'Typy úloh s. 162' },
 ];
 
 type Row = [topic: string, diff: 1 | 2 | 3, q: string, options: string[], explain: string, src: string];

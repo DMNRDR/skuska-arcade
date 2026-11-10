@@ -21,6 +21,7 @@ export default function Home({
   onMatTest2,
   onExam,
   onMatTest3,
+  onDgTest3,
   onLearn,
   onPlay,
   onGame,
@@ -29,7 +30,8 @@ export default function Home({
   subject: SubjectId;
   setSubject: (s: SubjectId) => void;
   onCampaign: () => void;
-  onTezy: (set?: 1 | 2) => void;
+  onTezy: (set?: 1 | 2 | 3) => void;
+  onDgTest3: () => void;
   onNavod: (zadanie: 5 | 7) => void;
   onMatTest2: () => void;
   onExam: () => void;
@@ -103,6 +105,12 @@ export default function Home({
       {/* deskriptíva: tézy na 1. písomku */}
       {subject === 'dg' && (
         <View style={{ gap: 10 }}>
+          <Text style={s.section}>3. písomka · 13. týždeň (kartografia)</Text>
+          <Press color={C.teal} onPress={onDgTest3} inner={{ padding: 18, gap: 6 }}>
+            <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>7 LEKCIÍ · TÉZY 3 · LEVELY 1 AŽ 4</Text>
+            <Text style={s.bigBtn}>Nauč sa na 3. písomku</Text>
+            <Text style={[s.small, { color: '#fff' }]}>Azimutálne, valcové, kužeľové, nepravé a polykónické zobrazenia, ortodróma. Rysovačky sietí krok po kroku a skúšobná písomka na 25 minút.</Text>
+          </Press>
           <Text style={s.section}>2. písomka · pi 13. 11.</Text>
           <Press color={C.orange} onPress={() => onLearn('pisomka2')} inner={{ padding: 18, gap: 6 }}>
             <Text style={[s.mono, { color: '#fff', opacity: 0.9 }]}>4 TÉMY · KLIKACIE LEKCIE</Text>

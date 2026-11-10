@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Bar, C, Confetti, F, GButton, haptic, Header, Icon, ND, Press } from '../components/ui';
 import { EXAM_TOPICS, ExamTopic } from '../data/exam-mat';
@@ -220,8 +220,14 @@ export function QuizTest({
   onOpen,
   onAgain,
   onFinish,
+  minutes,
+  points,
 }: {
   title?: string;
+  /** časový limit testu v minútach; po uplynutí sa test vyhodnotí (nezodpovedané = zle) */
+  minutes?: number;
+  /** maximum bodov ako na písomke (napr. 8); výsledok sa ukáže aj v bodoch */
+  points?: number;
   build: () => TQ[];
   groups: Group[];
   onClose: () => void;
@@ -237,7 +243,23 @@ export function QuizTest({
   const [end, setEnd] = useState(false);
   const scroll = useRef<ScrollView>(null);
   const shake = useRef(new Animated.Value(0)).current;
+  const [left, setLeft] = useState(minutes ? minutes * 60 : 0);
   const q = qs[i];
+  useEffect(() => {
+    if (!minutes || end) return;
+    const t = setInterval(() => setLeft((x) => Math.max(0, x - 1)), 1000);
+    return () => clearInterval(t);
+  }, [minutes, end]);
+  useEffect(() => {
+    if (minutes && left === 0 && !end) {
+      const full = qs.map((_, k) => res[k] ?? false);
+      setRes(full);
+      onFinish(full.filter(Boolean).length, qs.length);
+      play('levelup');
+      setEnd(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [left]);
   const opts = useMemo(() => shuffle(q.options.map((t, k) => ({ t, ok: k === 0 }))), [q]);
 
   if (end) {
@@ -256,6 +278,12 @@ export function QuizTest({
               <Text style={s.name}>
                 {ok} z {qs.length} správne · {pct} %
               </Text>
+              {points ? (
+                <Text style={[s.name, { color: pass ? C.good : C.bad }]}>
+                  {String(Math.round((ok / qs.length) * points * 2) / 2).replace('.', ',')} / {points} b
+                </Text>
+              ) : null}
+              {minutes ? <Text style={s.meta}>{left === 0 ? 'Čas vypršal, nezodpovedané sa rátajú ako zlé.' : `Hotovo za ${mmss(minutes * 60 - left)} z ${minutes}:00.`}</Text> : null}
               <Text style={s.meta}>{gt}, orientačne podľa stupnice STU (A od 92 %, E od 56 %)</Text>
             </View>
           </View>
@@ -333,6 +361,11 @@ export function QuizTest({
               {q.topic.no} {q.topic.title}
             </Text>
           </View>
+          {minutes ? (
+            <View style={[s.side, left < 120 && { borderColor: C.bad }]}>
+              <Text style={[s.sideText, { fontSize: 16 }, left < 120 && { color: C.bad }]}>⏱ {mmss(left)}</Text>
+            </View>
+          ) : null}
         </View>
         <View style={{ flexDirection: 'row', gap: 3 }}>
           {qs.map((_, k) => (
@@ -375,6 +408,8 @@ export function QuizTest({
     </View>
   );
 }
+
+const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
 
 const s = StyleSheet.create({
   page: { paddingHorizontal: 16, paddingBottom: 40, gap: 14 },

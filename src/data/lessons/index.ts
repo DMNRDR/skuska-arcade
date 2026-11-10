@@ -22,6 +22,7 @@ import mat_vektory from './mat-vektory';
 import mat_vlastne from './mat-vlastne';
 import { DG_STEPS } from './dg';
 import { DG2_STEPS } from './dg2';
+import { DG3_STEPS } from './dg3';
 import { GEO_STEPS } from './geo';
 
 // Podrobné lekcie: každá téma má vlastný súbor <predmet>-<téma>.ts s `export default steps`.
@@ -48,4 +49,4 @@ const DETAILED: Record<string, Step[]> = {
   'mat:vlastne': mat_vlastne,
 };
 
-export const LESSON_STEPS: Record<string, Step[]> = { ...FYZ_STEPS, ...MAT_STEPS, ...DETAILED, ...DG_STEPS, ...DG2_STEPS, ...GEO_STEPS };
+export const LESSON_STEPS: Record<string, Step[]> = { ...FYZ_STEPS, ...MAT_STEPS, ...DETAILED, ...DG_STEPS, ...DG2_STEPS, ...DG3_STEPS, ...GEO_STEPS };

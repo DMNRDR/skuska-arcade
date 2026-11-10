@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Bar, C, F, GButton, haptic, Header } from '../components/ui';
 import { Teza, TEZY, TEZY_SECTIONS } from '../data/dg-tezy';
 import { TEZY2, TEZY2_SECTIONS } from '../data/dg-tezy2';
+import { TEZY3, TEZY3_SECTIONS } from '../data/dg-tezy3';
 import { DgPic, Rysovacka } from '../learn/widgets/deskriptiva';
 import { shuffle } from '../util';
 
@@ -13,7 +14,7 @@ const COLOR = C.teal;
 type Filter = 'teoria' | 'rys' | 'vsetko';
 
 type TSet = { items: Teza[]; sections: string[]; title: string; lead: string };
-const SETS: Record<1 | 2, TSet> = {
+const SETS: Record<1 | 2 | 3, TSet> = {
   1: {
     items: TEZY,
     sections: TEZY_SECTIONS,
@@ -26,9 +27,15 @@ const SETS: Record<1 | 2, TSet> = {
     title: 'Tézy 2. písomky',
     lead: 'Všetky otázky a úlohy z dokumentu „2 Test – okruh otázok a úloh“ (AIS, 27. 10.), čísla sedia s dokumentom. Písomka je v piatok 13. 11. na cvičení. Ťukni na otázku a uvidíš vzorovú odpoveď s náčrtom, pri rysovacích úlohách konštrukciu krok po kroku.',
   },
+  3: {
+    items: TEZY3,
+    sections: TEZY3_SECTIONS,
+    title: 'Tézy 3. písomky',
+    lead: 'Okruh 3T učiteľka ešte nezverejnila. Otázky sú zostavené podľa sylabu a oficiálnych „Typov úloh“ zo skrípt Vajsáblovej (kartografia), čísla nie sú z dokumentu. Keď vyjde 3T, doplním ich podľa neho. Ťukni na otázku a uvidíš vzorovú odpoveď, pri rysovacích úlohách konštrukciu krok po kroku.',
+  },
 };
 
-export default function Tezy({ onBack, onXp, set = 1 }: { onBack: () => void; onXp: (xp: number) => void; set?: 1 | 2 }) {
+export default function Tezy({ onBack, onXp, set = 1 }: { onBack: () => void; onXp: (xp: number) => void; set?: 1 | 2 | 3 }) {
   const [mode, setMode] = useState<'prehlad' | 'skusanie'>('prehlad');
   const data = SETS[set];
   return (
